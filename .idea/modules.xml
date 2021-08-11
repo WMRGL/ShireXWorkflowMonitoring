@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/ShireXPathwayMonitoring.iml" filepath="$PROJECT_DIR$/.idea/ShireXPathwayMonitoring.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../ShireXWorkflowMonitoring/.idea/ShireXWorkflowMonitoring.iml" filepath="$PROJECT_DIR$/../ShireXWorkflowMonitoring/.idea/ShireXWorkflowMonitoring.iml" />
     </modules>
   </component>
 </project>
