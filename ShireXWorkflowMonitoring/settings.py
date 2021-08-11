@@ -18,7 +18,7 @@ from django.core.exceptions import ImproperlyConfigured
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-with open(os.path.join(BASE_DIR + "/ShireXWorkflowMonitoring", 'config.json')) as secrets_file:
+with open(os.path.join(BASE_DIR + "/ShireXWorkflowMonitoring/", 'secrets.json')) as secrets_file:
     secrets = json.load(secrets_file)
 
 def get_secret(setting, secrets=secrets):
