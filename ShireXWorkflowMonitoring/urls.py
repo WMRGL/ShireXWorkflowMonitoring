@@ -16,9 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from ShireXWorkflowMonitoring import CommonFunctionality
+
+app_name = "ShireXWorkflowMonitoringApplication"
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('login/', CommonFunctionality.Login.as_view(), name="LoginPage"),
+    path('', CommonFunctionality.Start.as_view(), name="StartPage"),
 ]
-
-
-#If I make this change here and commit what happens
