@@ -1,22 +1,8 @@
-"""ShireXWorkflowMonitoring URL Configuration
-
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/3.2/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
 from django.contrib import admin
 from django.urls import path
 
 from ShireXWorkflowMonitoring import CommonFunctionality
+from ShireXWorkflowMonitoring import HaemOncologyFunctionality
 
 app_name = "ShireXWorkflowMonitoringApplication"
 
@@ -24,4 +10,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', CommonFunctionality.Login.as_view(), name="LoginPage"),
     path('', CommonFunctionality.Start.as_view(), name="StartPage"),
+    path('logout/', CommonFunctionality.Authenticate.DoLogout, name="LogoutSystem"),
+    path('HO/BMT', HaemOncologyFunctionality.BMTSearch.as_view(), name="HaemOncBMTSearch"),
 ]

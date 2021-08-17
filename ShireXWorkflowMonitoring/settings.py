@@ -63,6 +63,10 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+SESSION_EXPIRE_AT_BROWSER_CLOSE=True
+
+SESSION_COOKIE_AGE=(30 * 60)        #30 mins.  Session age is recorded in seconds
+
 ROOT_URLCONF = 'ShireXWorkflowMonitoring.urls'
 
 TEMPLATES = [
@@ -91,10 +95,10 @@ WSGI_APPLICATION = 'ShireXWorkflowMonitoring.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'mssql',
-        'NAME': 'shire_data_plcm',
+        'NAME': get_secret("DB_NAME"),
         'USER': get_secret("DB_USERNAME"),
         'PASSWORD': get_secret("DB_PASSWORD"),
-        'HOST': '192.168.63.81',
+        'HOST': get_secret("DB_HOST"),
         'PORT': '1433',
         'OPTIONS': { 'driver' : 'ODBC Driver 17 for SQL Server'},
     }

@@ -3,6 +3,7 @@
 
 from django.contrib.auth import authenticate
 from django.contrib.auth import login
+from django.contrib.auth import logout
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
@@ -61,4 +62,10 @@ class Start(TemplateView):
         else:
             _context = None
             return render(request, self.template_name, _context)
+
+class Authenticate():
+    def DoLogout(request):
+        logout(request)
+
+        return HttpResponseRedirect(reverse('LoginPage'))
 

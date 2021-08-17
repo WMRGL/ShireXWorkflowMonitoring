@@ -11,7 +11,7 @@ class ShireBackend(BaseBackend):
             return None
 
         try:
-            userValidObj = STAFF.objects.get(EMPLOYEE_NUMBER=username)
+            userValidObj = STAFF.objects.get(LOGON_NAME=username)
 
             #Do the password check separate, because the SQL server comparison
             #is not case sensitive.  Whereas the code below is!
