@@ -2,8 +2,36 @@
 {% block content %}
 <body>
     {% include 'StandardMenu.html' %}
-    <div class="container text-sm-center p-5 gap-3">
-        I am the BMT Search
+    <div class="container">
+        <div class="container-fluid">
+            <form action="" method="get" id="formSearch">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <div class="row g-5 align-items-center">
+                        <div class="col-auto">
+                            <label for="txtCriteriaDateFrom" class="col-form-label">Date from:</label>
+                        </div>
+                        <div class="col-auto">
+                            <input type="date" class="form-control" name="txtCriteriaDateFrom" id="txtCriteriaDateFrom" value="{{ criteriaDateFrom|date:'Y-m-d' }}">
+                        </div>
+                        <div class="col-auto">
+                            <label for="txtCriteriaDateTo" class="col-form-label">Date to:</label>
+                        </div>
+                        <div class="col-auto">
+                            <input type="date" class="form-control" name="txtCriteriaDateTo" id="txtCriteriaDateTo" value="{{ criteriaDateTo|date:'Y-m-d' }}">
+                        </div>
+                        <div class="col-auto">
+                            <input type="button" value="Search" name="btnSubmit" id="btnSubmit" class="btn btn-primary">
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        {% if errorMessage %}
+            <div class="alert alert-danger text-center" role="alert">
+                {{ errorMessage }}
+            </div>
+        {% endif %}
     </div>
 </body>
 {% endblock content %}

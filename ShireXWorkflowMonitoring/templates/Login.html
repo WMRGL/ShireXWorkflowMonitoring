@@ -31,7 +31,13 @@
                 <label for="userPassword" class="form-label">Password</label>
                 <input type="password" id="userPassword" name="txtPassword" class="form-control">
             </div>
-            {% if error_message %}<div class="alert alert-danger mb-3" role="alert"><label>{{ error_message }}</label></div>{% endif %}
+
+            {% if error_message %}
+            <div class="alert alert-danger mb-3  text-center" role="alert">
+                {{ error_message }}
+            </div>
+            {% endif %}
+
             <div class="mb-3">
                 <input type="submit" value="Login" name="btnLogin" class="btn btn-dark" id="btnLogin">
             </div>

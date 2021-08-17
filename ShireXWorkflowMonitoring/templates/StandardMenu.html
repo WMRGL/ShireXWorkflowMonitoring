@@ -1,12 +1,12 @@
 {% load static %}
-   <div class="container">
+   <div class="container mb-3 mt-3">
         {# Note the use of the d- CSS below to hide the logo when the screen is small #}
         {# Both d-none and d-sm-none are required, not just d-sm-none as the documentation indicates #}
-        <div class="text-centre d-none d-sm-none d-md-block p-3">
-            <a href="https://bwc.nhs.uk/">
-                <img src={% static 'BWCLogo.png' %}>
-            </a>
-        </div>
+{#        <div class="text-centre d-none d-sm-none d-md-block p-3">#}
+{#            <a href="https://bwc.nhs.uk/">#}
+{#                <img src={% static 'BWCLogo.png' %}>#}
+{#            </a>#}
+{#        </div>#}
         <nav class="navbar navbar-expand-md navbar-dark bg-primary">
             <div class="container-fluid">
                 <a class="navbar-brand" href="#">WMRGL</a>
@@ -43,7 +43,6 @@
                         </li>
                     </ul>
                     {% if request.user.is_authenticated %}
-{#                    <ul class="navbar-nav justify-content-end me-auto mb-2 mb-lg-0">#}
                     <ul class="navbar-nav justify-content-end mb-2 mb-lg-0">
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="{% url 'LogoutSystem' %}">Logout</a>

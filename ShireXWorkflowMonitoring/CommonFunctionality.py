@@ -10,6 +10,8 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views.generic import TemplateView
 from ShireXWorkflowMonitoring.apps import ShireXWorkflowMonitoringConfig
+from datetime import datetime
+from enum import Enum
 
 class Login(TemplateView):
 
@@ -68,4 +70,38 @@ class Authenticate():
         logout(request)
 
         return HttpResponseRedirect(reverse('LoginPage'))
+
+class enumDataType(Enum):
+    String="string",
+    Integer="integer",
+    Float="float",
+    Datetime="datetime",
+    Boolean="boolean"
+
+class UtilityFunctions():
+    def GetRequestKey(request, keyName, dataType):
+        for _key in request.GET:
+            if _key == keyName:
+
+                _strVal = request.GET[_key]
+
+                if dataType == enumDataType.Datetime:
+                    return datetime.strptime(_strVal, '%Y-%m-%d')  # IMPORTANT..The format string is different to a template filter and is specific!
+
+                if dataType == enumDataType.Integer:
+                    return int(_strVal)
+
+                if dataType == enumDataType.Float:
+                    return float(_strVal)
+
+                if dataType == enumDataType.Boolean:
+                    if _strVal.upper() == "TRUE":
+                        return True
+                    if _strVal.upper() == "FALSE":
+                        return False
+                return _strVal
+
+        return ""
+
+
 
