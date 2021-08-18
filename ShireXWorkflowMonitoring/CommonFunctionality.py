@@ -79,7 +79,7 @@ class enumDataType(Enum):
     Boolean="boolean"
 
 class UtilityFunctions():
-    def GetRequestKey(request, keyName, dataType):
+    def GetRequestKey(self, request, keyName, dataType):
         for _key in request.GET:
             if _key == keyName:
 
@@ -103,5 +103,11 @@ class UtilityFunctions():
 
         return ""
 
-
+    def ConvertCursorListToDict(self, cursor):
+        "Return all rows from a cursor as a dict"
+        columns = [col[0] for col in cursor.description]
+        return [
+            dict(zip(columns, row))
+            for row in cursor.fetchall()
+        ]
 

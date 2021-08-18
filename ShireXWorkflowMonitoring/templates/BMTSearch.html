@@ -21,17 +21,67 @@
                             <input type="date" class="form-control" name="txtCriteriaDateTo" id="txtCriteriaDateTo" value="{{ criteriaDateTo|date:'Y-m-d' }}">
                         </div>
                         <div class="col-auto">
-                            <input type="button" value="Search" name="btnSubmit" id="btnSubmit" class="btn btn-primary">
+                            <input type="submit" value="Search" name="btnSubmit" id="btnSubmit" class="btn btn-primary">
                         </div>
                     </div>
                 </div>
             </form>
         </div>
         {% if errorMessage %}
-            <div class="alert alert-danger text-center" role="alert">
+            <div class="alert alert-danger text-center mb-3" role="alert">
                 {{ errorMessage }}
             </div>
         {% endif %}
+        <div class="container-fluid">
+            <table class="table table-bordered">
+                <thead style="background-color: lightblue">
+{#                    <th scope="col">#}
+{#                        Id#}
+{#                    </th>#}
+                    <th scope="col">
+                        Patient
+                    </th>
+                    <th scope="col">
+                        Deceased
+                    </th>
+                    <th scope="col">
+                        Lab Number
+                    </th>
+                </thead>
+                <tbody>
+                {% if workflowCases %}
+                    {% for item in workflowCases %}
+                        <tr>
+    {#                        <th scope="row">#}
+    {#                            <a href="{% url 'Activity:ActivityInstance' item.RefId %}">View/Edit {{ item.RefId }}</a>#}
+    {#                        </th>#}
+                            <td>
+                                {{ item.FIRSTNAME }}, {{ item.LASTNAME }}
+                            </td>
+                            <td>
+                                {{ item.DECEASED_DATE|date:'d-m-Y' }}
+                            </td>
+                            <td>
+                                {{ item.LABNO }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td>
+                            No records to display
+                        </td>
+                        <td>
+                            &nbsp;
+                        </td>
+                        <td>
+                            &nbsp;
+                        </td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </body>
 {% endblock content %}
