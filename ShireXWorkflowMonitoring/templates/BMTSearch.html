@@ -35,17 +35,47 @@
         <div class="container-fluid">
             <table class="table table-bordered">
                 <thead style="background-color: lightblue">
-{#                    <th scope="col">#}
-{#                        Id#}
-{#                    </th>#}
                     <th scope="col">
                         Patient
                     </th>
                     <th scope="col">
-                        Deceased
+                        Lab Number
                     </th>
                     <th scope="col">
-                        Lab Number
+                        Reason
+                    </th>
+                    <th scope="col">
+                        Bill code
+                    </th>
+                    <th scope="col">
+                        Sample type
+                    </th>
+                    <th scope="col">
+                        Priority
+                    </th>
+                    <th scope="col">
+                        Days left
+                    </th>
+                    <th scope="col">
+                        Date received
+                    </th>
+                    <th scope="col">
+                        Date activated
+                    </th>
+                    <th scope="col">
+                        Date due
+                    </th>
+                    <th scope="col">
+                        Status
+                    </th>
+                    <th scope="col">
+                        Report by
+                    </th>
+                    <th scope="col">
+                        Check by
+                    </th>
+                    <th scope="col">
+                        Wksheet / Result
                     </th>
                 </thead>
                 <tbody>
@@ -55,14 +85,65 @@
     {#                        <th scope="row">#}
     {#                            <a href="{% url 'Activity:ActivityInstance' item.RefId %}">View/Edit {{ item.RefId }}</a>#}
     {#                        </th>#}
+                            {% if item.DECEASED_DATE %}
+                            <td>
+                                {{ item.FIRSTNAME }}, {{ item.LASTNAME }} ( {{ item.DECEASED_DATE|date:'d-m-Y' }} )
+                            </td>
+                            {% else %}
                             <td>
                                 {{ item.FIRSTNAME }}, {{ item.LASTNAME }}
                             </td>
+                            {% endif %}
                             <td>
-                                {{ item.DECEASED_DATE|date:'d-m-Y' }}
+                                <a href="{% url 'SampleForm' item.LABNO %}">{{ item.LABNO }}</a>
                             </td>
                             <td>
-                                {{ item.LABNO }}
+                                {{ item.REASON }}
+                            </td>
+                            <td>
+                                {{ item.BILL_CODE }}
+                            </td>
+                            <td>
+                                {{ item.SAMPLETYPE }}
+                            </td>
+                            <td>
+                                {{ item.PRIORITY }}
+                            </td>
+                            {% if item.DaysRemaining == -99999 %}
+                            <td class="alert alert-danger" role="alert">
+                                No target date
+                            </td>
+                            {% else %}
+                                {% if item.DaysRemaining < 10 %}
+                            <td class="alert alert-danger" role="alert">
+                                {{ item.DaysRemaining }}
+                            </td>
+                                {% else %}
+                            <td>
+                                {{ item.DaysRemaining }}
+                            </td>
+                                {% endif %}
+                            {% endif %}
+                            <td>
+                                {{ item.DATE_RECEIVED|date:'d-m-Y' }}
+                            </td>
+                            <td>
+                                {{ item.DATE_ACTIVATED|date:'d-m-Y' }}
+                            </td>
+                            <td>
+                                {{ item.TARGET_DATE|date:'d-m-Y'}}
+                            </td>
+                            <td>
+                                {{ item.REPORT_STATUS }}
+                            </td>
+                            <td>
+                                {{ item.REPORT_BY }}
+                            </td>
+                            <td>
+                                {{ item.REPORT_CHECKED_BY }}
+                            </td>
+                            <td>
+                                {{ item.WORKSHEETS }}
                             </td>
                         </tr>
                     {% endfor %}

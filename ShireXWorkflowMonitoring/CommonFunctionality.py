@@ -104,7 +104,7 @@ class UtilityFunctions():
         return ""
 
     def ConvertCursorListToDict(self, cursor):
-        "Return all rows from a cursor as a dict"
+        #Return all rows from a cursor as a dictionary (rows) of dictionary (columns)
         columns = [col[0] for col in cursor.description]
         return [
             dict(zip(columns, row))
