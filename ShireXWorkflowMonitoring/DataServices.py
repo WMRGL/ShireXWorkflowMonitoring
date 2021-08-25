@@ -14,9 +14,17 @@ class ShireData():
 
             return _workflowCases
 
-    def GetDNAWorksheetResults(self, _LabNumber):
+    def GetSampleIndicationReportBill(self, _LabNumber):
         with connection.cursor() as _cursor:
-            _cursor.execute("{CALL dbo.uspShireXGetDNAWorksheetResults(%s)}", (_LabNumber,))
+            _cursor.execute("{CALL dbo.uspShireXGetSampleIndicationReportBill(%s)}", (_LabNumber,))
+
+            _results = self.utilities.ConvertCursorListToDict(_cursor)
+
+            return _results
+
+    def GetSampleWorksheetResults(self, _LabNumber):
+        with connection.cursor() as _cursor:
+            _cursor.execute("{CALL dbo.uspShireXGetSampleWorksheetResults(%s)}", (_LabNumber,))
 
             _results = self.utilities.ConvertCursorListToDict(_cursor)
 

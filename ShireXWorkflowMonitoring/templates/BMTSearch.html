@@ -82,9 +82,6 @@
                 {% if workflowCases %}
                     {% for item in workflowCases %}
                         <tr>
-    {#                        <th scope="row">#}
-    {#                            <a href="{% url 'Activity:ActivityInstance' item.RefId %}">View/Edit {{ item.RefId }}</a>#}
-    {#                        </th>#}
                             {% if item.DECEASED_DATE %}
                             <td>
                                 {{ item.FIRSTNAME }}, {{ item.LASTNAME }} ( {{ item.DECEASED_DATE|date:'d-m-Y' }} )

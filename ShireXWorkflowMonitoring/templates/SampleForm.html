@@ -1,10 +1,151 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+{% extends 'base.html' %}
+{% block content %}
 <body>
-Hi I'm the sample form {{ labNumber }}
+    {% include 'StandardMenu.html' %}
+    <div class="container text-sm-center p-5 gap-3">
+        <h1 class="display-6">Information screen for sample {{ labNumber }}</h1>
+        <p class="lead">What do you want to see here?</p>
+    </div>
+    {% if errorMessage %}
+        <div class="alert alert-danger text-center mb-3" role="alert">
+            {{ errorMessage }}
+        </div>
+    {% endif %}
+    <div class="container">
+        <div class="ms-3 mb-3">
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseIndicationTable" aria-expanded="false" aria-controls="collapseExample">
+            Indication / Reason / Bill / Target
+            </button>
+        </div>
+        <div class="collapse show" id="collapseIndicationTable">
+            <div class="container-fluid">
+                <table class="table table-bordered">
+                    <thead style="background-color: lightblue">
+                        <th scope="col">
+                            Indication
+                        </th>
+                        <th scope="col">
+                            Reason
+                        </th>
+                        <th scope="col">
+                            Bill code
+                        </th>
+                        <th scope="col">
+                            Days left
+                        </th>
+                        <th scope="col">
+                            Date activated
+                        </th>
+                        <th scope="col">
+                            Date due
+                        </th>
+                        <th scope="col">
+                            Status
+                        </th>
+                        <th scope="col">
+                            Report by
+                        </th>
+                    </thead>
+                    <tbody>
+                        {% if indicationReportBills %}
+                            {% for item in indicationReportBills %}
+                                <tr>
+                                    <td>
+                                        {{ item.INDICATION }}
+                                    </td>
+                                    <td>
+                                        {{ item.REASON }}
+                                    </td>
+                                    <td>
+                                        {{ item.BILL_CODE }}
+                                    </td>
+                                    {% if item.DaysRemaining == -99999 %}
+                                    <td class="alert alert-danger" role="alert">
+                                        No target date
+                                    </td>
+                                    {% else %}
+                                        {% if item.DaysRemaining < 10 %}
+                                    <td class="alert alert-danger" role="alert">
+                                        {{ item.DaysRemaining }}
+                                    </td>
+                                        {% else %}
+                                    <td>
+                                        {{ item.DaysRemaining }}
+                                    </td>
+                                        {% endif %}
+                                    {% endif %}
+                                    <td>
+                                        {{ item.DATE_ACTIVATED|date:'d-m-Y' }}
+                                    </td>
+                                    <td>
+                                        {{ item.TARGET_DATE|date:'d-m-Y'}}
+                                    </td>
+                                    <td>
+                                        {{ item.REPORT_STATUS }}
+                                    </td>
+                                    <td>
+                                        {{ item.REPORT_BY }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td>
+                                    There are no indications
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="ms-3 mb-3">
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWorksheetTable" aria-expanded="false" aria-controls="collapseExample">
+            Worksheets / Test results
+            </button>
+        </div>
+        <div class="collapse show" id="collapseWorksheetTable">
+            <div class="container-fluid">
+                <table class="table table-bordered">
+                    <thead style="background-color: lightblue">
+                        <th scope="col">
+                            Worksheet
+                        </th>
+                        <th scope="col">
+                            Test
+                        </th>
+                        <th scope="col">
+                            Result
+                        </th>
+                    </thead>
+                    <tbody>
+                        {% if worksheetResults %}
+                            {% for item in worksheetResults %}
+                                <tr>
+                                    <td>
+                                        {{ item.WORKSHEET }}
+                                    </td>
+                                    <td>
+                                        {{ item.TEST }}
+                                    </td>
+                                    <td>
+                                        {{ item.RESULT }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td>
+                                    There are no worksheets / results
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 </body>
-</html>
+{% endblock content %}

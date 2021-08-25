@@ -15,8 +15,25 @@ class SampleForm(TemplateView):
 
     def get(self, request, _labNumber):
 
-        _context = {
-            "labNumber" : _labNumber,
-        }
+        try:
 
-        return render(request, self.template_name, _context)
+            _indicationReportBills = self.dataServices.GetSampleIndicationReportBill(_labNumber)
+
+            _worksheetResults = self.dataServices.GetSampleWorksheetResults(_labNumber)
+
+            _context = {
+                "Title": self.title,
+                "labNumber": _labNumber,
+                "indicationReportBills" : _indicationReportBills,
+                "worksheetResults" : _worksheetResults,
+            }
+
+            return render(request, self.template_name, _context)
+
+        except Exception as ex:
+            context = {
+                "Title": self.title,
+                "errorMessage": "BMTSearch.get : " + str(ex)
+            }
+
+            return render(request, self.template_name, context)

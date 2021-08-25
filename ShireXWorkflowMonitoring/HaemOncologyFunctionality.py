@@ -58,7 +58,7 @@ class BMTSearch(TemplateView):
                 _row['WORKSHEETS'] = ""
 
                 if _labNumber != _previousLabNumber:
-                    _wsResults = self.dataServices.GetDNAWorksheetResults(_labNumber)
+                    _wsResults = self.dataServices.GetSampleWorksheetResults(_labNumber)
 
                     _worksheetList = ["",]
                     _testResultList = ["",]
