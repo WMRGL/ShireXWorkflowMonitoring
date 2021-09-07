@@ -57,6 +57,9 @@
                         Days left
                     </th>
                     <th scope="col">
+                        Alloc to
+                    </th>
+                    <th scope="col">
                         Date received
                     </th>
                     <th scope="col">
@@ -122,6 +125,9 @@
                                 {% endif %}
                             {% endif %}
                             <td>
+                                {{ item.ALLOCATED_TO }}
+                            </td>
+                            <td>
                                 {{ item.DATE_RECEIVED|date:'d-m-Y' }}
                             </td>
                             <td>
@@ -139,9 +145,21 @@
                             <td>
                                 {{ item.REPORT_CHECKED_BY }}
                             </td>
-                            <td>
-                                {{ item.WORKSHEETS }}
-                            </td>
+                            {% if item.WORKSHEET_OUTSTANDING == "yes" %}
+                                <td style="background-color: red">
+                                    None
+                                </td>
+                            {% else %}
+                                {% if item.RESULTS_OUTSTANDING == "yes" %}
+                                <td style="background-color: darkorange">
+                                    {{ item.WORKSHEETS }}
+                                </td>
+                                {% else %}
+                                <td>
+                                    {{ item.WORKSHEETS }}
+                                </td>
+                                {% endif %}
+                            {% endif %}
                         </tr>
                     {% endfor %}
                 {% else %}
