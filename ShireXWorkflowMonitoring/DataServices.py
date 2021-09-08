@@ -29,3 +29,9 @@ class ShireData():
             _results = self.utilities.ConvertCursorListToDict(_cursor)
 
             return _results
+
+    def SetAllocatedToForDNA(self, _LabNumber, _StaffCode):
+        with connection.cursor() as _cursor:
+            _cursor.execute("{CALL dbo.uspShireXSetAllocatedToForDNA(%s,%s)}", (_LabNumber, _StaffCode, ))
+
+            return 1

@@ -1,5 +1,6 @@
 #Add Haem Onc specific classes in this file
 from django.http import HttpResponseRedirect
+from django.http import HttpResponse
 from django.shortcuts import render
 
 from django.urls import reverse
@@ -10,6 +11,7 @@ from datetime import timedelta
 from ShireXWorkflowMonitoring.CommonFunctionality import UtilityFunctions
 from ShireXWorkflowMonitoring.CommonFunctionality import enumDataType
 from ShireXWorkflowMonitoring.DataServices import ShireData
+from ShireXWorkflowMonitoring.models import STAFF
 
 class BMTSearch(TemplateView):
     template_name = "BMTSearch.html"
@@ -22,7 +24,7 @@ class BMTSearch(TemplateView):
             if not request.user.is_authenticated:
                 return HttpResponseRedirect(reverse('LoginPage'))
 
-            #Otherwise
+            #If logged in determine if a postback, before extracting the search filters
             if request.GET.__len__() == 0:
                 _isPostBack = False
             else:
@@ -42,10 +44,6 @@ class BMTSearch(TemplateView):
                     _dateFrom = datetime.today() - timedelta(days=365)
                     _dateTo = datetime.today() + timedelta(days=7)
                     # _pageNumber = 1
-
-            # with connection.cursor() as _cursor:
-            #     _cursor.execute("{CALL dbo.uspShireXGetDNAWorkflowCases(%s, %s, %s)}", ('ONCOLOGY BMT', _dateFrom, _dateTo))
-            #     _workflowCases = self.utilities.ConvertCursorListToDict(_cursor)
 
             _workflowCases = self.dataServices.GetDNAWorkflowCases(_dateFrom, _dateTo)
 
@@ -116,5 +114,49 @@ class BMTSearch(TemplateView):
             }
 
             return render(request, self.template_name, context)
+
+class SetAllocatedToForDNA(TemplateView):
+    template_name = "SetAllocatedToForDNA.html"
+    title = ShireXWorkflowMonitoringConfig.title
+    utilities = UtilityFunctions()
+    dataServices = ShireData()
+
+    def get(self, request, _labNumber):
+
+        try:
+
+            _staff = STAFF.objects.get(LOGON_NAME=request.user.username)
+
+            if _staff == None:
+                _context = {
+                    "labNumber": _labNumber,
+                    "errorMessage": "The system cannot find the staff code from the username"
+                }
+                return render(request, self.template_name, _context)
+
+            #_retVal = self.dataServices.SetAllocatedToForDNA(_labNumber, _staff.STAFF_CODE)
+            _retVal = 0
+
+            if _retVal != 1:
+                _context = {
+                    "labNumber": _labNumber,
+                    "errorMessage": "The system attempted to set the Allocated to column for you, but failed at the database server.",
+                }
+                return render(request, self.template_name, _context)
+
+            _context = {
+                "labNumber" : _labNumber,
+            }
+
+            return render(request, self.template_name, _context)
+
+        except Exception as ex:
+            _context = {
+                "labNumber" : _labNumber,
+                "errorMessage": str(ex),
+            }
+
+            return render(request, self.template_name, _context)
+
 
 

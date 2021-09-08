@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<body>
+    {% include 'StandardMenu.html' %}
+    {% if errorMessage %}
+        <div class="container text-sm-center p-5 gap-3">
+            <h1 class="display-4">Unable to allocate {{ labNumber }} to you</h1>
+            <p class="lead">The system generated the following error: </p>
+            <div class="alert alert-danger text-center mb-3" role="alert">
+                {{ errorMessage }}
+            </div>
+            <p class="lead">Please click on the OK button to return to the list of cases</p>
+        </div>
+    {% else %}
+        <div class="container text-sm-center p-5 gap-3">
+            <h1 class="display-4">{{ labNumber }} has been allocated to you</h1>
+            <p class="lead">Please click on the OK button to return to the list of cases</p>
+        </div>
+    {% endif %}
+    <div class="container text-center">
+        <a class="btn btn-primary" href="{% url 'HaemOncBMTSearch' %}">OK</a>
+    </div>
+</body>
+{% endblock content %}

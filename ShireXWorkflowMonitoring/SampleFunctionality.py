@@ -16,6 +16,8 @@ class SampleForm(TemplateView):
     def get(self, request, _labNumber):
 
         try:
+            if not request.user.is_authenticated:
+                return HttpResponseRedirect(reverse('LoginPage'))
 
             _indicationReportBills = self.dataServices.GetSampleIndicationReportBill(_labNumber)
 
@@ -31,9 +33,9 @@ class SampleForm(TemplateView):
             return render(request, self.template_name, _context)
 
         except Exception as ex:
-            context = {
+            _context = {
                 "Title": self.title,
-                "errorMessage": "BMTSearch.get : " + str(ex)
+                "errorMessage": "SampleForm.get : " + str(ex)
             }
 
-            return render(request, self.template_name, context)
+            return render(request, self.template_name, _context)

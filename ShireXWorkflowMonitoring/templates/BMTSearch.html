@@ -35,8 +35,11 @@
         <div class="container-fluid">
             <table class="table table-bordered">
                 <thead style="background-color: lightblue">
+                    <th>
+                        Claim
+                    </th>
                     <th scope="col">
-                        Patient
+                        Patient (Date deceased)
                     </th>
                     <th scope="col">
                         Lab Number
@@ -85,6 +88,9 @@
                 {% if workflowCases %}
                     {% for item in workflowCases %}
                         <tr>
+                            <td>
+                                <a class="btn btn-primary" href="{% url 'HaemOncBMTSetAllocatedTo' _labNumber=item.LABNO %}">&nbsp;</a>
+                            </td>
                             {% if item.DECEASED_DATE %}
                             <td>
                                 {{ item.FIRSTNAME }}, {{ item.LASTNAME }} ( {{ item.DECEASED_DATE|date:'d-m-Y' }} )
@@ -106,22 +112,28 @@
                             <td>
                                 {{ item.SAMPLETYPE }}
                             </td>
+                            {% if item.SampleAlert %}
+                            <td style="background-color: darkorange" data-bs-toggle="tooltip" title="{{ item.SampleAlert }}">
+                                {{ item.PRIORITY }}
+                            </td>
+                            {% else %}
                             <td>
                                 {{ item.PRIORITY }}
                             </td>
+                            {% endif %}
                             {% if item.DaysRemaining == -99999 %}
-                            <td class="alert alert-danger" role="alert">
+                            <td style="background-color: red; color: white">
                                 No target date
                             </td>
                             {% else %}
                                 {% if item.DaysRemaining < 10 %}
-                            <td class="alert alert-danger" role="alert">
-                                {{ item.DaysRemaining }}
-                            </td>
+                                <td style="background-color: red; color: white">
+                                    {{ item.DaysRemaining }}
+                                </td>
                                 {% else %}
-                            <td>
-                                {{ item.DaysRemaining }}
-                            </td>
+                                <td>
+                                    {{ item.DaysRemaining }}
+                                </td>
                                 {% endif %}
                             {% endif %}
                             <td>
@@ -146,7 +158,7 @@
                                 {{ item.REPORT_CHECKED_BY }}
                             </td>
                             {% if item.WORKSHEET_OUTSTANDING == "yes" %}
-                                <td style="background-color: red">
+                                <td style="background-color: red; color: white">
                                     None
                                 </td>
                             {% else %}
