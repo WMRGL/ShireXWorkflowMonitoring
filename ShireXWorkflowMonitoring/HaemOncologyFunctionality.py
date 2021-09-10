@@ -134,8 +134,7 @@ class SetAllocatedToForDNA(TemplateView):
                 }
                 return render(request, self.template_name, _context)
 
-            #_retVal = self.dataServices.SetAllocatedToForDNA(_labNumber, _staff.STAFF_CODE)
-            _retVal = 0
+            _retVal = self.dataServices.SetAllocatedToForDNA(_labNumber, _staff.STAFF_CODE)
 
             if _retVal != 1:
                 _context = {
