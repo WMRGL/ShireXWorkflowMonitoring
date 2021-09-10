@@ -18,7 +18,7 @@ from django.core.exceptions import ImproperlyConfigured
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-with open(os.path.join(BASE_DIR + "/ShireXWorkflowMonitoring/", 'secrets.json')) as secrets_file:
+with open(os.path.join(BASE_DIR, 'ShireXWorkflowMonitoring/secrets.json')) as secrets_file:
     secrets = json.load(secrets_file)
 
 def get_secret(setting, secrets=secrets):
@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'ShireXWorkflowMonitoring.apps.ShireXWorkflowMonitoringConfig'
 ]
 
 MIDDLEWARE = [
@@ -62,12 +63,16 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+SESSION_EXPIRE_AT_BROWSER_CLOSE=True
+
+SESSION_COOKIE_AGE=(30 * 60)        #30 mins.  Session age is recorded in seconds
+
 ROOT_URLCONF = 'ShireXWorkflowMonitoring.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates']
+        'DIRS': [BASE_DIR / 'ShireXWorkflowMonitoring/templates']
         ,
         'APP_DIRS': True,
         'OPTIONS': {
@@ -90,17 +95,17 @@ WSGI_APPLICATION = 'ShireXWorkflowMonitoring.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'mssql',
-        'NAME': 'shire_data_plcm',
+        'NAME': get_secret("DB_NAME"),
         'USER': get_secret("DB_USERNAME"),
         'PASSWORD': get_secret("DB_PASSWORD"),
-        'HOST': '192.168.63.81',
+        'HOST': get_secret("DB_HOST"),
         'PORT': '1433',
         'OPTIONS': { 'driver' : 'ODBC Driver 17 for SQL Server'},
     }
 }
 
 AUTHENTICATION_BACKENDS = (
-    'PollsterSystem.security.CGUBackend',
+    'ShireXWorkflowMonitoring.ShireX_Authentication.ShireBackend',
     'django.contrib.auth.backends.ModelBackend',
     )
 

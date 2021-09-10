@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+{% block content %}
+<body>
+    {% include 'StandardMenu.html' %}
+    <div class="container">
+        <div class="container-fluid">
+            <form action="" method="get" id="formSearch">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <div class="row g-5 align-items-center">
+                        <div class="col-auto">
+                            <label for="txtCriteriaDateFrom" class="col-form-label">Date from:</label>
+                        </div>
+                        <div class="col-auto">
+                            <input type="date" class="form-control" name="txtCriteriaDateFrom" id="txtCriteriaDateFrom" value="{{ criteriaDateFrom|date:'Y-m-d' }}">
+                        </div>
+                        <div class="col-auto">
+                            <label for="txtCriteriaDateTo" class="col-form-label">Date to:</label>
+                        </div>
+                        <div class="col-auto">
+                            <input type="date" class="form-control" name="txtCriteriaDateTo" id="txtCriteriaDateTo" value="{{ criteriaDateTo|date:'Y-m-d' }}">
+                        </div>
+                        <div class="col-auto">
+                            <input type="submit" value="Search" name="btnSubmit" id="btnSubmit" class="btn btn-primary">
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        {% if errorMessage %}
+            <div class="alert alert-danger text-center mb-3" role="alert">
+                {{ errorMessage }}
+            </div>
+        {% endif %}
+        <div class="container-fluid">
+            <table class="table table-bordered">
+                <thead style="background-color: lightblue">
+                    <th>
+                        Claim
+                    </th>
+                    <th scope="col">
+                        Patient (Date deceased)
+                    </th>
+                    <th scope="col">
+                        Lab Number
+                    </th>
+                    <th scope="col">
+                        Reason
+                    </th>
+                    <th scope="col">
+                        Bill code
+                    </th>
+                    <th scope="col">
+                        Sample type
+                    </th>
+                    <th scope="col">
+                        Priority
+                    </th>
+                    <th scope="col">
+                        Days left
+                    </th>
+                    <th scope="col">
+                        Alloc to
+                    </th>
+                    <th scope="col">
+                        Date received
+                    </th>
+                    <th scope="col">
+                        Date activated
+                    </th>
+                    <th scope="col">
+                        Date due
+                    </th>
+                    <th scope="col">
+                        Status
+                    </th>
+                    <th scope="col">
+                        Report by
+                    </th>
+                    <th scope="col">
+                        Check by
+                    </th>
+                    <th scope="col">
+                        Wksheet / Result
+                    </th>
+                </thead>
+                <tbody>
+                {% if workflowCases %}
+                    {% for item in workflowCases %}
+                        <tr>
+                            <td>
+                                <a class="btn btn-primary" href="{% url 'HaemOncBMTSetAllocatedTo' _labNumber=item.LABNO %}">&nbsp;</a>
+                            </td>
+                            {% if item.DECEASED_DATE %}
+                            <td>
+                                {{ item.FIRSTNAME }}, {{ item.LASTNAME }} ( {{ item.DECEASED_DATE|date:'d-m-Y' }} )
+                            </td>
+                            {% else %}
+                            <td>
+                                {{ item.FIRSTNAME }}, {{ item.LASTNAME }}
+                            </td>
+                            {% endif %}
+                            <td>
+                                <a href="{% url 'SampleForm' item.LABNO %}">{{ item.LABNO }}</a>
+                            </td>
+                            <td>
+                                {{ item.REASON }}
+                            </td>
+                            <td>
+                                {{ item.BILL_CODE }}
+                            </td>
+                            <td>
+                                {{ item.SAMPLETYPE }}
+                            </td>
+                            {% if item.SampleAlert %}
+                            <td style="background-color: darkorange" data-bs-toggle="tooltip" title="{{ item.SampleAlert }}">
+                                {{ item.PRIORITY }}
+                            </td>
+                            {% else %}
+                            <td>
+                                {{ item.PRIORITY }}
+                            </td>
+                            {% endif %}
+                            {% if item.DaysRemaining == -99999 %}
+                            <td style="background-color: red; color: white">
+                                No target date
+                            </td>
+                            {% else %}
+                                {% if item.DaysRemaining < 10 %}
+                                <td style="background-color: red; color: white">
+                                    {{ item.DaysRemaining }}
+                                </td>
+                                {% else %}
+                                <td>
+                                    {{ item.DaysRemaining }}
+                                </td>
+                                {% endif %}
+                            {% endif %}
+                            <td>
+                                {{ item.ALLOCATED_TO }}
+                            </td>
+                            <td>
+                                {{ item.DATE_RECEIVED|date:'d-m-Y' }}
+                            </td>
+                            <td>
+                                {{ item.DATE_ACTIVATED|date:'d-m-Y' }}
+                            </td>
+                            <td>
+                                {{ item.TARGET_DATE|date:'d-m-Y'}}
+                            </td>
+                            <td>
+                                {{ item.REPORT_STATUS }}
+                            </td>
+                            <td>
+                                {{ item.REPORT_BY }}
+                            </td>
+                            <td>
+                                {{ item.REPORT_CHECKED_BY }}
+                            </td>
+                            {% if item.WORKSHEET_OUTSTANDING == "yes" %}
+                                <td style="background-color: red; color: white">
+                                    None
+                                </td>
+                            {% else %}
+                                {% if item.RESULTS_OUTSTANDING == "yes" %}
+                                <td style="background-color: darkorange">
+                                    {{ item.WORKSHEETS }}
+                                </td>
+                                {% else %}
+                                <td>
+                                    {{ item.WORKSHEETS }}
+                                </td>
+                                {% endif %}
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td>
+                            No records to display
+                        </td>
+                        <td>
+                            &nbsp;
+                        </td>
+                        <td>
+                            &nbsp;
+                        </td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+{% endblock content %}
