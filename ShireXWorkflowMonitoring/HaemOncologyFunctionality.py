@@ -12,6 +12,7 @@ from ShireXWorkflowMonitoring.CommonFunctionality import UtilityFunctions
 from ShireXWorkflowMonitoring.CommonFunctionality import enumDataType
 from ShireXWorkflowMonitoring.DataServices import ShireData
 from ShireXWorkflowMonitoring.models import STAFF
+from django.core.paginator import Paginator
 
 class BMTSearch(TemplateView):
     template_name = "BMTSearch.html"
@@ -33,25 +34,30 @@ class BMTSearch(TemplateView):
             if not _isPostBack:
                 _dateFrom = datetime.today() - timedelta(days=365)
                 _dateTo = datetime.today() + timedelta(days=7)
-                #_pageNumber = 1
+                _pageNumber = 1
+                _itemsPerPage = 20
             else:
                 try:
                     _dateFrom = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime)
                     _dateTo = self.utilities.GetRequestKey(request, "txtCriteriaDateTo", enumDataType.Datetime)
-                    # _pageNumber = self.utilities.GetRequestKey(request, "txtPageNumber", enumDataType.Integer)
+                    _pageNumber = self.utilities.GetRequestKey(request, "txtPageNumber", enumDataType.Integer)
+                    _itemsPerPage = self.utilities.GetRequestKey(request, "ddlCriteriaItemsPerPage", enumDataType.Integer)
                 except Exception as ex:
                     #If any errors occur return the default criteria
                     _dateFrom = datetime.today() - timedelta(days=365)
                     _dateTo = datetime.today() + timedelta(days=7)
-                    # _pageNumber = 1
+                    _pageNumber = 1
+                    _itemsPerPage = 20
 
-            _workflowCases = self.dataServices.GetDNAWorkflowCases(_dateFrom, _dateTo)
+            _workflowCases = Paginator(self.dataServices.GetDNAWorkflowCases(_dateFrom, _dateTo), _itemsPerPage)
+
+            _pageOfWorkflowCases = _workflowCases.page(_pageNumber)
 
             #For each Lab No/Reason/Bill line extract the worksheet summary for that Lab No
             #TODO refactor the following to a separate method, when we know what the final output is.
             _previousLabNumber = ""
 
-            for _row in _workflowCases:
+            for _row in _pageOfWorkflowCases:
                 _labNumber = _row['LABNO']
                 _row['WORKSHEETS'] = ""
                 _row['RESULTS_OUTSTANDING'] = "no"
@@ -103,7 +109,8 @@ class BMTSearch(TemplateView):
                 "criteriaDateFrom" : _dateFrom,
                 "criteriaDateTo" : _dateTo,
                 "Title": self.title,
-                "workflowCases": _workflowCases,
+                "workflowCases": _pageOfWorkflowCases,
+                "itemsPerPage" : _itemsPerPage,
             }
             return render(request, self.template_name, _context)
 

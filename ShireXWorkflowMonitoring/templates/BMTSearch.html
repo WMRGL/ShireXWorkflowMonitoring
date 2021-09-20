@@ -3,29 +3,115 @@
 <body>
     {% include 'StandardMenu.html' %}
     <div class="container">
-        <div class="container-fluid">
-            <form action="" method="get" id="formSearch">
-                {% csrf_token %}
-                <div class="mb-3">
-                    <div class="row g-5 align-items-center">
-                        <div class="col-auto">
-                            <label for="txtCriteriaDateFrom" class="col-form-label">Date from:</label>
+        <div class="row mb-3">
+            <div class="col-2">
+                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSearch" aria-expanded="false" aria-controls="collapseExample">
+                Show/Hide Search
+                </button>
+            </div>
+            <div class="col-10">
+                <h2 class="text-center">
+                    BMT Workflow
+                </h2>
+            </div>
+        </div>
+        <div class="collapse show" id="collapseSearch">
+            <div class="container-fluid">
+                <form action="" method="get" id="formSearch">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <div class="row g-5 align-items-center">
+                            <div class="col-2">
+                                <input type="hidden" id="txtPageNumber" name="txtPageNumber">
+                            </div>
+                            <div class="col-2">
+                                <label for="txtCriteriaDateFrom" class="col-form-label">Date from:</label>
+                            </div>
+                            <div class="col-2">
+                                <input type="date" class="form-control" name="txtCriteriaDateFrom" id="txtCriteriaDateFrom" value="{{ criteriaDateFrom|date:'Y-m-d' }}">
+                            </div>
+                            <div class="col-2">
+                                <label for="txtCriteriaDateTo" class="col-form-label">Date to:</label>
+                            </div>
+                            <div class="col-2">
+                                <input type="date" class="form-control" name="txtCriteriaDateTo" id="txtCriteriaDateTo" value="{{ criteriaDateTo|date:'Y-m-d' }}">
+                            </div>
+                            <div class="col-2">
+                                &nbsp;
+                            </div>
                         </div>
-                        <div class="col-auto">
-                            <input type="date" class="form-control" name="txtCriteriaDateFrom" id="txtCriteriaDateFrom" value="{{ criteriaDateFrom|date:'Y-m-d' }}">
+                        <div class="row g-5 align-items-center">
+                            <div class="col-2">
+                                &nbsp;
+                            </div>
+                            <div class="col-2">
+                                <label for="ddlCriteriaStatus" class="col-form-label">Status:</label>
+                            </div>
+                            <div class="col-2">
+                                <select class="form-select" name="ddlCriteriaStatus" id="ddlCriteriaStatus">
+                                    <option value="NOTFINAL" selected="selected">Not Final</option>
+{#                                    <option value="40" {% if itemsPerPage == 40 %} selected="selected" {% endif %}>40</option>#}
+                                </select>
+                            </div>
+                            <div class="col-2">
+                                <label for="ddlCriteriaPriority" class="col-form-label">Priority:</label>
+                            </div>
+                            <div class="col-2">
+                                <select class="form-select" name="ddlCriteriaPriority" id="ddlCriteriaPriority">
+{#                                    <option value="20" {% if itemsPerPage == 20 %} selected="selected" {% endif %}>20</option>#}
+{#                                    <option value="40" {% if itemsPerPage == 40 %} selected="selected" {% endif %}>40</option>#}
+                                </select>
+                            </div>
+                            <div class="col-2">
+                                &nbsp;
+                            </div>
                         </div>
-                        <div class="col-auto">
-                            <label for="txtCriteriaDateTo" class="col-form-label">Date to:</label>
+                        <div class="row g-5 align-items-center">
+                            <div class="col-2">
+                                &nbsp;
+                            </div>
+                            <div class="col-2">
+                                <label for="ddlCriteriaReason" class="col-form-label">Reason:</label>
+                            </div>
+                            <div class="col-2">
+                                <select class="form-select" name="ddlCriteriaReason" id="ddlCriteriaReason">
+{#                                    <option value="NOTFINAL" selected="selected">Not Final</option>#}
+{#                                    <option value="40" {% if itemsPerPage == 40 %} selected="selected" {% endif %}>40</option>#}
+                                </select>
+                            </div>
+{#                            <div class="col-2">#}
+{#                                <label for="ddlCriteriaPriority" class="col-form-label">Priority:</label>#}
+{#                            </div>#}
+{#                            <div class="col-2">#}
+{#                                <select class="form-select" name="ddlCriteriaPriority" id="ddlCriteriaPriority">#}
+{#                                    <option value="20" {% if itemsPerPage == 20 %} selected="selected" {% endif %}>20</option>#}
+{#                                    <option value="40" {% if itemsPerPage == 40 %} selected="selected" {% endif %}>40</option>#}
+{#                                </select>#}
+{#                            </div>#}
+                            <div class="col-auto">
+                                &nbsp;
+                            </div>
                         </div>
-                        <div class="col-auto">
-                            <input type="date" class="form-control" name="txtCriteriaDateTo" id="txtCriteriaDateTo" value="{{ criteriaDateTo|date:'Y-m-d' }}">
-                        </div>
-                        <div class="col-auto">
-                            <input type="submit" value="Search" name="btnSubmit" id="btnSubmit" class="btn btn-primary">
+                        <div class="row g-5 align-items-center">
+                            <div class="col-2">
+                                &nbsp;
+                            </div>
+                            <div class="col-2">
+                                <label for="ddlCriteriaItemsPerPage" class="col-form-label">Items per page:</label>
+                            </div>
+                            <div class="col-2">
+                                <select class="form-select" name="ddlCriteriaItemsPerPage" id="ddlCriteriaItemsPerPage">
+                                    <option value="20" {% if itemsPerPage == 20 %} selected="selected" {% endif %}>20</option>
+                                    <option value="40" {% if itemsPerPage == 40 %} selected="selected" {% endif %}>40</option>
+                                </select>
+                            </div>
+                            <div class="col-6 text-center">
+                                <input type="submit" value="Search" name="btnSubmit" id="btnSubmit" class="btn btn-primary">
+                            </div>
                         </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
         {% if errorMessage %}
             <div class="alert alert-danger text-center mb-3" role="alert">
@@ -34,7 +120,7 @@
         {% endif %}
         <div class="container-fluid">
             <table class="table table-bordered">
-                <thead style="background-color: lightblue">
+                <thead class="bg-primary" style="color:white">
                     <th>
                         Claim
                     </th>
@@ -46,9 +132,6 @@
                     </th>
                     <th scope="col">
                         Reason
-                    </th>
-                    <th scope="col">
-                        Bill code
                     </th>
                     <th scope="col">
                         Sample type
@@ -78,10 +161,10 @@
                         Report by
                     </th>
                     <th scope="col">
-                        Check by
+                        Wksheet / Result
                     </th>
                     <th scope="col">
-                        Wksheet / Result
+                        Alert
                     </th>
                 </thead>
                 <tbody>
@@ -107,26 +190,29 @@
                                 {{ item.REASON }}
                             </td>
                             <td>
-                                {{ item.BILL_CODE }}
-                            </td>
-                            <td>
                                 {{ item.SAMPLETYPE }}
                             </td>
-                            {% if item.SampleAlert %}
-                            <td style="background-color: darkorange" data-bs-toggle="tooltip" title="{{ item.SampleAlert }}">
+                            {% if item.PRIORITY|upper == "URGENT" %}
+                            <td style="color:red; font-weight: bold">
                                 {{ item.PRIORITY }}
                             </td>
                             {% else %}
-                            <td>
-                                {{ item.PRIORITY }}
-                            </td>
+                                {% if item.PRIORITY|upper == "PRIORITY" %}
+                                <td style="color:green; font-weight: bold">
+                                    {{ item.PRIORITY }}
+                                </td>
+                                {% else %}
+                                <td>
+                                    {{ item.PRIORITY }}
+                                </td>
+                                {% endif %}
                             {% endif %}
                             {% if item.DaysRemaining == -99999 %}
                             <td style="background-color: red; color: white">
                                 No target date
                             </td>
                             {% else %}
-                                {% if item.DaysRemaining < 10 %}
+                                {% if item.DaysRemaining < 5 %}
                                 <td style="background-color: red; color: white">
                                     {{ item.DaysRemaining }}
                                 </td>
@@ -148,14 +234,17 @@
                             <td>
                                 {{ item.TARGET_DATE|date:'d-m-Y'}}
                             </td>
+                            {% if item.REPORT_STATUS|upper == "PENDING" %}
+                            <td style="color:green; font-weight: bold">
+                                {{ item.REPORT_STATUS }}
+                            </td>
+                            {% else %}
                             <td>
                                 {{ item.REPORT_STATUS }}
                             </td>
+                            {% endif %}
                             <td>
                                 {{ item.REPORT_BY }}
-                            </td>
-                            <td>
-                                {{ item.REPORT_CHECKED_BY }}
                             </td>
                             {% if item.WORKSHEET_OUTSTANDING == "yes" %}
                                 <td style="background-color: red; color: white">
@@ -172,6 +261,9 @@
                                 </td>
                                 {% endif %}
                             {% endif %}
+                            <td>
+                                {{ item.SampleAlert }}
+                            </td>
                         </tr>
                     {% endfor %}
                 {% else %}
@@ -190,6 +282,88 @@
                 </tbody>
             </table>
         </div>
+
+        {% if workflowCases %}
+        <div class="container-fluid">
+            <nav aria-label="Pages for table">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item"><input type="button" class="page-link" value="<< First" id="btnPageFirst"></li>
+                    <li class="page-item"><input type="button" class="page-link" value="< Previous" id="btnPagePrevious"></li>
+                    <li class="page-item"><span class="page-link">Page {{ workflowCases.number }} of {{ workflowCases.paginator.num_pages }}</span></li>
+                    <li class="page-item"><input type="button" class="page-link" value="Next >" id="btnPageNext"></li>
+                    <li class="page-item"><input type="button" class="page-link" value="Last >>" id="btnPageLast"></li>
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
+
     </div>
+
+    <script>
+        window.addEventListener('load', function() {
+            document.getElementById('txtPageNumber').value = '1';
+        })
+
+
+        document.getElementById('btnPageFirst').addEventListener('click', function () { DoSubmitFirstPage(); } );
+        document.getElementById('btnPagePrevious').addEventListener('click', function () { DoSubmitPreviousPage(); } );
+        document.getElementById('btnPageNext').addEventListener('click', function () { DoSubmitNextPage(); } );
+        document.getElementById('btnPageLast').addEventListener('click', function () { DoSubmitLastPage(); } );
+
+        function DoSubmitFirstPage() {
+            _pageNumber = document.getElementById('txtPageNumber');
+            _pageNumber.value = '1';
+
+            document.getElementById('formSearch').submit();
+        }
+
+        function DoSubmitPreviousPage() {
+            _pageNumber = document.getElementById('txtPageNumber');
+            {% if workflowCases != None %}
+                {% if workflowCases.has_previous %}
+                    _pageNumber.value = {{ workflowCases.previous_page_number }};
+                {% else %}
+                    _pageNumber.value = '1';
+                {% endif %}
+            {% else %}
+                _pageNumber.value = '1';
+            {% endif %}
+
+            document.getElementById('formSearch').submit();
+        }
+
+        function DoSubmitNextPage() {
+            _pageNumber = document.getElementById('txtPageNumber');
+            {% if workflowCases != None %}
+                {% if workflowCases.has_next %}
+                    _pageNumber.value = {{ workflowCases.next_page_number }};
+                {% else %}
+                    _pageNumber.value = '1';
+                {% endif %}
+            {% else %}
+                _pageNumber.value = '1';
+            {% endif %}
+
+            document.getElementById('formSearch').submit();
+        }
+
+        function DoSubmitLastPage() {
+            _pageNumber = document.getElementById('txtPageNumber');
+            {% if workflowCases != None %}
+                {% if workflowCases.has_next %}
+                    _pageNumber.value = {{ workflowCases.paginator.num_pages }};
+                {% else %}
+                    _pageNumber.value = '1';
+                {% endif %}
+            {% else %}
+                _pageNumber.value = '1';
+            {% endif %}
+
+            document.getElementById('formSearch').submit();
+        }
+
+
+    </script>
+
 </body>
 {% endblock content %}

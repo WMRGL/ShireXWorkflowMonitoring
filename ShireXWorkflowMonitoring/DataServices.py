@@ -35,3 +35,11 @@ class ShireData():
             _cursor.execute("{CALL dbo.uspShireXSetAllocatedToForDNA(%s,%s)}", (_LabNumber, _StaffCode, ))
 
             return 1
+
+    def GetSample(self, _LabNumber):
+        with connection.cursor() as _cursor:
+            _cursor.execute("{CALL dbo.uspShireXGetSample(%s)}", (_LabNumber,))
+
+            _results = self.utilities.ConvertCursorListToDict(_cursor)
+
+            return _results
