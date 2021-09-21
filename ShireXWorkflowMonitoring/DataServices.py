@@ -6,9 +6,9 @@ class ShireData():
 
     utilities = UtilityFunctions()
 
-    def GetDNAWorkflowCases(self, _dateFrom, _dateTo):
+    def GetDNAWorkflowCases(self, _dateFrom, _dateTo, _reportStatus, _priority, _reason):
         with connection.cursor() as _cursor:
-            _cursor.execute("{CALL dbo.uspShireXGetDNAWorkflowCases(%s, %s, %s)}", ('ONCOLOGY BMT', _dateFrom, _dateTo))
+            _cursor.execute("{CALL dbo.uspShireXGetDNAWorkflowCases(%s, %s, %s, %s, %s, %s)}", ('ONCOLOGY BMT', _dateFrom, _dateTo, _reportStatus, _priority, _reason))
 
             _workflowCases = self.utilities.ConvertCursorListToDict(_cursor)
 
@@ -39,6 +39,23 @@ class ShireData():
     def GetSample(self, _LabNumber):
         with connection.cursor() as _cursor:
             _cursor.execute("{CALL dbo.uspShireXGetSample(%s)}", (_LabNumber,))
+
+            _results = self.utilities.ConvertCursorListToDict(_cursor)
+
+            return _results
+
+    def GetReportStatus(self):
+        with connection.cursor() as _cursor:
+            _cursor.execute("{CALL dbo.uspShireXGetReportStatus()}")
+
+            _results = self.utilities.ConvertCursorListToDict(_cursor)
+
+            return _results
+
+
+    def GetDNAPriority(self):
+        with connection.cursor() as _cursor:
+            _cursor.execute("{CALL dbo.uspShireXGetDNAPriority()}")
 
             _results = self.utilities.ConvertCursorListToDict(_cursor)
 

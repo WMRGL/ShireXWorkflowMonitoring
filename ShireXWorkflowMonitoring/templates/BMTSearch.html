@@ -49,8 +49,14 @@
                             </div>
                             <div class="col-2">
                                 <select class="form-select" name="ddlCriteriaStatus" id="ddlCriteriaStatus">
-                                    <option value="NOTFINAL" selected="selected">Not Final</option>
-{#                                    <option value="40" {% if itemsPerPage == 40 %} selected="selected" {% endif %}>40</option>#}
+{#                                  The status of "not final" is a special criteria that is the default #}
+{#                                  search criteria i.e. all reports not finalised.  #}
+                                    <option value="NOTFINAL" {% if criteriaReportStatus == "" %} selected="selected" {% endif %}>Not Final</option>
+                                    {% if criteriaReportStatuses %}
+                                        {% for item in criteriaReportStatuses %}
+                                            <option value="{{ item.REPORT_STATUS }}" {% if item.REPORT_STATUS == criteriaReportStatus %} selected="selected" {% endif %}>{{ item.REPORT_STATUS }}</option>
+                                        {% endfor %}
+                                    {% endif %}
                                 </select>
                             </div>
                             <div class="col-2">
@@ -58,8 +64,12 @@
                             </div>
                             <div class="col-2">
                                 <select class="form-select" name="ddlCriteriaPriority" id="ddlCriteriaPriority">
-{#                                    <option value="20" {% if itemsPerPage == 20 %} selected="selected" {% endif %}>20</option>#}
-{#                                    <option value="40" {% if itemsPerPage == 40 %} selected="selected" {% endif %}>40</option>#}
+                                    <option value="" {% if criteriaPriority == "" %} selected="selected" {% endif %}>select...</option>
+                                    {% if criteriaPriorities %}
+                                        {% for item in criteriaPriorities %}
+                                            <option value="{{ item.PRIORITY }}" {% if item.PRIORITY == criteriaPriority %} selected="selected" {% endif %}>{{ item.PRIORITY }}</option>
+                                        {% endfor %}
+                                    {% endif %}
                                 </select>
                             </div>
                             <div class="col-2">
@@ -71,25 +81,13 @@
                                 &nbsp;
                             </div>
                             <div class="col-2">
-                                <label for="ddlCriteriaReason" class="col-form-label">Reason:</label>
+                                <label for="txtCriteriaReason" class="col-form-label">Reason:</label>
                             </div>
                             <div class="col-2">
-                                <select class="form-select" name="ddlCriteriaReason" id="ddlCriteriaReason">
-{#                                    <option value="NOTFINAL" selected="selected">Not Final</option>#}
-{#                                    <option value="40" {% if itemsPerPage == 40 %} selected="selected" {% endif %}>40</option>#}
-                                </select>
+                                <input type="text" class="form-control" name="txtCriteriaReason" id="txtCriteriaReason" value="{{ criteriaReason }}">
                             </div>
-{#                            <div class="col-2">#}
-{#                                <label for="ddlCriteriaPriority" class="col-form-label">Priority:</label>#}
-{#                            </div>#}
-{#                            <div class="col-2">#}
-{#                                <select class="form-select" name="ddlCriteriaPriority" id="ddlCriteriaPriority">#}
-{#                                    <option value="20" {% if itemsPerPage == 20 %} selected="selected" {% endif %}>20</option>#}
-{#                                    <option value="40" {% if itemsPerPage == 40 %} selected="selected" {% endif %}>40</option>#}
-{#                                </select>#}
-{#                            </div>#}
                             <div class="col-auto">
-                                &nbsp;
+                                (Wildcard character is %)
                             </div>
                         </div>
                         <div class="row g-5 align-items-center">
