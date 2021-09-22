@@ -31,7 +31,7 @@ class BMTSearch(TemplateView):
             else:
                 _isPostBack = True
 
-            _reportStatus = ""
+            _reportStatus = "NOTFINAL"
             _priority = ""
             _reason = ""
 

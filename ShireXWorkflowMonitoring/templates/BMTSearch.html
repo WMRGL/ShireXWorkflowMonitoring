@@ -210,14 +210,20 @@
                                 No target date
                             </td>
                             {% else %}
-                                {% if item.DaysRemaining < 5 %}
+                                {% if item.DaysRemaining < 5 and item.REPORT_STATUS|slice:":5"|upper != "FINAL"%}
                                 <td style="background-color: red; color: white">
                                     {{ item.DaysRemaining }}
                                 </td>
                                 {% else %}
-                                <td>
-                                    {{ item.DaysRemaining }}
-                                </td>
+                                    {% if item.REPORT_STATUS|slice:":5"|upper == "FINAL" %}
+                                    <td>
+                                        0
+                                    </td>
+                                    {% else %}
+                                    <td>
+                                        {{ item.DaysRemaining }}
+                                    </td>
+                                    {% endif %}
                                 {% endif %}
                             {% endif %}
                             <td>
