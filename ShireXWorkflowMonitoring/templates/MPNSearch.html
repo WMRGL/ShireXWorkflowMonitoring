@@ -1,0 +1,391 @@
+{% extends 'base.html' %}
+{% block content %}
+<body>
+    {% include 'StandardMenu.html' %}
+    <div class="container">
+        <div class="row mb-3">
+            <div class="col-2">
+                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSearch" aria-expanded="false" aria-controls="collapseExample">
+                Show/Hide Search
+                </button>
+            </div>
+            <div class="col-10">
+                <h2 class="text-center">
+                    MPN Workflow
+                </h2>
+            </div>
+        </div>
+        <div class="collapse show" id="collapseSearch">
+            <div class="container-fluid">
+                <form action="" method="get" id="formSearch">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <div class="row g-5 align-items-center">
+                            <div class="col-2">
+                                <input type="hidden" id="txtPageNumber" name="txtPageNumber">
+                            </div>
+                            <div class="col-2">
+                                <label for="txtCriteriaDateFrom" class="col-form-label">Date from:</label>
+                            </div>
+                            <div class="col-2">
+                                <input type="date" class="form-control" name="txtCriteriaDateFrom" id="txtCriteriaDateFrom" value="{{ criteriaDateFrom|date:'Y-m-d' }}">
+                            </div>
+                            <div class="col-2">
+                                <label for="txtCriteriaDateTo" class="col-form-label">Date to:</label>
+                            </div>
+                            <div class="col-2">
+                                <input type="date" class="form-control" name="txtCriteriaDateTo" id="txtCriteriaDateTo" value="{{ criteriaDateTo|date:'Y-m-d' }}">
+                            </div>
+                            <div class="col-2">
+                                &nbsp;
+                            </div>
+                        </div>
+                        <div class="row g-5 align-items-center">
+                            <div class="col-2">
+                                &nbsp;
+                            </div>
+                            <div class="col-2">
+                                <label for="ddlCriteriaStatus" class="col-form-label">Status:</label>
+                            </div>
+                            <div class="col-2">
+                                <select class="form-select" name="ddlCriteriaStatus" id="ddlCriteriaStatus">
+{#                                  The status of "not final" is a special criteria that is the default #}
+{#                                  search criteria i.e. all reports not finalised.  #}
+                                    <option value="NOTFINAL" {% if criteriaReportStatus == "" %} selected="selected" {% endif %}>Not Final</option>
+                                    {% if criteriaReportStatuses %}
+                                        {% for item in criteriaReportStatuses %}
+                                            <option value="{{ item.REPORT_STATUS }}" {% if item.REPORT_STATUS == criteriaReportStatus %} selected="selected" {% endif %}>{{ item.REPORT_STATUS }}</option>
+                                        {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </div>
+                            <div class="col-2">
+                                <label for="ddlCriteriaPriority" class="col-form-label">Priority:</label>
+                            </div>
+                            <div class="col-2">
+                                <select class="form-select" name="ddlCriteriaPriority" id="ddlCriteriaPriority">
+                                    <option value="" {% if criteriaPriority == "" %} selected="selected" {% endif %}>select...</option>
+                                    {% if criteriaPriorities %}
+                                        {% for item in criteriaPriorities %}
+                                            <option value="{{ item.PRIORITY }}" {% if item.PRIORITY == criteriaPriority %} selected="selected" {% endif %}>{{ item.PRIORITY }}</option>
+                                        {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </div>
+                            <div class="col-2">
+                                &nbsp;
+                            </div>
+                        </div>
+                        <div class="row g-5 align-items-center">
+                            <div class="col-2">
+                                &nbsp;
+                            </div>
+                            <div class="col-2">
+                                <label for="txtCriteriaReason" class="col-form-label">Reason:</label>
+                            </div>
+                            <div class="col-2">
+                                <input type="text" class="form-control" name="txtCriteriaReason" id="txtCriteriaReason" value="{{ criteriaReason }}">
+                            </div>
+                            <div class="col-auto">
+                                (Wildcard character is %)
+                            </div>
+                        </div>
+                        <div class="row g-5 align-items-center">
+                            <div class="col-2">
+                                &nbsp;
+                            </div>
+                            <div class="col-2">
+                                <label for="ddlCriteriaItemsPerPage" class="col-form-label">Items per page:</label>
+                            </div>
+                            <div class="col-2">
+                                <select class="form-select" name="ddlCriteriaItemsPerPage" id="ddlCriteriaItemsPerPage">
+                                    <option value="20" {% if itemsPerPage == 20 %} selected="selected" {% endif %}>20</option>
+                                    <option value="40" {% if itemsPerPage == 40 %} selected="selected" {% endif %}>40</option>
+                                </select>
+                            </div>
+                            <div class="col-6 text-center">
+                                <input type="submit" value="Search" name="btnSubmit" id="btnSubmit" class="btn btn-primary">
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% if errorMessage %}
+            <div class="alert alert-danger text-center mb-3" role="alert">
+                {{ errorMessage }}
+            </div>
+        {% endif %}
+        <div class="container-fluid">
+            <table class="table table-bordered">
+                <thead class="bg-primary" style="color:white">
+                    <th>
+                        Claim
+                    </th>
+                    <th scope="col">
+                        Patient (Date deceased)
+                    </th>
+                    <th scope="col">
+                        Lab Number
+                    </th>
+                    <th scope="col">
+                        Reason
+                    </th>
+                    <th scope="col">
+                        Sample type
+                    </th>
+                    <th scope="col">
+                        Priority
+                    </th>
+                    <th scope="col">
+                        Days left
+                    </th>
+                    <th scope="col">
+                        Alloc to
+                    </th>
+                    <th scope="col">
+                        Key
+                    </th>
+                    <th scope="col">
+                        Date received
+                    </th>
+                    <th scope="col">
+                        Date activated
+                    </th>
+                    <th scope="col">
+                        Date due
+                    </th>
+                    <th scope="col">
+                        Status
+                    </th>
+                    <th scope="col">
+                        Report by
+                    </th>
+                    <th scope="col">
+                        Wksheet / Result
+                    </th>
+                    <th scope="col">
+                        Alert
+                    </th>
+                </thead>
+                <tbody>
+                {% if workflowCases %}
+                    {% for item in workflowCases %}
+                        <tr>
+                            <td>
+                                <a class="btn btn-primary" href="{% url 'HaemOncSetAllocatedTo' _labNumber=item.LABNO _workflowName='MPN' %}">&nbsp;</a>
+                            </td>
+                            {% if item.DECEASED_DATE %}
+                            <td>
+                                {{ item.FIRSTNAME }}, {{ item.LASTNAME }} ( {{ item.DECEASED_DATE|date:'d-m-Y' }} )
+                            </td>
+                            {% else %}
+                            <td>
+                                {{ item.FIRSTNAME }}, {{ item.LASTNAME }}
+                            </td>
+                            {% endif %}
+                            <td>
+                                <a href="{% url 'SampleForm' item.LABNO %}">{{ item.LABNO }}</a>
+                            </td>
+                            <td>
+                                {{ item.REASON }}
+                            </td>
+                            <td>
+                                {{ item.SAMPLETYPE }}
+                            </td>
+                            {% if item.PRIORITY|upper == "URGENT" %}
+                            <td style="color:red; font-weight: bold">
+                                {{ item.PRIORITY }}
+                            </td>
+                            {% else %}
+                                {% if item.PRIORITY|upper == "PRIORITY" %}
+                                <td style="color:green; font-weight: bold">
+                                    {{ item.PRIORITY }}
+                                </td>
+                                {% else %}
+                                <td>
+                                    {{ item.PRIORITY }}
+                                </td>
+                                {% endif %}
+                            {% endif %}
+                            {% if item.DaysRemaining == -99999 %}
+                            <td style="background-color: red; color: white">
+                                No target date
+                            </td>
+                            {% else %}
+                                {% if item.DaysRemaining <= -100 and item.REPORT_STATUS|slice:":5"|upper != "FINAL"%}
+                                <td style="background-color: red; color: white">
+                                    {{ item.DaysRemaining }}
+                                </td>
+                                {% else %}
+                                    {% if item.DaysRemaining <= 0 and item.REPORT_STATUS|slice:":5"|upper != "FINAL" %}
+                                    <td style="color: red; font-weight: bold">
+                                        {{ item.DaysRemaining }}
+                                    </td>
+                                    {% else %}
+                                        {% if item.DaysRemaining <= 5 and item.REPORT_STATUS|slice:":5"|upper != "FINAL" %}
+                                        <td style="color: orange; font-weight: bold">
+                                            {{ item.DaysRemaining }}
+                                        </td>
+                                        {% else %}
+                                            {% if item.REPORT_STATUS|slice:":5"|upper == "FINAL" %}
+                                            <td>
+                                                0
+                                            </td>
+                                            {% else %}
+                                            <td>
+                                                {{ item.DaysRemaining }}
+                                            </td>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
+                            <td>
+                                {{ item.ALLOCATED_TO }}
+                            </td>
+                            <td>
+                                {{ item.REF }}
+                            </td>
+                            <td>
+                                {{ item.DATE_RECEIVED|date:'d-m-Y' }}
+                            </td>
+                            <td>
+                                {{ item.DATE_ACTIVATED|date:'d-m-Y' }}
+                            </td>
+                            <td>
+                                {{ item.TARGET_DATE|date:'d-m-Y'}}
+                            </td>
+                            {% if item.REPORT_STATUS|upper == "PENDING" %}
+                            <td style="color:green; font-weight: bold">
+                                {{ item.REPORT_STATUS }}
+                            </td>
+                            {% else %}
+                            <td>
+                                {{ item.REPORT_STATUS }}
+                            </td>
+                            {% endif %}
+                            <td>
+                                {{ item.REPORT_BY }}
+                            </td>
+                            {% if item.WORKSHEET_OUTSTANDING == "yes" %}
+                                <td style="background-color: red; color: white">
+                                    None
+                                </td>
+                            {% else %}
+                                {% if item.RESULTS_OUTSTANDING == "yes" %}
+                                <td style="background-color: darkorange">
+                                    {{ item.WORKSHEETS }}
+                                </td>
+                                {% else %}
+                                <td>
+                                    {{ item.WORKSHEETS }}
+                                </td>
+                                {% endif %}
+                            {% endif %}
+                            <td>
+                                {{ item.SampleAlert }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td>
+                            No records to display
+                        </td>
+                        <td>
+                            &nbsp;
+                        </td>
+                        <td>
+                            &nbsp;
+                        </td>
+                    </tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if workflowCases %}
+        <div class="container-fluid">
+            <nav aria-label="Pages for table">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item"><input type="button" class="page-link" value="<< First" id="btnPageFirst"></li>
+                    <li class="page-item"><input type="button" class="page-link" value="< Previous" id="btnPagePrevious"></li>
+                    <li class="page-item"><span class="page-link">Page {{ workflowCases.number }} of {{ workflowCases.paginator.num_pages }}</span></li>
+                    <li class="page-item"><input type="button" class="page-link" value="Next >" id="btnPageNext"></li>
+                    <li class="page-item"><input type="button" class="page-link" value="Last >>" id="btnPageLast"></li>
+                </ul>
+            </nav>
+        </div>
+        {% endif %}
+
+    </div>
+
+    <script>
+        window.addEventListener('load', function() {
+            document.getElementById('txtPageNumber').value = '1';
+        })
+
+
+        document.getElementById('btnPageFirst').addEventListener('click', function () { DoSubmitFirstPage(); } );
+        document.getElementById('btnPagePrevious').addEventListener('click', function () { DoSubmitPreviousPage(); } );
+        document.getElementById('btnPageNext').addEventListener('click', function () { DoSubmitNextPage(); } );
+        document.getElementById('btnPageLast').addEventListener('click', function () { DoSubmitLastPage(); } );
+
+        function DoSubmitFirstPage() {
+            _pageNumber = document.getElementById('txtPageNumber');
+            _pageNumber.value = '1';
+
+            document.getElementById('formSearch').submit();
+        }
+
+        function DoSubmitPreviousPage() {
+            _pageNumber = document.getElementById('txtPageNumber');
+            {% if workflowCases != None %}
+                {% if workflowCases.has_previous %}
+                    _pageNumber.value = {{ workflowCases.previous_page_number }};
+                {% else %}
+                    _pageNumber.value = '1';
+                {% endif %}
+            {% else %}
+                _pageNumber.value = '1';
+            {% endif %}
+
+            document.getElementById('formSearch').submit();
+        }
+
+        function DoSubmitNextPage() {
+            _pageNumber = document.getElementById('txtPageNumber');
+            {% if workflowCases != None %}
+                {% if workflowCases.has_next %}
+                    _pageNumber.value = {{ workflowCases.next_page_number }};
+                {% else %}
+                    _pageNumber.value = '1';
+                {% endif %}
+            {% else %}
+                _pageNumber.value = '1';
+            {% endif %}
+
+            document.getElementById('formSearch').submit();
+        }
+
+        function DoSubmitLastPage() {
+            _pageNumber = document.getElementById('txtPageNumber');
+            {% if workflowCases != None %}
+                {% if workflowCases.has_next %}
+                    _pageNumber.value = {{ workflowCases.paginator.num_pages }};
+                {% else %}
+                    _pageNumber.value = '1';
+                {% endif %}
+            {% else %}
+                _pageNumber.value = '1';
+            {% endif %}
+
+            document.getElementById('formSearch').submit();
+        }
+
+
+    </script>
+
+</body>
+{% endblock content %}

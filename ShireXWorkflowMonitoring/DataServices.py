@@ -6,9 +6,9 @@ class ShireData():
 
     utilities = UtilityFunctions()
 
-    def GetDNAWorkflowCases(self, _dateFrom, _dateTo, _reportStatus, _priority, _reason):
+    def GetDNAWorkflowCases(self, _indicationCategory1, _indicationDisease1, _indicationDisease2, _indicationDisease3, _dateFrom, _dateTo, _reportStatus, _priority, _reason):
         with connection.cursor() as _cursor:
-            _cursor.execute("{CALL dbo.uspShireXGetDNAWorkflowCases(%s, %s, %s, %s, %s, %s)}", ('ONCOLOGY BMT', _dateFrom, _dateTo, _reportStatus, _priority, _reason))
+            _cursor.execute("{CALL dbo.uspShireXGetDNAWorkflowCases(%s, %s, %s, %s, %s, %s, %s, %s, %s)}", (_indicationCategory1, _indicationDisease1, _indicationDisease2, _indicationDisease3, _dateFrom, _dateTo, _reportStatus, _priority, _reason))
 
             _workflowCases = self.utilities.ConvertCursorListToDict(_cursor)
 

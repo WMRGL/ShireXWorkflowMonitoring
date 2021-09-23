@@ -55,6 +55,9 @@
                             Days left
                         </th>
                         <th scope="col">
+                            Key
+                        </th>
+                        <th scope="col">
                             Date activated
                         </th>
                         <th scope="col">
@@ -81,20 +84,17 @@
                                         {{ item.BILL_CODE }}
                                     </td>
                                     {% if item.DaysRemaining == -99999 %}
-                                    <td class="alert alert-danger" role="alert">
+                                    <td style="background-color: red; color: white">
                                         No target date
                                     </td>
                                     {% else %}
-                                        {% if item.DaysRemaining < 10 %}
-                                    <td class="alert alert-danger" role="alert">
-                                        {{ item.DaysRemaining }}
-                                    </td>
-                                        {% else %}
                                     <td>
                                         {{ item.DaysRemaining }}
                                     </td>
-                                        {% endif %}
                                     {% endif %}
+                                    <td>
+                                        {{ item.REF }}
+                                    </td>
                                     <td>
                                         {{ item.DATE_ACTIVATED|date:'d-m-Y' }}
                                     </td>
@@ -140,6 +140,9 @@
                         <th scope="col">
                             Result
                         </th>
+                        <th scope="col">
+                            Value 1
+                        </th>
                     </thead>
                     <tbody>
                         {% if worksheetResults %}
@@ -153,6 +156,9 @@
                                     </td>
                                     <td>
                                         {{ item.RESULT }}
+                                    </td>
+                                    <td>
+                                        {{ item.VALUE1 }}
                                     </td>
                                 </tr>
                             {% endfor %}
