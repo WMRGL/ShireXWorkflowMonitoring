@@ -63,56 +63,6 @@ class BMTSearch(TemplateView):
             #For each Lab No/Reason/Bill line extract the worksheet summary for that Lab No
             _pageOfWorkflowCases = self.AddWorksheetTestResultsToWorkflowCases(_pageOfWorkflowCases)
 
-            # _previousLabNumber = ""
-            #
-            # for _row in _pageOfWorkflowCases:
-            #     _labNumber = _row['LABNO']
-            #     _row['WORKSHEETS'] = ""
-            #     _row['RESULTS_OUTSTANDING'] = "no"
-            #     _row['WORKSHEET_OUTSTANDING'] = "yes"
-            #
-            #     if _labNumber != _previousLabNumber:
-            #         #If the lab number is different, compile the worksheet/test/result information
-            #         _wsResults = self.dataServices.GetSampleWorksheetResults(_labNumber)
-            #
-            #         _worksheetList = ["",]
-            #         _testResultList = ["",]
-            #
-            #         for _wsRow in _wsResults:
-            #             #For each worksheet/test/result
-            #             _worksheet = _wsRow['WORKSHEET']
-            #             _test = _wsRow['TEST']
-            #             _result = _wsRow['RESULT']
-            #
-            #             _row['WORKSHEET_OUTSTANDING'] = "no"
-            #
-            #             if (_result == None) or (_result == ''):
-            #                 _row['RESULTS_OUTSTANDING'] = "yes"
-            #                 _result = "No result"
-            #
-            #             #If the worksheet is not in the list
-            #             #i.e. index() fails, add it, otherwise move on
-            #             try:
-            #                 _worksheetList.index(_worksheet)
-            #             except:
-            #                 _worksheetList.append(_worksheet)
-            #
-            #             try:
-            #                 _testResultList.append(_test + ': ' + _result)
-            #             except:
-            #                 #Do nothing
-            #                 _stuff = 1
-            #
-            #         _worksheetList.remove("")
-            #         _testResultList.remove("")
-            #
-            #         _worksheetListString = ''.join(_worksheetList)
-            #         _testResultListString = ''.join(_testResultList)
-            #
-            #         _row['WORKSHEETS'] = _worksheetListString + " / " + _testResultListString
-            #
-            #     _previousLabNumber = _labNumber
-
             #Codes for the search criteria
             _reportStatuses = self.dataServices.GetReportStatus()
 
@@ -200,7 +150,7 @@ class SetAllocatedToForDNA(TemplateView):
     utilities = UtilityFunctions()
     dataServices = ShireData()
 
-    def get(self, request, _labNumber):
+    def get(self, request, _labNumber, _workflowName):
 
         try:
 
@@ -213,7 +163,45 @@ class SetAllocatedToForDNA(TemplateView):
                 }
                 return render(request, self.template_name, _context)
 
-            _retVal = self.dataServices.SetAllocatedToForDNA(_labNumber, _staff.STAFF_CODE)
+            _staffList = STAFF.objects.all
+
+            _isSupervisor = "N"
+
+            _permissionName = "Is" + _workflowName + "Supervisor"
+
+            _hasPermission = self.dataServices.UserHasPermission(request.user.username, _permissionName)
+
+            if _hasPermission:
+                _isSupervisor = "Y"
+
+            _cancelURL = "HaemOnc" + _workflowName + "Search"
+
+            _context = {
+                "labNumber" : _labNumber,
+                "staffList" : _staffList,
+                "staff" : _staff,
+                "isSupervisor" : _isSupervisor,
+                "workflowName" : _workflowName,
+                "cancelURL" : _cancelURL,
+            }
+
+            return render(request, self.template_name, _context)
+
+        except Exception as ex:
+            _context = {
+                "labNumber" : _labNumber,
+                "errorMessage": str(ex),
+            }
+
+            return render(request, self.template_name, _context)
+
+    def post(self, request, _labNumber, _workflowName):
+
+        try:
+
+            _staffCode = self.utilities.PostRequestKey(request, "ddlStaffCode", enumDataType.String)
+
+            _retVal = self.dataServices.SetAllocatedToForDNA(_labNumber, _staffCode)
 
             if _retVal != 1:
                 _context = {
@@ -222,11 +210,10 @@ class SetAllocatedToForDNA(TemplateView):
                 }
                 return render(request, self.template_name, _context)
 
-            _context = {
-                "labNumber" : _labNumber,
-            }
+            _urlName = "HaemOnc" + _workflowName + "Search"
 
-            return render(request, self.template_name, _context)
+            return HttpResponseRedirect(reverse(_urlName))
+
 
         except Exception as ex:
             _context = {

@@ -12,7 +12,7 @@ urlpatterns = [
     path('login/', CommonFunctionality.Login.as_view(), name="LoginPage"),
     path('', CommonFunctionality.Start.as_view(), name="StartPage"),
     path('logout/', CommonFunctionality.Authenticate.DoLogout, name="LogoutSystem"),
-    path('HO/BMT', HaemOncologyFunctionality.BMTSearch.as_view(), name="HaemOncBMTSearch"),
-    path('HO/BMT/<str:_labNumber>', HaemOncologyFunctionality.SetAllocatedToForDNA.as_view(), name="HaemOncBMTSetAllocatedTo"),
+    path('HO/BMT/', HaemOncologyFunctionality.BMTSearch.as_view(), name="HaemOncBMTSearch"),
+    path('HO/Allocate/<str:_labNumber>/<str:_workflowName>/', HaemOncologyFunctionality.SetAllocatedToForDNA.as_view(), name="HaemOncSetAllocatedTo"),
     path('Sample/<str:_labNumber>', SampleFunctionality.SampleForm.as_view(), name="SampleForm"),
 ]

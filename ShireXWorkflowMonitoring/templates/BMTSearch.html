@@ -170,7 +170,7 @@
                     {% for item in workflowCases %}
                         <tr>
                             <td>
-                                <a class="btn btn-primary" href="{% url 'HaemOncBMTSetAllocatedTo' _labNumber=item.LABNO %}">&nbsp;</a>
+                                <a class="btn btn-primary" href="{% url 'HaemOncSetAllocatedTo' _labNumber=item.LABNO _workflowName='BMT' %}">&nbsp;</a>
                             </td>
                             {% if item.DECEASED_DATE %}
                             <td>

@@ -60,3 +60,16 @@ class ShireData():
             _results = self.utilities.ConvertCursorListToDict(_cursor)
 
             return _results
+
+
+    def UserHasPermission(self, _username, _permissionCode):
+        with connection.cursor() as _cursor:
+            _cursor.execute("{CALL dbo.uspShireXUserHasPermission(%s, %s)}", (_username, _permissionCode))
+
+            _results = self.utilities.ConvertCursorListToDict(_cursor)
+
+            _retVal = False
+            if _results.__len__() > 0:
+                _retVal = True
+
+            return _retVal
