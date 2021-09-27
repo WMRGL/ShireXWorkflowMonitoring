@@ -19,6 +19,12 @@ class SampleForm(TemplateView):
             if not request.user.is_authenticated:
                 return HttpResponseRedirect(reverse('LoginPage'))
 
+            _sample = self.dataServices.GetSample(_labNumber)
+
+            # Because the template cannot handle the list of dictionary that is
+            # _sample, we have to extract the dictionary in _sampleItem
+            _sampleItem = _sample[0]
+
             _indicationReportBills = self.dataServices.GetSampleIndicationReportBill(_labNumber)
 
             _worksheetResults = self.dataServices.GetSampleWorksheetResults(_labNumber)
@@ -26,6 +32,7 @@ class SampleForm(TemplateView):
             _context = {
                 "Title": self.title,
                 "labNumber": _labNumber,
+                "sampleItem": _sampleItem,
                 "indicationReportBills" : _indicationReportBills,
                 "worksheetResults" : _worksheetResults,
             }

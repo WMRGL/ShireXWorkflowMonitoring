@@ -4,21 +4,53 @@
     {% include 'StandardMenu.html' %}
     {% if errorMessage %}
         <div class="container text-sm-center p-5 gap-3">
-            <h1 class="display-4">Unable to allocate {{ labNumber }} to you</h1>
             <p class="lead">The system generated the following error: </p>
             <div class="alert alert-danger text-center mb-3" role="alert">
                 {{ errorMessage }}
             </div>
-            <p class="lead">Please click on the OK button to return to the list of cases</p>
+            <p class="lead">Please click on the Cancel button to return to the list of cases</p>
         </div>
     {% else %}
-        <div class="container text-sm-center p-5 gap-3">
-            <h1 class="display-4">{{ labNumber }} has been allocated to you</h1>
-            <p class="lead">Please click on the OK button to return to the list of cases</p>
-        </div>
+    <div class="container text-center p-5 gap-3">
+        <h1 class="display-4">Allocate {{ labNumber }} to</h1>
+    </div>
+    <div class="container-fluid">
+        <form action="" method="post" id="formSetAllocatedTo">
+            {% csrf_token %}
+            <div class="mb-3">
+                <div class="row g-5 align-items-center mb-3">
+                    <div class="col-4">
+                        &nbsp;
+                    </div>
+                    <div class="col-4">
+                        <select class="form-select" name="ddlStaffCode" id="ddlStaffCode">
+                            <option value="HO">De-allocate (HO)</option>
+                            {% if isSupervisor == "Y" %}
+{#                              If a supervisor allow them to allocate to someone else i.e. add the staff list#}
+                                {% for item in staffList %}
+                                    <option value="{{ item.STAFF_CODE }}" {% if item.STAFF_CODE == staff.STAFF_CODE %} selected="selected" {% endif %}>{{ item.NAME }} ({{ item.STAFF_CODE }})</option>
+                                {% endfor %}
+                            {% else %}
+{#                              Otherwise, just display the current staff code#}
+                                <option value="{{ staff.STAFF_CODE }}" selected="selected">{{ staff.NAME }} ({{ staff.STAFF_CODE }})</option>
+                            {% endif %}
+                        </select>
+                    </div>
+                    <div class="col-auto">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="row g-5 align-items-center mb-3">
+                    <div class="col-12 text-center">
+                        <input type="submit" value="Allocate" name="btnSubmit" id="btnSubmit" class="btn btn-primary">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
     {% endif %}
-    <div class="container text-center">
-        <a class="btn btn-primary" href="{% url 'HaemOncBMTSearch' %}">OK</a>
+    <div class="container text-center mb-3">
+        <a class="btn btn-primary" href="{% url cancelURL %}">Cancel</a>
     </div>
 </body>
 {% endblock content %}

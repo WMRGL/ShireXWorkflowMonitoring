@@ -2,9 +2,30 @@
 {% block content %}
 <body>
     {% include 'StandardMenu.html' %}
-    <div class="container text-sm-center p-5 gap-3">
-        <h1 class="display-6">Information screen for sample {{ labNumber }}</h1>
-        <p class="lead">What do you want to see here?</p>
+    <div class="mb-3">
+        <div class="mb-3">
+            <h1 class="text-center">Information screen for sample {{ labNumber }}</h1>
+        </div>
+        <div class="mb-3">
+            &nbsp;
+        </div>
+        <div class="row g-5 mb-3">
+            <div class="col-2">
+                &nbsp;
+            </div>
+            <div class="col-2 border border-dark">
+                Alert:
+            </div>
+            <div class="col-5 border border-dark">
+                {{ sampleItem.SAMPLE_SPECIAL_PROMPT }}
+            </div>
+            <div class="col-3">
+                &nbsp;
+            </div>
+        </div>
+        <div class="mb-3">
+            &nbsp;
+        </div>
     </div>
     {% if errorMessage %}
         <div class="alert alert-danger text-center mb-3" role="alert">
@@ -20,7 +41,7 @@
         <div class="collapse show" id="collapseIndicationTable">
             <div class="container-fluid">
                 <table class="table table-bordered">
-                    <thead style="background-color: lightblue">
+                    <thead class="bg-primary" style="color:white">
                         <th scope="col">
                             Indication
                         </th>
@@ -32,6 +53,9 @@
                         </th>
                         <th scope="col">
                             Days left
+                        </th>
+                        <th scope="col">
+                            Key
                         </th>
                         <th scope="col">
                             Date activated
@@ -60,20 +84,17 @@
                                         {{ item.BILL_CODE }}
                                     </td>
                                     {% if item.DaysRemaining == -99999 %}
-                                    <td class="alert alert-danger" role="alert">
+                                    <td style="background-color: red; color: white">
                                         No target date
                                     </td>
                                     {% else %}
-                                        {% if item.DaysRemaining < 10 %}
-                                    <td class="alert alert-danger" role="alert">
-                                        {{ item.DaysRemaining }}
-                                    </td>
-                                        {% else %}
                                     <td>
                                         {{ item.DaysRemaining }}
                                     </td>
-                                        {% endif %}
                                     {% endif %}
+                                    <td>
+                                        {{ item.REF }}
+                                    </td>
                                     <td>
                                         {{ item.DATE_ACTIVATED|date:'d-m-Y' }}
                                     </td>
@@ -109,7 +130,7 @@
         <div class="collapse show" id="collapseWorksheetTable">
             <div class="container-fluid">
                 <table class="table table-bordered">
-                    <thead style="background-color: lightblue">
+                    <thead class="bg-primary" style="color:white">
                         <th scope="col">
                             Worksheet
                         </th>
@@ -118,6 +139,9 @@
                         </th>
                         <th scope="col">
                             Result
+                        </th>
+                        <th scope="col">
+                            Value 1
                         </th>
                     </thead>
                     <tbody>
@@ -132,6 +156,9 @@
                                     </td>
                                     <td>
                                         {{ item.RESULT }}
+                                    </td>
+                                    <td>
+                                        {{ item.VALUE1 }}
                                     </td>
                                 </tr>
                             {% endfor %}

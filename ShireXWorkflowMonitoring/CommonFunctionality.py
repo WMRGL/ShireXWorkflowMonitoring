@@ -63,6 +63,7 @@ class Start(TemplateView):
             return HttpResponseRedirect(reverse('LoginPage'))
         else:
             _context = None
+
             return render(request, self.template_name, _context)
 
 class Authenticate():
@@ -84,6 +85,30 @@ class UtilityFunctions():
             if _key == keyName:
 
                 _strVal = request.GET[_key]
+
+                if dataType == enumDataType.Datetime:
+                    return datetime.strptime(_strVal, '%Y-%m-%d')  # IMPORTANT..The format string is different to a template filter and is specific!
+
+                if dataType == enumDataType.Integer:
+                    return int(_strVal)
+
+                if dataType == enumDataType.Float:
+                    return float(_strVal)
+
+                if dataType == enumDataType.Boolean:
+                    if _strVal.upper() == "TRUE":
+                        return True
+                    if _strVal.upper() == "FALSE":
+                        return False
+                return _strVal
+
+        return ""
+
+    def PostRequestKey(self, request, keyName, dataType):
+        for _key in request.POST:
+            if _key == keyName:
+
+                _strVal = request.POST[_key]
 
                 if dataType == enumDataType.Datetime:
                     return datetime.strptime(_strVal, '%Y-%m-%d')  # IMPORTANT..The format string is different to a template filter and is specific!
