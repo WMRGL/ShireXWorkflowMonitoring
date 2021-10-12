@@ -35,7 +35,9 @@ class BMTSearch(TemplateView):
 
             _reportStatus = "NOTFINAL"
             _priority = ""
-            _reason = ""
+            _diseaseIndicationCode = ""
+            _reasonForDiseaseIndication = ""
+            _searchCount = 0
 
             if not _isPostBack:
                 _dateFrom = datetime.today() - timedelta(days=30)
@@ -50,7 +52,8 @@ class BMTSearch(TemplateView):
                     _itemsPerPage = self.utilities.GetRequestKey(request, "ddlCriteriaItemsPerPage", enumDataType.Integer)
                     _reportStatus = self.utilities.GetRequestKey(request, "ddlCriteriaStatus", enumDataType.String)
                     _priority = self.utilities.GetRequestKey(request, "ddlCriteriaPriority", enumDataType.String)
-                    _reason = self.utilities.GetRequestKey(request, "txtCriteriaReason", enumDataType.String)
+                    _diseaseIndicationCode = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication", enumDataType.String)
+                    _reasonForDiseaseIndication = self.utilities.GetRequestKey(request, "ddlCriteriaReasonForDiseaseIndication", enumDataType.String)
                 except Exception as ex:
                     #If any errors occur return the default criteria
                     _dateFrom = datetime.today() - timedelta(days=30)
@@ -58,7 +61,11 @@ class BMTSearch(TemplateView):
                     _pageNumber = 1
                     _itemsPerPage = 20
 
-            _workflowCases = Paginator(self.dataServices.GetDNAWorkflowCases('ONCOLOGY BMT', '', '', '', _dateFrom, _dateTo, _reportStatus, _priority, _reason), _itemsPerPage)
+            _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases('ONCOLOGY BMT', '', '', '', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode, _reasonForDiseaseIndication)
+
+            _searchCount = _totalWorkflowCases.__len__()
+
+            _workflowCases = Paginator(_totalWorkflowCases, _itemsPerPage)
 
             _pageOfWorkflowCases = _workflowCases.page(_pageNumber)
 
@@ -70,6 +77,10 @@ class BMTSearch(TemplateView):
 
             _priorities = self.dataServices.GetDNAPriority()
 
+            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('ONCOLOGY BMT', '', '', '')
+
+            _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(_diseaseIndicationCode)
+
             _context = {
                 "criteriaDateFrom" : _dateFrom,
                 "criteriaDateTo" : _dateTo,
@@ -80,7 +91,11 @@ class BMTSearch(TemplateView):
                 "criteriaReportStatus" : _reportStatus,
                 "criteriaPriorities" : _priorities,
                 "criteriaPriority" : _priority,
-                "criteriaReason": _reason,
+                "criteriaDiseaseIndications": _diseaseIndications,
+                "criteriaDiseaseIndication": _diseaseIndicationCode,
+                "criteriaReasonsForDiseaseIndications": _reasonsForDiseaseIndications,
+                "criteriaReasonForDiseaseIndication": _reasonForDiseaseIndication,
+                "searchCount": _searchCount,
             }
             return render(request, self.template_name, _context)
 
@@ -91,60 +106,6 @@ class BMTSearch(TemplateView):
             }
 
             return render(request, self.template_name, context)
-
-    # def AddWorksheetTestResultsToWorkflowCases(self, _pageOfWorkflowCases):
-    #
-    #     _previousLabNumber = ""
-    #
-    #     for _row in _pageOfWorkflowCases:
-    #         _labNumber = _row['LABNO']
-    #         _row['WORKSHEETS'] = ""
-    #         _row['RESULTS_OUTSTANDING'] = "no"
-    #         _row['WORKSHEET_OUTSTANDING'] = "yes"
-    #
-    #         if _labNumber != _previousLabNumber:
-    #             # If the lab number is different, compile the worksheet/test/result information
-    #             _wsResults = self.dataServices.GetSampleWorksheetResults(_labNumber)
-    #
-    #             _worksheetList = ["", ]
-    #             _testResultList = ["", ]
-    #
-    #             for _wsRow in _wsResults:
-    #                 # For each worksheet/test/result
-    #                 _worksheet = _wsRow['WORKSHEET']
-    #                 _test = _wsRow['TEST']
-    #                 _result = _wsRow['RESULT']
-    #
-    #                 _row['WORKSHEET_OUTSTANDING'] = "no"
-    #
-    #                 if (_result == None) or (_result == ''):
-    #                     _row['RESULTS_OUTSTANDING'] = "yes"
-    #                     _result = "No result"
-    #
-    #                 # If the worksheet is not in the list
-    #                 # i.e. index() fails, add it, otherwise move on
-    #                 try:
-    #                     _worksheetList.index(_worksheet)
-    #                 except:
-    #                     _worksheetList.append(_worksheet)
-    #
-    #                 try:
-    #                     _testResultList.append(_test + ': ' + _result)
-    #                 except:
-    #                     # Do nothing
-    #                     _stuff = 1
-    #
-    #             _worksheetList.remove("")
-    #             _testResultList.remove("")
-    #
-    #             _worksheetListString = ''.join(_worksheetList)
-    #             _testResultListString = ''.join(_testResultList)
-    #
-    #             _row['WORKSHEETS'] = _worksheetListString + " / " + _testResultListString
-    #
-    #         _previousLabNumber = _labNumber
-    #
-    #     return _pageOfWorkflowCases
 
 class MPNSearch(TemplateView):
     template_name = "MPNSearch.html"
@@ -166,7 +127,9 @@ class MPNSearch(TemplateView):
 
             _reportStatus = "NOTFINAL"
             _priority = ""
-            _reason = ""
+            _diseaseIndicationCode = ""
+            _reasonForDiseaseIndication = ""
+            _searchCount = 0
 
             if not _isPostBack:
                 _dateFrom = datetime.today() - timedelta(days=365)
@@ -181,7 +144,8 @@ class MPNSearch(TemplateView):
                     _itemsPerPage = self.utilities.GetRequestKey(request, "ddlCriteriaItemsPerPage", enumDataType.Integer)
                     _reportStatus = self.utilities.GetRequestKey(request, "ddlCriteriaStatus", enumDataType.String)
                     _priority = self.utilities.GetRequestKey(request, "ddlCriteriaPriority", enumDataType.String)
-                    _reason = self.utilities.GetRequestKey(request, "txtCriteriaReason", enumDataType.String)
+                    _diseaseIndicationCode = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication", enumDataType.String)
+                    _reasonForDiseaseIndication = self.utilities.GetRequestKey(request, "ddlCriteriaReasonForDiseaseIndication", enumDataType.String)
                 except Exception as ex:
                     #If any errors occur return the default criteria
                     _dateFrom = datetime.today() - timedelta(days=365)
@@ -189,7 +153,11 @@ class MPNSearch(TemplateView):
                     _pageNumber = 1
                     _itemsPerPage = 20
 
-            _workflowCases = Paginator(self.dataServices.GetDNAWorkflowCases('', 'D-MPD', 'R-MPD', 'D-CMML', _dateFrom, _dateTo, _reportStatus, _priority, _reason), _itemsPerPage)
+            _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases('2012_HAEM_ONC', 'D-MPD', 'R-MPD', 'D-CMML', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode, _reasonForDiseaseIndication)
+
+            _searchCount = _totalWorkflowCases.__len__()
+
+            _workflowCases = Paginator(_totalWorkflowCases, _itemsPerPage)
 
             _pageOfWorkflowCases = _workflowCases.page(_pageNumber)
 
@@ -201,6 +169,10 @@ class MPNSearch(TemplateView):
 
             _priorities = self.dataServices.GetDNAPriority()
 
+            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', 'D-MPD', 'R-MPD', 'D-CMML')
+
+            _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(_diseaseIndicationCode)
+
             _context = {
                 "criteriaDateFrom" : _dateFrom,
                 "criteriaDateTo" : _dateTo,
@@ -211,7 +183,11 @@ class MPNSearch(TemplateView):
                 "criteriaReportStatus" : _reportStatus,
                 "criteriaPriorities" : _priorities,
                 "criteriaPriority" : _priority,
-                "criteriaReason": _reason,
+                "criteriaDiseaseIndications": _diseaseIndications,
+                "criteriaDiseaseIndication": _diseaseIndicationCode,
+                "criteriaReasonsForDiseaseIndications": _reasonsForDiseaseIndications,
+                "criteriaReasonForDiseaseIndication": _reasonForDiseaseIndication,
+                "searchCount": _searchCount,
             }
             return render(request, self.template_name, _context)
 

@@ -6,9 +6,9 @@ class ShireData():
 
     utilities = UtilityFunctions()
 
-    def GetDNAWorkflowCases(self, _indicationCategory1, _indicationDisease1, _indicationDisease2, _indicationDisease3, _dateFrom, _dateTo, _reportStatus, _priority, _reason):
+    def GetDNAWorkflowCases(self, _indicationCategory1, _indicationDisease1, _indicationDisease2, _indicationDisease3, _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode, _reasonCode):
         with connection.cursor() as _cursor:
-            _cursor.execute("{CALL dbo.uspShireXGetDNAWorkflowCases(%s, %s, %s, %s, %s, %s, %s, %s, %s)}", (_indicationCategory1, _indicationDisease1, _indicationDisease2, _indicationDisease3, _dateFrom, _dateTo, _reportStatus, _priority, _reason))
+            _cursor.execute("{CALL dbo.uspShireXGetDNAWorkflowCases(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)}", (_indicationCategory1, _indicationDisease1, _indicationDisease2, _indicationDisease3, _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode, _reasonCode))
 
             _workflowCases = self.utilities.ConvertCursorListToDict(_cursor)
 
@@ -73,3 +73,20 @@ class ShireData():
                 _retVal = True
 
             return _retVal
+
+    def GetDNADiseaseIndication(self, _indicationCategory1, _indicationDisease1, _indicationDisease2, _indicationDisease3):
+        with connection.cursor() as _cursor:
+            _cursor.execute("{CALL dbo.uspShireXGetDNADiseaseIndication(%s,%s,%s,%s)}", (_indicationCategory1, _indicationDisease1, _indicationDisease2, _indicationDisease3))
+
+            _results = self.utilities.ConvertCursorListToDict(_cursor)
+
+            return _results
+
+    def GetDNAReasonForDiseaseIndication(self, _diseaseCode):
+        with connection.cursor() as _cursor:
+            _cursor.execute("{CALL dbo.uspShireXGetDNAReasonForDiseaseIndication(%s)}", (_diseaseCode,))
+
+            _results = self.utilities.ConvertCursorListToDict(_cursor)
+
+            return _results
+

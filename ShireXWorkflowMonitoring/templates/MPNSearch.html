@@ -81,13 +81,33 @@
                                 &nbsp;
                             </div>
                             <div class="col-2">
-                                <label for="txtCriteriaReason" class="col-form-label">Reason:</label>
+                                <label for="ddlCriteriaDiseaseIndication" class="col-form-label">Indication:</label>
                             </div>
                             <div class="col-2">
-                                <input type="text" class="form-control" name="txtCriteriaReason" id="txtCriteriaReason" value="{{ criteriaReason }}">
+                                <select class="form-select" name="ddlCriteriaDiseaseIndication" id="ddlCriteriaDiseaseIndication">
+                                    <option value="" {% if criteriaDiseaseIndication == "" %} selected="selected" {% endif %}>select...</option>
+                                    {% if criteriaDiseaseIndications %}
+                                        {% for item in criteriaDiseaseIndications %}
+                                            <option value="{{ item.DISEASE_CODE }}" {% if item.DISEASE_CODE == criteriaDiseaseIndication %} selected="selected" {% endif %}>{{ item.DISEASE_CODE }}</option>
+                                        {% endfor %}
+                                    {% endif %}
+                                </select>
                             </div>
-                            <div class="col-auto">
-                                (Wildcard character is %)
+                            <div class="col-2">
+                                <label for="ddlCriteriaReasonForDiseaseIndication" class="col-form-label">Reason:</label>
+                            </div>
+                            <div class="col-2">
+                                <select class="form-select" name="ddlCriteriaReasonForDiseaseIndication" id="ddlCriteriaReasonForDiseaseIndication">
+                                    <option value="" {% if criteriaReasonForDiseaseIndication == "" %} selected="selected" {% endif %}>select...</option>
+                                    {% if criteriaReasonsForDiseaseIndications %}
+                                        {% for item in criteriaReasonsForDiseaseIndications %}
+                                            <option value="{{ item.REASON_CODE }}" {% if item.REASON_CODE == criteriaReasonForDiseaseIndication %} selected="selected" {% endif %}>{{ item.REASON_CODE }}</option>
+                                        {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </div>
+                            <div class="col-2">
+                                &nbsp;
                             </div>
                         </div>
                         <div class="row g-5 align-items-center">
@@ -103,8 +123,14 @@
                                     <option value="40" {% if itemsPerPage == 40 %} selected="selected" {% endif %}>40</option>
                                 </select>
                             </div>
-                            <div class="col-6 text-center">
+                            <div class="col-2">
                                 <input type="submit" value="Search" name="btnSubmit" id="btnSubmit" class="btn btn-primary">
+                            </div>
+                            <div class="col-2">
+                                Cases found : {{ searchCount }}
+                            </div>
+                            <div class="col-2">
+                                Page {{ workflowCases.number }} of {{ workflowCases.paginator.num_pages }}
                             </div>
                         </div>
                     </div>
@@ -121,6 +147,9 @@
                 <thead class="bg-primary" style="color:white">
                     <th>
                         Claim
+                    </th>
+                    <th scope="col">
+                        Alert
                     </th>
                     <th scope="col">
                         Patient (Date deceased)
@@ -153,7 +182,7 @@
                         Date activated
                     </th>
                     <th scope="col">
-                        Date due
+                        Date_due
                     </th>
                     <th scope="col">
                         Status
@@ -164,9 +193,6 @@
                     <th scope="col">
                         Wksheet / Result
                     </th>
-                    <th scope="col">
-                        Alert
-                    </th>
                 </thead>
                 <tbody>
                 {% if workflowCases %}
@@ -174,6 +200,9 @@
                         <tr>
                             <td>
                                 <a class="btn btn-primary" href="{% url 'HaemOncSetAllocatedTo' _labNumber=item.LABNO _workflowName='MPN' %}">&nbsp;</a>
+                            </td>
+                            <td>
+                                {{ item.SampleAlert }}
                             </td>
                             {% if item.DECEASED_DATE %}
                             <td>
@@ -269,12 +298,12 @@
                                 {{ item.REPORT_BY }}
                             </td>
                             {% if item.WORKSHEET_OUTSTANDING == "yes" %}
-                                <td style="background-color: red; color: white">
+                                <td>
                                     None
                                 </td>
                             {% else %}
                                 {% if item.RESULTS_OUTSTANDING == "yes" %}
-                                <td style="background-color: darkorange">
+                                <td>
                                     {{ item.WORKSHEETS }}
                                 </td>
                                 {% else %}
@@ -283,9 +312,6 @@
                                 </td>
                                 {% endif %}
                             {% endif %}
-                            <td>
-                                {{ item.SampleAlert }}
-                            </td>
                         </tr>
                     {% endfor %}
                 {% else %}
@@ -326,11 +352,19 @@
             document.getElementById('txtPageNumber').value = '1';
         })
 
+        document.getElementById('ddlCriteriaDiseaseIndication').addEventListener('change', function () {
+            document.getElementById('ddlCriteriaReasonForDiseaseIndication').value = '';
+            DoPostBack();
+        } )
 
         document.getElementById('btnPageFirst').addEventListener('click', function () { DoSubmitFirstPage(); } );
         document.getElementById('btnPagePrevious').addEventListener('click', function () { DoSubmitPreviousPage(); } );
         document.getElementById('btnPageNext').addEventListener('click', function () { DoSubmitNextPage(); } );
         document.getElementById('btnPageLast').addEventListener('click', function () { DoSubmitLastPage(); } );
+
+        function DoPostBack() {
+            document.getElementById('formSearch').submit();
+        }
 
         function DoSubmitFirstPage() {
             _pageNumber = document.getElementById('txtPageNumber');
