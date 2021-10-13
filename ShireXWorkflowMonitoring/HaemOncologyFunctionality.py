@@ -61,7 +61,7 @@ class BMTSearch(TemplateView):
                     _pageNumber = 1
                     _itemsPerPage = 20
 
-            _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases('ONCOLOGY BMT', '', '', '', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode, _reasonForDiseaseIndication)
+            _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases('ONCOLOGY BMT', '', '', '', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode, _reasonForDiseaseIndication, request.user.username, '')
 
             _searchCount = _totalWorkflowCases.__len__()
 
@@ -129,6 +129,7 @@ class MPNSearch(TemplateView):
             _priority = ""
             _diseaseIndicationCode = ""
             _reasonForDiseaseIndication = ""
+            _lastName = ""
             _searchCount = 0
 
             if not _isPostBack:
@@ -146,6 +147,7 @@ class MPNSearch(TemplateView):
                     _priority = self.utilities.GetRequestKey(request, "ddlCriteriaPriority", enumDataType.String)
                     _diseaseIndicationCode = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication", enumDataType.String)
                     _reasonForDiseaseIndication = self.utilities.GetRequestKey(request, "ddlCriteriaReasonForDiseaseIndication", enumDataType.String)
+                    _lastName = self.utilities.GetRequestKey(request, "txtCriteriaLastname", enumDataType.String)
                 except Exception as ex:
                     #If any errors occur return the default criteria
                     _dateFrom = datetime.today() - timedelta(days=365)
@@ -153,7 +155,9 @@ class MPNSearch(TemplateView):
                     _pageNumber = 1
                     _itemsPerPage = 20
 
-            _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases('2012_HAEM_ONC', 'D-MPD', 'R-MPD', 'D-CMML', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode, _reasonForDiseaseIndication)
+            _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases('2012_HAEM_ONC', 'D-MPD', 'R-MPD', 'D-CMML', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode, _reasonForDiseaseIndication, request.user.username, _lastName)
+
+            _listOfSurnames = self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases)
 
             _searchCount = _totalWorkflowCases.__len__()
 
@@ -187,6 +191,8 @@ class MPNSearch(TemplateView):
                 "criteriaDiseaseIndication": _diseaseIndicationCode,
                 "criteriaReasonsForDiseaseIndications": _reasonsForDiseaseIndications,
                 "criteriaReasonForDiseaseIndication": _reasonForDiseaseIndication,
+                "criteriaSurnames": _listOfSurnames,
+                "criteriaSurname" : _lastName,
                 "searchCount": _searchCount,
             }
             return render(request, self.template_name, _context)

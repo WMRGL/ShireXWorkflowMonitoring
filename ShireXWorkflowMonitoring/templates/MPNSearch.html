@@ -22,9 +22,6 @@
                     <div class="mb-3">
                         <div class="row g-5 align-items-center">
                             <div class="col-2">
-                                <input type="hidden" id="txtPageNumber" name="txtPageNumber">
-                            </div>
-                            <div class="col-2">
                                 <label for="txtCriteriaDateFrom" class="col-form-label">Date from:</label>
                             </div>
                             <div class="col-2">
@@ -37,12 +34,20 @@
                                 <input type="date" class="form-control" name="txtCriteriaDateTo" id="txtCriteriaDateTo" value="{{ criteriaDateTo|date:'Y-m-d' }}">
                             </div>
                             <div class="col-2">
-                                &nbsp;
+                                <label for="txtCriteriaLastname" class="col-form-label">Surname:</label>
+                            </div>
+                            <div class="col-2">
+                                <input type="text" class="form-control" name="txtCriteriaLastname" id="txtCriteriaLastname" list="listOfSurnames" {% if criteriaSurname != "" %} value="{{ criteriaSurname }}" {% endif %}>
+                                <datalist id="listOfSurnames">
+                                    {% for item in criteriaSurnames %}
+                                        <option value="{{ item }}" />
+                                    {% endfor %}
+                                </datalist>
                             </div>
                         </div>
                         <div class="row g-5 align-items-center">
                             <div class="col-2">
-                                &nbsp;
+                                <input type="hidden" id="txtPageNumber" name="txtPageNumber">
                             </div>
                             <div class="col-2">
                                 <label for="ddlCriteriaStatus" class="col-form-label">Status:</label>
