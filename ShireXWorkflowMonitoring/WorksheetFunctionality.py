@@ -57,3 +57,21 @@ class Worksheet():
             _previousLabNumber = _labNumber
 
         return _pageOfWorkflowCases
+
+    def GetListOfSurnamesFromWorkflowCases(self, _workflowCases):
+        #An extension routine for the various workflow search routines
+        _previousLabNumber = ""
+
+        _lastnameList = ["", ]
+
+        for _row in _workflowCases:
+            _lastname = _row['LASTNAME']
+
+            try:
+                _lastnameList.index(_lastname)
+            except:
+                _lastnameList.append(_lastname)
+
+        _sortedListOfLastNames = sorted(_lastnameList)
+
+        return _sortedListOfLastNames

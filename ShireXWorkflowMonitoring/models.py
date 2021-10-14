@@ -5,6 +5,7 @@ class STAFF(models.Model):
     LOGON_NAME = models.CharField(max_length=50)   #User name
     PASSWORD = models.CharField(max_length=10)
     NAME = models.CharField(max_length=50)
+    EMPLOYMENT_END_DATE = models.DateTimeField()
 
     class Meta:
         managed=False
