@@ -11,12 +11,25 @@ class ShireBackend(BaseBackend):
             return None
 
         try:
-            userValidObj = STAFF.objects.get(LOGON_NAME=username)
+            userValidObj = STAFF.objects.filter(LOGON_NAME=username, EMPLOYMENT_END_DATE__isnull=True)
 
-            #Do the password check separate, because the SQL server comparison
-            #is not case sensitive.  Whereas the code below is!
-            if userValidObj.PASSWORD == password:
-                _isUserPasswordValid = True
+            if userValidObj == None:
+                return None
+
+            for item in userValidObj:
+
+                #Do the password check separate, because the SQL server comparison
+                #is not case sensitive.  Whereas the code below is!
+                if item.PASSWORD == password:
+                    _isUserPasswordValid = True
+
+            if userValidObj.__len__() > 1:
+                if _isUserPasswordValid:
+                    _errTxt = ' with one of them having a valid password'
+                else:
+                    _errTxt = '. None of them have a valid password'
+
+                raise ValueError('ShireBackend.authenticate : The system found two active user staff records' + _errTxt)
 
         except Exception as ex:
             return None

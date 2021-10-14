@@ -13,7 +13,7 @@ class SampleForm(TemplateView):
     utilities = UtilityFunctions()
     dataServices = ShireData()
 
-    def get(self, request, _labNumber):
+    def get(self, request, _labNumber, _workflowName):
 
         try:
             if not request.user.is_authenticated:
@@ -29,12 +29,15 @@ class SampleForm(TemplateView):
 
             _worksheetResults = self.dataServices.GetSampleWorksheetResults(_labNumber)
 
+            _backURL = "HaemOnc" + _workflowName + "Search"
+
             _context = {
                 "Title": self.title,
                 "labNumber": _labNumber,
                 "sampleItem": _sampleItem,
                 "indicationReportBills" : _indicationReportBills,
                 "worksheetResults" : _worksheetResults,
+                "backURL": _backURL,
             }
 
             return render(request, self.template_name, _context)

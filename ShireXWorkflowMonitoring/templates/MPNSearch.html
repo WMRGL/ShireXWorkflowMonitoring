@@ -219,7 +219,7 @@
                             </td>
                             {% endif %}
                             <td>
-                                <a href="{% url 'SampleForm' item.LABNO %}">{{ item.LABNO }}</a>
+                                <a href="{% url 'SampleForm'  _labNumber=item.LABNO _workflowName='MPN' %}">{{ item.LABNO }}</a>
                             </td>
                             <td>
                                 {{ item.REASON }}
