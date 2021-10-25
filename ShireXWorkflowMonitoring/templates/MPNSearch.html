@@ -302,6 +302,7 @@
                             <td>
                                 {{ item.REPORT_BY }}
                             </td>
+                            {% autoescape off%}
                             {% if item.WORKSHEET_OUTSTANDING == "yes" %}
                                 <td>
                                     None
@@ -317,6 +318,7 @@
                                 </td>
                                 {% endif %}
                             {% endif %}
+                            {% endautoescape %}
                         </tr>
                     {% endfor %}
                 {% else %}

@@ -18,41 +18,66 @@ class Worksheet():
                 # If the lab number is different, compile the worksheet/test/result information
                 _wsResults = self.dataServices.GetSampleWorksheetResults(_labNumber)
 
-                _worksheetList = ["", ]
-                _testResultList = ["", ]
+                #_worksheetList = ["", ]
+                #_testResultList = ["", ]
+
+                _worksheetListString = ""
 
                 for _wsRow in _wsResults:
                     # For each worksheet/test/result
                     _worksheet = _wsRow['WORKSHEET']
+                    _worksheetFirstCheck = _wsRow['FIRST_RESULT_BY']
+                    _worksheetSecondCheck = _wsRow['SECOND_RESULT_BY']
                     _test = _wsRow['TEST']
                     _result = _wsRow['RESULT']
+                    _highlightColour = _wsRow['HighlightColour']
+
+                    _worksheetColour = "green"
+
+                    if _worksheetSecondCheck == None or _worksheetSecondCheck == "":
+                        _worksheetColour = "orange"
+                    else:
+                        if _worksheetFirstCheck == None or _worksheetFirstCheck == "":
+                            _worksheetColour = "red"
+
+                    if _highlightColour == None:
+                        _highlightColour = "black"
 
                     _row['WORKSHEET_OUTSTANDING'] = "no"
 
                     if (_result == None) or (_result == ''):
                         _row['RESULTS_OUTSTANDING'] = "yes"
-                        _result = "No result"
+                        _result = ""
 
+                    _worksheetListString =  _worksheetListString + "<span style='color: " + _worksheetColour + "'>" + _worksheet + " / " + "</span><span style='color: " + _highlightColour + "'>" + _test + ': ' + _result + "<span><br><br>"
                     # If the worksheet is not in the list
                     # i.e. index() fails, add it, otherwise move on
-                    try:
-                        _worksheetList.index(_worksheet)
-                    except:
-                        _worksheetList.append(_worksheet)
+                    # try:
+                    #     _worksheetList.index(_worksheet)
+                    # except:
+                    #     _worksheetList.append(_worksheet)
+                    #
+                    # try:
+                    #     _testResultList.append(_test + ': ' + _result)
+                    # except:
+                    #     # Do nothing
+                    #     _stuff = 1
 
-                    try:
-                        _testResultList.append(_test + ': ' + _result)
-                    except:
-                        # Do nothing
-                        _stuff = 1
+                #_worksheetList.remove("")
+                #_testResultList.remove("")
 
-                _worksheetList.remove("")
-                _testResultList.remove("")
+                #_worksheetListString = ''.join(_worksheetList)
+                #_testResultListString = ''.join(_testResultList)
 
-                _worksheetListString = ''.join(_worksheetList)
-                _testResultListString = ''.join(_testResultList)
+                #_row['WORKSHEETS'] = _worksheetListString + " / " + _testResultListString
 
-                _row['WORKSHEETS'] = _worksheetListString + " / " + _testResultListString
+
+                #Remove the last set of <br><br>
+                _len = len(_worksheetListString)
+
+                _wsListString = _worksheetListString[0:(_len - 8)]
+
+                _row['WORKSHEETS'] = _wsListString
 
             _previousLabNumber = _labNumber
 
