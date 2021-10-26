@@ -18,6 +18,8 @@ class Worksheet():
                 # If the lab number is different, compile the worksheet/test/result information
                 _wsResults = self.dataServices.GetSampleWorksheetResults(_labNumber)
 
+                _testsNoWorksheet = self.dataServices.GetSampleTestsNotAllocatedToWorksheet(_labNumber)
+
                 #_worksheetList = ["", ]
                 #_testResultList = ["", ]
 
@@ -71,11 +73,24 @@ class Worksheet():
 
                 #_row['WORKSHEETS'] = _worksheetListString + " / " + _testResultListString
 
-
-                #Remove the last set of <br><br>
+                # Remove the last set of <br><br>
                 _len = len(_worksheetListString)
 
                 _wsListString = _worksheetListString[0:(_len - 8)]
+
+                #Add the tests that are not allocated to worksheets
+                if _testsNoWorksheet.__len__() > 0:
+                    _wsListString = _wsListString + "<br><br><span>Tests not allocated to w/s: "
+
+                    for _item in _testsNoWorksheet:
+                        _testName = _item["TEST"]
+
+                        _wsListString = _wsListString + _testName + ", "
+
+                    # Remove the last comma
+                    _len = len(_wsListString)
+
+                    _wsListString = _wsListString[0:(_len - 1)] + "</span>"
 
                 _row['WORKSHEETS'] = _wsListString
 

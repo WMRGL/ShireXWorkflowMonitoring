@@ -61,7 +61,7 @@ class BMTSearch(TemplateView):
                     _pageNumber = 1
                     _itemsPerPage = 20
 
-            _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases('ONCOLOGY BMT', '', '', '', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode, _reasonForDiseaseIndication, request.user.username, '')
+            _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases('ONCOLOGY BMT', '', '', '', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode, '', '', _reasonForDiseaseIndication, '', '', request.user.username, '', '')
 
             _searchCount = _totalWorkflowCases.__len__()
 
@@ -127,9 +127,14 @@ class MPNSearch(TemplateView):
 
             _reportStatus = "NOTFINAL"
             _priority = ""
-            _diseaseIndicationCode = ""
-            _reasonForDiseaseIndication = ""
+            _diseaseIndicationCode1 = ""
+            _diseaseIndicationCode2 = ""
+            _diseaseIndicationCode3 = ""
+            _reasonForDiseaseIndication1 = ""
+            _reasonForDiseaseIndication2 = ""
+            _reasonForDiseaseIndication3 = ""
             _lastName = ""
+            _labNumber = ""
             _searchCount = 0
 
             if not _isPostBack:
@@ -145,9 +150,14 @@ class MPNSearch(TemplateView):
                     _itemsPerPage = self.utilities.GetRequestKey(request, "ddlCriteriaItemsPerPage", enumDataType.Integer)
                     _reportStatus = self.utilities.GetRequestKey(request, "ddlCriteriaStatus", enumDataType.String)
                     _priority = self.utilities.GetRequestKey(request, "ddlCriteriaPriority", enumDataType.String)
-                    _diseaseIndicationCode = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication", enumDataType.String)
-                    _reasonForDiseaseIndication = self.utilities.GetRequestKey(request, "ddlCriteriaReasonForDiseaseIndication", enumDataType.String)
+                    _diseaseIndicationCode1 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication1", enumDataType.String)
+                    _diseaseIndicationCode2 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication2", enumDataType.String)
+                    _diseaseIndicationCode3 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication3", enumDataType.String)
+                    _reasonForDiseaseIndication1 = self.utilities.GetRequestKey(request, "ddlCriteriaReasonForDiseaseIndication1", enumDataType.String)
+                    _reasonForDiseaseIndication2 = self.utilities.GetRequestKey(request, "ddlCriteriaReasonForDiseaseIndication2", enumDataType.String)
+                    _reasonForDiseaseIndication3 = self.utilities.GetRequestKey(request, "ddlCriteriaReasonForDiseaseIndication3", enumDataType.String)
                     _lastName = self.utilities.GetRequestKey(request, "txtCriteriaLastname", enumDataType.String)
+                    _labNumber = self.utilities.GetRequestKey(request, "txtCriteriaLabnumber", enumDataType.String)
                 except Exception as ex:
                     #If any errors occur return the default criteria
                     _dateFrom = datetime.today() - timedelta(days=365)
@@ -155,7 +165,7 @@ class MPNSearch(TemplateView):
                     _pageNumber = 1
                     _itemsPerPage = 20
 
-            _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases('2012_HAEM_ONC', 'D-MPD', 'R-MPD', 'D-CMML', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode, _reasonForDiseaseIndication, request.user.username, _lastName)
+            _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases('2012_HAEM_ONC', 'D-MPD', 'R-MPD', 'D-CMML', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1, _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName, _labNumber)
 
             _listOfSurnames = self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases)
 
@@ -175,7 +185,7 @@ class MPNSearch(TemplateView):
 
             _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', 'D-MPD', 'R-MPD', 'D-CMML')
 
-            _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(_diseaseIndicationCode)
+            _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(_diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3)
 
             _context = {
                 "criteriaDateFrom" : _dateFrom,
@@ -188,11 +198,16 @@ class MPNSearch(TemplateView):
                 "criteriaPriorities" : _priorities,
                 "criteriaPriority" : _priority,
                 "criteriaDiseaseIndications": _diseaseIndications,
-                "criteriaDiseaseIndication": _diseaseIndicationCode,
+                "criteriaDiseaseIndication1": _diseaseIndicationCode1,
+                "criteriaDiseaseIndication2": _diseaseIndicationCode2,
+                "criteriaDiseaseIndication3": _diseaseIndicationCode3,
                 "criteriaReasonsForDiseaseIndications": _reasonsForDiseaseIndications,
-                "criteriaReasonForDiseaseIndication": _reasonForDiseaseIndication,
+                "criteriaReasonForDiseaseIndication1": _reasonForDiseaseIndication1,
+                "criteriaReasonForDiseaseIndication2": _reasonForDiseaseIndication2,
+                "criteriaReasonForDiseaseIndication3": _reasonForDiseaseIndication3,
                 "criteriaSurnames": _listOfSurnames,
                 "criteriaSurname" : _lastName,
+                "criteriaLabnumber" : _labNumber,
                 "searchCount": _searchCount,
             }
             return render(request, self.template_name, _context)
