@@ -279,21 +279,23 @@
                             <td>
                                 {{ item.REPORT_BY }}
                             </td>
-                            {% if item.WORKSHEET_OUTSTANDING == "yes" %}
+                            {% autoescape off%}
+{#                            {% if item.WORKSHEET_OUTSTANDING == "yes" %}#}
+{#                                <td>#}
+{#                                    None#}
+{#                                </td>#}
+{#                            {% else %}#}
+{#                                {% if item.RESULTS_OUTSTANDING == "yes" %}#}
+{#                                <td>#}
+{#                                    {{ item.WORKSHEETS }}#}
+{#                                </td>#}
+{#                                {% else %}#}
                                 <td>
-                                    None
+                                {{ item.WORKSHEETS }}
                                 </td>
-                            {% else %}
-                                {% if item.RESULTS_OUTSTANDING == "yes" %}
-                                <td>
-                                    {{ item.WORKSHEETS }}
-                                </td>
-                                {% else %}
-                                <td>
-                                    {{ item.WORKSHEETS }}
-                                </td>
-                                {% endif %}
-                            {% endif %}
+{#                                {% endif %}#}
+{#                            {% endif %}#}
+                            {% endautoescape %}
                         </tr>
                     {% endfor %}
                 {% else %}

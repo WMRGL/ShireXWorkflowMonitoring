@@ -72,6 +72,10 @@ class BMTSearch(TemplateView):
             #For each Lab No/Reason/Bill line extract the worksheet summary for that Lab No
             _pageOfWorkflowCases = self.worksheetHelper.AddWorksheetTestResultsToWorkflowCases(_pageOfWorkflowCases)
 
+            _pageOfWorkflowCases = self.worksheetHelper.AddTestsWithNoWorksheetsToWorkflowCases(_pageOfWorkflowCases)
+
+            _pageOfWorkflowCases = self.worksheetHelper.ConvertWorksheetsColumnEmptyStringToNone(_pageOfWorkflowCases)
+
             #Codes for the search criteria
             _reportStatuses = self.dataServices.GetReportStatus()
 
@@ -79,7 +83,7 @@ class BMTSearch(TemplateView):
 
             _diseaseIndications = self.dataServices.GetDNADiseaseIndication('ONCOLOGY BMT', '', '', '')
 
-            _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(_diseaseIndicationCode)
+            _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(_diseaseIndicationCode, '', '')
 
             _context = {
                 "criteriaDateFrom" : _dateFrom,
@@ -178,6 +182,10 @@ class MPNSearch(TemplateView):
             #For each Lab No/Reason/Bill line extract the worksheet summary for that Lab No
             _pageOfWorkflowCases = self.worksheetHelper.AddWorksheetTestResultsToWorkflowCases(_pageOfWorkflowCases)
 
+            _pageOfWorkflowCases = self.worksheetHelper.AddTestsWithNoWorksheetsToWorkflowCases(_pageOfWorkflowCases)
+
+            _pageOfWorkflowCases = self.worksheetHelper.ConvertWorksheetsColumnEmptyStringToNone(_pageOfWorkflowCases)
+
             #Codes for the search criteria
             _reportStatuses = self.dataServices.GetReportStatus()
 
@@ -231,16 +239,22 @@ class SetAllocatedToForDNA(TemplateView):
 
         try:
 
-            _staff = STAFF.objects.get(LOGON_NAME=request.user.username)
+            _staffList = None
+            _staff = None
 
-            if _staff == None:
+            _staffQuery = STAFF.objects.filter(LOGON_NAME=request.user.username, EMPLOYMENT_END_DATE__isnull=True)
+
+            if _staffQuery == None or _staffQuery.__len__() == 0:
                 _context = {
                     "labNumber": _labNumber,
                     "errorMessage": "The system cannot find the staff code from the username"
                 }
                 return render(request, self.template_name, _context)
-
-            _staffList = STAFF.objects.all
+            else:
+                #Convert the queryset, which should only have one record
+                #to a single instance of the Staff record
+                for _item in _staffQuery:
+                    _staff = _item
 
             _isSupervisor = "N"
 
@@ -250,6 +264,7 @@ class SetAllocatedToForDNA(TemplateView):
 
             if _hasPermission:
                 _isSupervisor = "Y"
+                _staffList = STAFF.objects.all
 
             _cancelURL = "HaemOnc" + _workflowName + "Search"
 

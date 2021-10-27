@@ -355,21 +355,21 @@
                                 {{ item.REPORT_BY }}
                             </td>
                             {% autoescape off%}
-                            {% if item.WORKSHEET_OUTSTANDING == "yes" %}
+{#                            {% if item.WORKSHEET_OUTSTANDING == "yes" %}#}
+{#                                <td>#}
+{#                                    None#}
+{#                                </td>#}
+{#                            {% else %}#}
+{#                                {% if item.RESULTS_OUTSTANDING == "yes" %}#}
+{#                                <td>#}
+{#                                    {{ item.WORKSHEETS }}#}
+{#                                </td>#}
+{#                                {% else %}#}
                                 <td>
-                                    None
+                                {{ item.WORKSHEETS }}
                                 </td>
-                            {% else %}
-                                {% if item.RESULTS_OUTSTANDING == "yes" %}
-                                <td>
-                                    {{ item.WORKSHEETS }}
-                                </td>
-                                {% else %}
-                                <td>
-                                    {{ item.WORKSHEETS }}
-                                </td>
-                                {% endif %}
-                            {% endif %}
+{#                                {% endif %}#}
+{#                            {% endif %}#}
                             {% endautoescape %}
                             <td>
                                 {{ item.SampleAlert }}

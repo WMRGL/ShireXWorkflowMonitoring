@@ -11,14 +11,12 @@ class Worksheet():
         for _row in _pageOfWorkflowCases:
             _labNumber = _row['LABNO']
             _row['WORKSHEETS'] = ""
-            _row['RESULTS_OUTSTANDING'] = "no"
-            _row['WORKSHEET_OUTSTANDING'] = "yes"
+            #_row['RESULTS_OUTSTANDING'] = "no"
+            #_row['WORKSHEET_OUTSTANDING'] = "yes"
 
             if _labNumber != _previousLabNumber:
                 # If the lab number is different, compile the worksheet/test/result information
                 _wsResults = self.dataServices.GetSampleWorksheetResults(_labNumber)
-
-                _testsNoWorksheet = self.dataServices.GetSampleTestsNotAllocatedToWorksheet(_labNumber)
 
                 #_worksheetList = ["", ]
                 #_testResultList = ["", ]
@@ -45,10 +43,10 @@ class Worksheet():
                     if _highlightColour == None:
                         _highlightColour = "black"
 
-                    _row['WORKSHEET_OUTSTANDING'] = "no"
+                    #_row['WORKSHEET_OUTSTANDING'] = "no"
 
                     if (_result == None) or (_result == ''):
-                        _row['RESULTS_OUTSTANDING'] = "yes"
+                        #_row['RESULTS_OUTSTANDING'] = "yes"
                         _result = ""
 
                     _worksheetListString =  _worksheetListString + "<span style='color: " + _worksheetColour + "'>" + _worksheet + " / " + "</span><span style='color: " + _highlightColour + "'>" + _test + ': ' + _result + "<span><br><br>"
@@ -73,24 +71,13 @@ class Worksheet():
 
                 #_row['WORKSHEETS'] = _worksheetListString + " / " + _testResultListString
 
-                # Remove the last set of <br><br>
-                _len = len(_worksheetListString)
+                _wsListString = ""
 
-                _wsListString = _worksheetListString[0:(_len - 8)]
+                if _worksheetListString.__len__() > 0:
+                    # Remove the last set of <br><br>
+                    _len = len(_worksheetListString)
 
-                #Add the tests that are not allocated to worksheets
-                if _testsNoWorksheet.__len__() > 0:
-                    _wsListString = _wsListString + "<br><br><span>Tests not allocated to w/s: "
-
-                    for _item in _testsNoWorksheet:
-                        _testName = _item["TEST"]
-
-                        _wsListString = _wsListString + _testName + ", "
-
-                    # Remove the last comma
-                    _len = len(_wsListString)
-
-                    _wsListString = _wsListString[0:(_len - 1)] + "</span>"
+                    _wsListString = _worksheetListString[0:(_len - 8)]
 
                 _row['WORKSHEETS'] = _wsListString
 
@@ -115,3 +102,47 @@ class Worksheet():
         _sortedListOfLastNames = sorted(_lastnameList)
 
         return _sortedListOfLastNames
+
+    def AddTestsWithNoWorksheetsToWorkflowCases(self, _pageOfWorkflowCases):
+        #An extension routine for the various workflow search routines
+        _previousLabNumber = ""
+
+        for _row in _pageOfWorkflowCases:
+            _labNumber = _row['LABNO']
+            _noWsString = ""
+
+            if _labNumber != _previousLabNumber:
+                # If the lab number is different, compile the information
+                _testsNoWorksheet = self.dataServices.GetSampleTestsNotAllocatedToWorksheet(_labNumber)
+
+                _worksheetListString = _row['WORKSHEETS']
+
+                if _testsNoWorksheet.__len__() > 0:
+                    if _worksheetListString.__len__() > 0:
+                        _noWsString = "<br><br><span>Tests not allocated to w/s: "
+                    else:
+                        _noWsString = "<span>Tests not allocated to w/s: "
+
+                    for _item in _testsNoWorksheet:
+                        _testName = _item["TEST"]
+
+                        _noWsString = _noWsString + _testName + ", "
+
+                    # Remove the last comma and close the span
+                    _len = len(_noWsString)
+
+                    _noWsString = _noWsString[0:(_len - 3)] + "</span>"
+
+                    _row['WORKSHEETS'] = _worksheetListString + _noWsString
+
+            _previousLabNumber = _labNumber
+
+        return _pageOfWorkflowCases
+
+    def ConvertWorksheetsColumnEmptyStringToNone(self, _pageOfWorkflowCases):
+
+        for _row in _pageOfWorkflowCases:
+            if _row['WORKSHEETS'] == "" or _row['WORKSHEETS'] == " ":
+                _row['WORKSHEETS'] = None
+
+        return _pageOfWorkflowCases
