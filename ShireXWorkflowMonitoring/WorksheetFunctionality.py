@@ -31,6 +31,7 @@ class Worksheet():
                     _test = _wsRow['TEST']
                     _result = _wsRow['RESULT']
                     _highlightColour = _wsRow['HighlightColour']
+                    _retest = _wsRow['RETEST']
 
                     _worksheetColour = "green"
 
@@ -43,13 +44,20 @@ class Worksheet():
                     if _highlightColour == None:
                         _highlightColour = "black"
 
+                    if _retest == None:
+                        _retest = 0         #False
+
+                    _reTestString = ""
+                    if _retest == -1:
+                        _reTestString = " (A)"
+
                     #_row['WORKSHEET_OUTSTANDING'] = "no"
 
                     if (_result == None) or (_result == ''):
                         #_row['RESULTS_OUTSTANDING'] = "yes"
                         _result = ""
 
-                    _worksheetListString =  _worksheetListString + "<span style='color: " + _worksheetColour + "'>" + _worksheet + " / " + "</span><span style='color: " + _highlightColour + "'>" + _test + ': ' + _result + "<span><br><br>"
+                    _worksheetListString =  _worksheetListString + "<span style='color: " + _worksheetColour + "'>" + _worksheet + _reTestString + " / " + "</span><span style='color: " + _highlightColour + "'>" + _test + ': ' + _result + "<span><br><br>"
                     # If the worksheet is not in the list
                     # i.e. index() fails, add it, otherwise move on
                     # try:

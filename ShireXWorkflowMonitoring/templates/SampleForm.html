@@ -130,6 +130,51 @@
     </div>
     <div class="container">
         <div class="ms-3 mb-3">
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTestTable" aria-expanded="false" aria-controls="collapseExample">
+            Tests
+            </button>
+        </div>
+        <div class="collapse show" id="collapseTestTable">
+            <div class="container-fluid">
+                <table class="table table-bordered">
+                    <thead class="bg-primary" style="color:white">
+                        <th scope="col">
+                            Test
+                        </th>
+                        <th scope="col">
+                            Activated
+                        </th>
+                    </thead>
+                    <tbody>
+                        {% if tests %}
+                            {% for item in tests %}
+                                <tr>
+                                    <td>
+                                        {{ item.TEST }}
+                                    </td>
+                                    <td>
+                                        {% if item.RETEST == -1 %}
+                                            Yes
+                                        {% else %}
+                                            No
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td>
+                                    There are no tests
+                                </td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="ms-3 mb-3">
             <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWorksheetTable" aria-expanded="false" aria-controls="collapseExample">
             Worksheets / Test results
             </button>
@@ -140,6 +185,12 @@
                     <thead class="bg-primary" style="color:white">
                         <th scope="col">
                             Worksheet
+                        </th>
+                        <th scope="col">
+                            1st Check by
+                        </th>
+                        <th scope="col">
+                            2nd Check by
                         </th>
                         <th scope="col">
                             Test
@@ -157,6 +208,12 @@
                                 <tr>
                                     <td>
                                         {{ item.WORKSHEET }}
+                                    </td>
+                                    <td>
+                                        {{ item.FIRST_RESULT_BY }}
+                                    </td>
+                                    <td>
+                                        {{ item.SECOND_RESULT_BY }}
                                     </td>
                                     <td>
                                         {{ item.TEST }}

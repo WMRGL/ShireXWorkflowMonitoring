@@ -27,6 +27,8 @@ class SampleForm(TemplateView):
 
             _indicationReportBills = self.dataServices.GetSampleIndicationReportBill(_labNumber)
 
+            _tests = self.dataServices.GetSampleTests(_labNumber)
+
             _worksheetResults = self.dataServices.GetSampleWorksheetResults(_labNumber)
 
             _backURL = "HaemOnc" + _workflowName + "Search"
@@ -36,6 +38,7 @@ class SampleForm(TemplateView):
                 "labNumber": _labNumber,
                 "sampleItem": _sampleItem,
                 "indicationReportBills" : _indicationReportBills,
+                "tests": _tests,
                 "worksheetResults" : _worksheetResults,
                 "backURL": _backURL,
             }

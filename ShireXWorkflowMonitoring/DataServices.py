@@ -6,9 +6,9 @@ class ShireData():
 
     utilities = UtilityFunctions()
 
-    def GetDNAWorkflowCases(self, _indicationCategory1, _indicationDisease1, _indicationDisease2, _indicationDisease3, _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonCode1, _reasonCode2, _reasonCode3, _username, _surname, _labNumber):
+    def GetDNAWorkflowCases(self, _indicationCategory1, _indicationDisease1, _indicationDisease2, _indicationDisease3, _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonCode1, _reasonCode2, _reasonCode3, _username, _surname, _labNumber, _NoResultStatus):
         with connection.cursor() as _cursor:
-            _cursor.execute("{CALL dbo.uspShireXGetDNAWorkflowCases(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)}", (_indicationCategory1, _indicationDisease1, _indicationDisease2, _indicationDisease3, _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonCode1,_reasonCode2,_reasonCode3, _username, _surname, _labNumber))
+            _cursor.execute("{CALL dbo.uspShireXGetDNAWorkflowCases(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)}", (_indicationCategory1, _indicationDisease1, _indicationDisease2, _indicationDisease3, _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonCode1,_reasonCode2,_reasonCode3, _username, _surname, _labNumber, _NoResultStatus))
 
             _workflowCases = self.utilities.ConvertCursorListToDict(_cursor)
 
@@ -93,6 +93,15 @@ class ShireData():
     def GetSampleTestsNotAllocatedToWorksheet(self, _LabNumber):
         with connection.cursor() as _cursor:
             _cursor.execute("{CALL dbo.uspShireXGetSampleTestsNotAllocatedToWorksheet(%s)}", (_LabNumber,))
+
+            _results = self.utilities.ConvertCursorListToDict(_cursor)
+
+            return _results
+
+
+    def GetSampleTests(self, _LabNumber):
+        with connection.cursor() as _cursor:
+            _cursor.execute("{CALL dbo.uspShireXGetSampleTests(%s)}", (_LabNumber,))
 
             _results = self.utilities.ConvertCursorListToDict(_cursor)
 
