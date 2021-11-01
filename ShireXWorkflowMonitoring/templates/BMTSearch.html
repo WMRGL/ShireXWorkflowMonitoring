@@ -22,9 +22,6 @@
                     <div class="mb-3">
                         <div class="row g-5 align-items-center">
                             <div class="col-2">
-                                <input type="hidden" id="txtPageNumber" name="txtPageNumber">
-                            </div>
-                            <div class="col-2">
                                 <label for="txtCriteriaDateFrom" class="col-form-label">Date from:</label>
                             </div>
                             <div class="col-2">
@@ -37,12 +34,23 @@
                                 <input type="date" class="form-control" name="txtCriteriaDateTo" id="txtCriteriaDateTo" value="{{ criteriaDateTo|date:'Y-m-d' }}">
                             </div>
                             <div class="col-2">
-                                &nbsp;
+                                <label for="txtCriteriaLastname" class="col-form-label">Surname:</label>
+                            </div>
+                            <div class="col-2">
+                                <input type="text" class="form-control" name="txtCriteriaLastname" id="txtCriteriaLastname" list="listOfSurnames" {% if criteriaSurname != "" %} value="{{ criteriaSurname }}" {% endif %}>
+                                <datalist id="listOfSurnames">
+                                    {% for item in criteriaSurnames %}
+                                        <option value="{{ item }}" />
+                                    {% endfor %}
+                                </datalist>
                             </div>
                         </div>
                         <div class="row g-5 align-items-center">
                             <div class="col-2">
-                                &nbsp;
+                                <label for="txtCriteriaLabnumber" class="col-form-label">Lab number:</label>
+                            </div>
+                            <div class="col-2">
+                                <input type="text" class="form-control" name="txtCriteriaLabnumber" id="txtCriteriaLabnumber" {% if criteriaLabnumber != "" %} value="{{ criteriaLabnumber }}" {% endif %}>
                             </div>
                             <div class="col-2">
                                 <label for="ddlCriteriaStatus" class="col-form-label">Status:</label>
@@ -52,6 +60,7 @@
 {#                                  The status of "not final" is a special criteria that is the default #}
 {#                                  search criteria i.e. all reports not finalised.  #}
                                     <option value="NOTFINAL" {% if criteriaReportStatus == "" %} selected="selected" {% endif %}>Not Final</option>
+                                    <option value="NONE" {% if criteriaReportStatus == "NONE" %} selected="selected" {% endif %}>None</option>
                                     {% if criteriaReportStatuses %}
                                         {% for item in criteriaReportStatuses %}
                                             <option value="{{ item.REPORT_STATUS }}" {% if item.REPORT_STATUS == criteriaReportStatus %} selected="selected" {% endif %}>{{ item.REPORT_STATUS }}</option>
@@ -72,39 +81,43 @@
                                     {% endif %}
                                 </select>
                             </div>
-                            <div class="col-2">
-                                &nbsp;
-                            </div>
                         </div>
                         <div class="row g-5 align-items-center">
                             <div class="col-2">
-                                &nbsp;
+                                <label for="ddlCriteriaDiseaseIndication1" class="col-form-label">Indication:</label>
                             </div>
                             <div class="col-2">
-                                <label for="ddlCriteriaDiseaseIndication" class="col-form-label">Indication:</label>
-                            </div>
-                            <div class="col-2">
-                                <select class="form-select" name="ddlCriteriaDiseaseIndication" id="ddlCriteriaDiseaseIndication">
-                                    <option value="" {% if criteriaDiseaseIndication == "" %} selected="selected" {% endif %}>select...</option>
+                                <select class="form-select" name="ddlCriteriaDiseaseIndication1" id="ddlCriteriaDiseaseIndication1">
+                                    <option value="" {% if criteriaDiseaseIndication1 == "" %} selected="selected" {% endif %}>select...</option>
                                     {% if criteriaDiseaseIndications %}
                                         {% for item in criteriaDiseaseIndications %}
-                                            <option value="{{ item.DISEASE_CODE }}" {% if item.DISEASE_CODE == criteriaDiseaseIndication %} selected="selected" {% endif %}>{{ item.DISEASE_CODE }}</option>
+                                            <option value="{{ item.DISEASE_CODE }}" {% if item.DISEASE_CODE == criteriaDiseaseIndication1 %} selected="selected" {% endif %}>{{ item.DISEASE_CODE }}</option>
                                         {% endfor %}
                                     {% endif %}
                                 </select>
                             </div>
                             <div class="col-2">
-                                <label for="ddlCriteriaReasonForDiseaseIndication" class="col-form-label">Reason:</label>
-                            </div>
-                            <div class="col-2">
-                                <select class="form-select" name="ddlCriteriaReasonForDiseaseIndication" id="ddlCriteriaReasonForDiseaseIndication">
-                                    <option value="" {% if criteriaReasonForDiseaseIndication == "" %} selected="selected" {% endif %}>select...</option>
-                                    {% if criteriaReasonsForDiseaseIndications %}
-                                        {% for item in criteriaReasonsForDiseaseIndications %}
-                                            <option value="{{ item.REASON_CODE }}" {% if item.REASON_CODE == criteriaReasonForDiseaseIndication %} selected="selected" {% endif %}>{{ item.REASON_CODE }}</option>
+                                <select class="form-select" name="ddlCriteriaDiseaseIndication2" id="ddlCriteriaDiseaseIndication2">
+                                    <option value="" {% if criteriaDiseaseIndication2 == "" %} selected="selected" {% endif %}>select...</option>
+                                    {% if criteriaDiseaseIndications %}
+                                        {% for item in criteriaDiseaseIndications %}
+                                            <option value="{{ item.DISEASE_CODE }}" {% if item.DISEASE_CODE == criteriaDiseaseIndication2 %} selected="selected" {% endif %}>{{ item.DISEASE_CODE }}</option>
                                         {% endfor %}
                                     {% endif %}
                                 </select>
+                            </div>
+                            <div class="col-2">
+                                <select class="form-select" name="ddlCriteriaDiseaseIndication3" id="ddlCriteriaDiseaseIndication3">
+                                    <option value="" {% if criteriaDiseaseIndication3 == "" %} selected="selected" {% endif %}>select...</option>
+                                    {% if criteriaDiseaseIndications %}
+                                        {% for item in criteriaDiseaseIndications %}
+                                            <option value="{{ item.DISEASE_CODE }}" {% if item.DISEASE_CODE == criteriaDiseaseIndication3 %} selected="selected" {% endif %}>{{ item.DISEASE_CODE }}</option>
+                                        {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </div>
+                            <div class="col-2">
+                                &nbsp;
                             </div>
                             <div class="col-2">
                                 &nbsp;
@@ -112,18 +125,68 @@
                         </div>
                         <div class="row g-5 align-items-center">
                             <div class="col-2">
+                                <label for="ddlCriteriaReasonForDiseaseIndication1" class="col-form-label">Reason:</label>
+                            </div>
+                            <div class="col-2">
+                                <select class="form-select" name="ddlCriteriaReasonForDiseaseIndication1" id="ddlCriteriaReasonForDiseaseIndication1">
+                                    <option value="" {% if criteriaReasonForDiseaseIndication1 == "" %} selected="selected" {% endif %}>select...</option>
+                                    {% if criteriaReasonsForDiseaseIndications %}
+                                        {% for item in criteriaReasonsForDiseaseIndications %}
+                                            <option value="{{ item.REASON_CODE }}" {% if item.REASON_CODE == criteriaReasonForDiseaseIndication1 %} selected="selected" {% endif %}>{{ item.REASON_CODE }}</option>
+                                        {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </div>
+                            <div class="col-2">
+                                <select class="form-select" name="ddlCriteriaReasonForDiseaseIndication2" id="ddlCriteriaReasonForDiseaseIndication2">
+                                    <option value="" {% if criteriaReasonForDiseaseIndication2 == "" %} selected="selected" {% endif %}>select...</option>
+                                    {% if criteriaReasonsForDiseaseIndications %}
+                                        {% for item in criteriaReasonsForDiseaseIndications %}
+                                            <option value="{{ item.REASON_CODE }}" {% if item.REASON_CODE == criteriaReasonForDiseaseIndication2 %} selected="selected" {% endif %}>{{ item.REASON_CODE }}</option>
+                                        {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </div>
+                            <div class="col-2">
+                                <select class="form-select" name="ddlCriteriaReasonForDiseaseIndication3" id="ddlCriteriaReasonForDiseaseIndication3">
+                                    <option value="" {% if criteriaReasonForDiseaseIndication3 == "" %} selected="selected" {% endif %}>select...</option>
+                                    {% if criteriaReasonsForDiseaseIndications %}
+                                        {% for item in criteriaReasonsForDiseaseIndications %}
+                                            <option value="{{ item.REASON_CODE }}" {% if item.REASON_CODE == criteriaReasonForDiseaseIndication3 %} selected="selected" {% endif %}>{{ item.REASON_CODE }}</option>
+                                        {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </div>
+                            <div class="col-2">
                                 &nbsp;
+                            </div>
+                            <div class="col-2">
+                                &nbsp;
+                            </div>
+                        </div>
+                        <div class="row g-5 align-items-center">
+                            <div class="col-2">
+                                <label for="ddlCriteriaNoResult" class="col-form-label">No result:</label>
+                                <input type="hidden" id="txtPageNumber" name="txtPageNumber">
+                            </div>
+                            <div class="col-2">
+                                <select class="form-select" name="ddlCriteriaNoResult" id="ddlCriteriaNoResult">
+                                    <option value="0" {% if criteriaNoResult == 0 %} selected="selected" {% endif %}>select...</option>
+                                    <option value="1" {% if criteriaNoResult == 1 %} selected="selected" {% endif %}>No result</option>
+                                    <option value="2" {% if criteriaNoResult == 2 %} selected="selected" {% endif %}>No wksheet</option>
+                                    <option value="3" {% if criteriaNoResult == 3 %} selected="selected" {% endif %}>Both</option>
+                                </select>
                             </div>
                             <div class="col-2">
                                 <label for="ddlCriteriaItemsPerPage" class="col-form-label">Items per page:</label>
                             </div>
-                            <div class="col-2">
-                                <select class="form-select" name="ddlCriteriaItemsPerPage" id="ddlCriteriaItemsPerPage">
+                            <div class="col-1" style="padding-right: unset">   {# Unset to make select control wide enough #}
+                                <select class="form-select" style="width: 100%" name="ddlCriteriaItemsPerPage" id="ddlCriteriaItemsPerPage">
                                     <option value="20" {% if itemsPerPage == 20 %} selected="selected" {% endif %}>20</option>
                                     <option value="40" {% if itemsPerPage == 40 %} selected="selected" {% endif %}>40</option>
                                 </select>
                             </div>
-                            <div class="col-2">
+                            <div class="col-1">
                                 <input type="submit" value="Search" name="btnSubmit" id="btnSubmit" class="btn btn-primary">
                             </div>
                             <div class="col-2">
@@ -158,7 +221,7 @@
                         Lab Number
                     </th>
                     <th scope="col">
-                        Reason
+                        Indication / Reason
                     </th>
                     <th scope="col">
                         Sample type
@@ -214,7 +277,7 @@
                                 <a href="{% url 'SampleForm' _labNumber=item.LABNO _workflowName='BMT' %}">{{ item.LABNO }}</a>
                             </td>
                             <td>
-                                {{ item.REASON }}
+                                {{ item.DISEASE_CODE }} /<br>{{ item.REASON }}
                             </td>
                             <td>
                                 {{ item.SAMPLETYPE }}
@@ -279,21 +342,23 @@
                             <td>
                                 {{ item.REPORT_BY }}
                             </td>
-                            {% if item.WORKSHEET_OUTSTANDING == "yes" %}
+                            {% autoescape off%}
+{#                            {% if item.WORKSHEET_OUTSTANDING == "yes" %}#}
+{#                                <td>#}
+{#                                    None#}
+{#                                </td>#}
+{#                            {% else %}#}
+{#                                {% if item.RESULTS_OUTSTANDING == "yes" %}#}
+{#                                <td>#}
+{#                                    {{ item.WORKSHEETS }}#}
+{#                                </td>#}
+{#                                {% else %}#}
                                 <td>
-                                    None
+                                {{ item.WORKSHEETS }}
                                 </td>
-                            {% else %}
-                                {% if item.RESULTS_OUTSTANDING == "yes" %}
-                                <td>
-                                    {{ item.WORKSHEETS }}
-                                </td>
-                                {% else %}
-                                <td>
-                                    {{ item.WORKSHEETS }}
-                                </td>
-                                {% endif %}
-                            {% endif %}
+{#                                {% endif %}#}
+{#                            {% endif %}#}
+                            {% endautoescape %}
                         </tr>
                     {% endfor %}
                 {% else %}
