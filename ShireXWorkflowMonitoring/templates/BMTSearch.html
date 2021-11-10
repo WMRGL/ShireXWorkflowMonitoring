@@ -166,15 +166,15 @@
                         </div>
                         <div class="row g-5 align-items-center">
                             <div class="col-2">
-                                <label for="ddlCriteriaNoResult" class="col-form-label">No result:</label>
+                                <label for="ddlCriteriaNoResult" class="col-form-label">Workflow:</label>
                                 <input type="hidden" id="txtPageNumber" name="txtPageNumber">
                             </div>
                             <div class="col-2">
                                 <select class="form-select" name="ddlCriteriaNoResult" id="ddlCriteriaNoResult">
                                     <option value="0" {% if criteriaNoResult == 0 %} selected="selected" {% endif %}>select...</option>
-                                    <option value="1" {% if criteriaNoResult == 1 %} selected="selected" {% endif %}>No result</option>
+                                    <option value="1" {% if criteriaNoResult == 1 %} selected="selected" {% endif %}>No test</option>
                                     <option value="2" {% if criteriaNoResult == 2 %} selected="selected" {% endif %}>No wksheet</option>
-                                    <option value="3" {% if criteriaNoResult == 3 %} selected="selected" {% endif %}>Both</option>
+                                    <option value="3" {% if criteriaNoResult == 3 %} selected="selected" {% endif %}>No result</option>
                                 </select>
                             </div>
                             <div class="col-2">
