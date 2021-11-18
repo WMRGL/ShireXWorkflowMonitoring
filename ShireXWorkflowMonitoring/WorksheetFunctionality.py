@@ -27,7 +27,7 @@ class Worksheet():
                     # For each worksheet/test/result
                     _worksheet = _wsRow['WORKSHEET']
                     _worksheetFirstCheck = _wsRow['FIRST_RESULT_BY']
-                    _worksheetSecondCheck = _wsRow['SECOND_RESULT_BY']
+                    _worksheetSecondCheck = _wsRow['FIRST_RESULT_CHECKED_BY']
                     _test = _wsRow['TEST']
                     _result = _wsRow['RESULT']
                     _highlightColour = _wsRow['HighlightColour']

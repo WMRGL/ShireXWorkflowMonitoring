@@ -11,7 +11,7 @@
             </div>
             <div class="col-10">
                 <h2 class="text-center">
-                    BMT Workflow
+                    D-HCL Workflow
                 </h2>
             </div>
         </div>
@@ -180,8 +180,8 @@
                             <div class="col-2">
                                 <label for="ddlCriteriaItemsPerPage" class="col-form-label">Items per page:</label>
                             </div>
-                            <div class="col-1" style="padding-right: unset">   {# Unset to make select control wide enough #}
-                                <select class="form-select" style="width: 100%" name="ddlCriteriaItemsPerPage" id="ddlCriteriaItemsPerPage">
+                            <div class="col-1" style="padding-right: unset">  {# Unset to make select control wide enough #}
+                                <select class="form-select" name="ddlCriteriaItemsPerPage" id="ddlCriteriaItemsPerPage">
                                     <option value="20" {% if itemsPerPage == 20 %} selected="selected" {% endif %}>20</option>
                                     <option value="40" {% if itemsPerPage == 40 %} selected="selected" {% endif %}>40</option>
                                 </select>
@@ -212,9 +212,6 @@
                         Claim
                     </th>
                     <th scope="col">
-                        Alert
-                    </th>
-                    <th scope="col">
                         Patient (Date deceased)
                     </th>
                     <th scope="col">
@@ -236,6 +233,9 @@
                         Alloc to
                     </th>
                     <th scope="col">
+                        Key
+                    </th>
+                    <th scope="col">
                         Date received
                     </th>
                     <th scope="col">
@@ -253,16 +253,16 @@
                     <th scope="col">
                         Wksheet / Result
                     </th>
+                    <th scope="col">
+                        Alert
+                    </th>
                 </thead>
                 <tbody>
                 {% if workflowCases %}
                     {% for item in workflowCases %}
                         <tr>
                             <td>
-                                <a class="btn btn-primary" href="{% url 'HaemOncSetAllocatedTo' _labNumber=item.LABNO _workflowName='BMT' %}">&nbsp;</a>
-                            </td>
-                            <td>
-                                {{ item.SampleAlert }}
+                                <a class="btn btn-primary" href="{% url 'HaemOncSetAllocatedTo' _labNumber=item.LABNO _workflowName='MPN' %}">&nbsp;</a>
                             </td>
                             {% if item.DECEASED_DATE %}
                             <td>
@@ -274,7 +274,7 @@
                             </td>
                             {% endif %}
                             <td>
-                                <a href="{% url 'SampleForm' _labNumber=item.LABNO _workflowName='BMT' %}">{{ item.LABNO }}</a>
+                                <a href="{% url 'SampleForm'  _labNumber=item.LABNO _workflowName='MPN' %}">{{ item.LABNO }}</a>
                             </td>
                             <td>
                                 {{ item.DISEASE_CODE }} /<br>{{ item.REASON }}
@@ -302,24 +302,39 @@
                                 No target date
                             </td>
                             {% else %}
-                                {% if item.DaysRemaining < 5 and item.REPORT_STATUS|slice:":5"|upper != "FINAL"%}
+                                {% if item.DaysRemaining <= -100 and item.REPORT_STATUS|slice:":5"|upper != "FINAL"%}
                                 <td style="background-color: red; color: white">
                                     {{ item.DaysRemaining }}
                                 </td>
                                 {% else %}
-                                    {% if item.REPORT_STATUS|slice:":5"|upper == "FINAL" %}
-                                    <td>
-                                        0
-                                    </td>
-                                    {% else %}
-                                    <td>
+                                    {% if item.DaysRemaining <= 0 and item.REPORT_STATUS|slice:":5"|upper != "FINAL" %}
+                                    <td style="color: red; font-weight: bold">
                                         {{ item.DaysRemaining }}
                                     </td>
+                                    {% else %}
+                                        {% if item.DaysRemaining <= 5 and item.REPORT_STATUS|slice:":5"|upper != "FINAL" %}
+                                        <td style="color: orange; font-weight: bold">
+                                            {{ item.DaysRemaining }}
+                                        </td>
+                                        {% else %}
+                                            {% if item.REPORT_STATUS|slice:":5"|upper == "FINAL" %}
+                                            <td>
+                                                0
+                                            </td>
+                                            {% else %}
+                                            <td>
+                                                {{ item.DaysRemaining }}
+                                            </td>
+                                            {% endif %}
+                                        {% endif %}
                                     {% endif %}
                                 {% endif %}
                             {% endif %}
                             <td>
                                 {{ item.ALLOCATED_TO }}
+                            </td>
+                            <td>
+                                {{ item.REF }}
                             </td>
                             <td>
                                 {{ item.DATE_RECEIVED|date:'d-m-Y' }}
@@ -359,6 +374,9 @@
 {#                                {% endif %}#}
 {#                            {% endif %}#}
                             {% endautoescape %}
+                            <td>
+                                {{ item.SampleAlert }}
+                            </td>
                         </tr>
                     {% endfor %}
                 {% else %}
