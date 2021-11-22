@@ -24,6 +24,8 @@
                                 Haem-Oncology
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="{% url 'HaemOncEverythingSearch' %}">All Workflows</a>
+                                <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="{% url 'HaemOncALLSearch' %}">ALL</a></li>
                                 <li><a class="dropdown-item" href="{% url 'HaemOncBreakSearch' %}">BREAK</a></li>
                                 <li><a class="dropdown-item" href="{% url 'HaemOncDONCSearch' %}">D-ONC</a></li>
@@ -41,8 +43,6 @@
                                 <li><a class="dropdown-item" href="{% url 'HaemOncSNPSearch' %}">SNP - Array analysis</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" href="{% url 'HaemOncWGSSearch' %}">WGS</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{% url 'HaemOncEverythingSearch' %}">All Workflows</a>
                             </ul>
                         </li>
                     </ul>
