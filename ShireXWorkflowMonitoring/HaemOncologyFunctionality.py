@@ -100,7 +100,8 @@ class BMTSearch(TemplateView):
 
             _diseaseIndications = self.dataServices.GetDNADiseaseIndication('ONCOLOGY BMT', 'BMT')
 
-            _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(_diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3)
+            #_reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(_diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3)
+            _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication('BMT','','')
 
             _context = {
                 "criteriaDateFrom" : _dateFrom,

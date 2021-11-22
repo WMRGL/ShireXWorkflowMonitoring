@@ -88,33 +88,34 @@
                             </div>
                             <div class="col-2">
                                 <select class="form-select" name="ddlCriteriaDiseaseIndication1" id="ddlCriteriaDiseaseIndication1">
-                                    <option value="" {% if criteriaDiseaseIndication1 == "" %} selected="selected" {% endif %}>select...</option>
-                                    {% if criteriaDiseaseIndications %}
-                                        {% for item in criteriaDiseaseIndications %}
-                                            <option value="{{ item.DISEASE_CODE }}" {% if item.DISEASE_CODE == criteriaDiseaseIndication1 %} selected="selected" {% endif %}>{{ item.DISEASE_CODE }}</option>
-                                        {% endfor %}
-                                    {% endif %}
+                      {#             <option value="" {% if criteriaDiseaseIndication1 == "" %} selected="selected" {% endif %}>select...</option>#}
+                      {#              {% if criteriaDiseaseIndications %}#}
+                      {#                  {% for item in criteriaDiseaseIndications %}#}
+                      {#                      <option value="{{ item.DISEASE_CODE }}" {% if item.DISEASE_CODE == criteriaDiseaseIndication1 %} selected="selected" {% endif %}>{{ item.DISEASE_CODE }}</option>#}
+                      {#                  {% endfor %}#}
+                      {#              {% endif %}#}
+                                    <option value="BMT">BMT</option>
                                 </select>
                             </div>
-                            <div class="col-2">
-                                <select class="form-select" name="ddlCriteriaDiseaseIndication2" id="ddlCriteriaDiseaseIndication2">
-                                    <option value="" {% if criteriaDiseaseIndication2 == "" %} selected="selected" {% endif %}>select...</option>
-                                    {% if criteriaDiseaseIndications %}
-                                        {% for item in criteriaDiseaseIndications %}
-                                            <option value="{{ item.DISEASE_CODE }}" {% if item.DISEASE_CODE == criteriaDiseaseIndication2 %} selected="selected" {% endif %}>{{ item.DISEASE_CODE }}</option>
-                                        {% endfor %}
-                                    {% endif %}
-                                </select>
+                                <div class="col-2">
+                            {#    <select class="form-select" name="ddlCriteriaDiseaseIndication2" id="ddlCriteriaDiseaseIndication2">#}
+                            {#        <option value="" {% if criteriaDiseaseIndication2 == "" %} selected="selected" {% endif %}>select...</option>#}
+                            {#{% if criteriaDiseaseIndications %}#}
+                            {#           {% for item in criteriaDiseaseIndications %}#}
+                            {#                <option value="{{ item.DISEASE_CODE }}" {% if item.DISEASE_CODE == criteriaDiseaseIndication2 %} selected="selected" {% endif %}>{{ item.DISEASE_CODE }}</option>#}
+                            {#            {% endfor %}#}
+                            {#        {% endif %}#}
+                            {#    </select>#}
                             </div>
                             <div class="col-2">
-                                <select class="form-select" name="ddlCriteriaDiseaseIndication3" id="ddlCriteriaDiseaseIndication3">
-                                    <option value="" {% if criteriaDiseaseIndication3 == "" %} selected="selected" {% endif %}>select...</option>
-                                    {% if criteriaDiseaseIndications %}
-                                        {% for item in criteriaDiseaseIndications %}
-                                            <option value="{{ item.DISEASE_CODE }}" {% if item.DISEASE_CODE == criteriaDiseaseIndication3 %} selected="selected" {% endif %}>{{ item.DISEASE_CODE }}</option>
-                                        {% endfor %}
-                                    {% endif %}
-                                </select>
+                            {#    <select class="form-select" name="ddlCriteriaDiseaseIndication3" id="ddlCriteriaDiseaseIndication3">#}
+                            {#        <option value="" {% if criteriaDiseaseIndication3 == "" %} selected="selected" {% endif %}>select...</option>#}
+                            {#        {% if criteriaDiseaseIndications %}#}
+                            {#            {% for item in criteriaDiseaseIndications %}#}
+                            {#                <option value="{{ item.DISEASE_CODE }}" {% if item.DISEASE_CODE == criteriaDiseaseIndication3 %} selected="selected" {% endif %}>{{ item.DISEASE_CODE }}</option>#}
+                            {#            {% endfor %}#}
+                            {#        {% endif %}#}
+                            {#    </select>#}
                             </div>
                             <div class="col-2">
                                 &nbsp;
@@ -138,24 +139,24 @@
                                 </select>
                             </div>
                             <div class="col-2">
-                                <select class="form-select" name="ddlCriteriaReasonForDiseaseIndication2" id="ddlCriteriaReasonForDiseaseIndication2">
-                                    <option value="" {% if criteriaReasonForDiseaseIndication2 == "" %} selected="selected" {% endif %}>select...</option>
-                                    {% if criteriaReasonsForDiseaseIndications %}
-                                        {% for item in criteriaReasonsForDiseaseIndications %}
-                                            <option value="{{ item.REASON_CODE }}" {% if item.REASON_CODE == criteriaReasonForDiseaseIndication2 %} selected="selected" {% endif %}>{{ item.REASON_CODE }}</option>
-                                        {% endfor %}
-                                    {% endif %}
-                                </select>
+                      {#          <select class="form-select" name="ddlCriteriaReasonForDiseaseIndication2" id="ddlCriteriaReasonForDiseaseIndication2">#}
+                      {#              <option value="" {% if criteriaReasonForDiseaseIndication2 == "" %} selected="selected" {% endif %}>select...</option>#}
+                      {#              {% if criteriaReasonsForDiseaseIndications %}#}
+                      {#                  {% for item in criteriaReasonsForDiseaseIndications %}#}
+                      {#                      <option value="{{ item.REASON_CODE }}" {% if item.REASON_CODE == criteriaReasonForDiseaseIndication2 %} selected="selected" {% endif %}>{{ item.REASON_CODE }}</option>#}
+                      {#                  {% endfor %}#}
+                      {#              {% endif %}#}
+                      {#          </select>#}
                             </div>
                             <div class="col-2">
-                                <select class="form-select" name="ddlCriteriaReasonForDiseaseIndication3" id="ddlCriteriaReasonForDiseaseIndication3">
-                                    <option value="" {% if criteriaReasonForDiseaseIndication3 == "" %} selected="selected" {% endif %}>select...</option>
-                                    {% if criteriaReasonsForDiseaseIndications %}
-                                        {% for item in criteriaReasonsForDiseaseIndications %}
-                                            <option value="{{ item.REASON_CODE }}" {% if item.REASON_CODE == criteriaReasonForDiseaseIndication3 %} selected="selected" {% endif %}>{{ item.REASON_CODE }}</option>
-                                        {% endfor %}
-                                    {% endif %}
-                                </select>
+                      {#          <select class="form-select" name="ddlCriteriaReasonForDiseaseIndication3" id="ddlCriteriaReasonForDiseaseIndication3">#}
+                      {#              <option value="" {% if criteriaReasonForDiseaseIndication3 == "" %} selected="selected" {% endif %}>select...</option>#}
+                      {#              {% if criteriaReasonsForDiseaseIndications %}#}
+                      {#                  {% for item in criteriaReasonsForDiseaseIndications %}#}
+                      {#                      <option value="{{ item.REASON_CODE }}" {% if item.REASON_CODE == criteriaReasonForDiseaseIndication3 %} selected="selected" {% endif %}>{{ item.REASON_CODE }}</option>#}
+                      {#                  {% endfor %}#}
+                      {#              {% endif %}#}
+                      {#          </select>#}
                             </div>
                             <div class="col-2">
                                 &nbsp;
