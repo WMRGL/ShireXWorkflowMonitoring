@@ -1,12 +1,14 @@
 from django.contrib.auth.backends import BaseBackend
 from django.contrib.auth.models import User
+from django.contrib import messages
+
 from .models import STAFF
 
 class ShireBackend(BaseBackend):
     def authenticate(self, request, username=None, password=None):
         _isUserPasswordValid = False
 
-        #Make sure the username and password are both provided
+            #Make sure the username and password are both provided
         if username==None or password==None:
             return None
 
@@ -17,19 +19,24 @@ class ShireBackend(BaseBackend):
                 return None
 
             for item in userValidObj:
-
                 #Do the password check separate, because the SQL server comparison
                 #is not case sensitive.  Whereas the code below is!
+
                 if item.PASSWORD == password:
                     _isUserPasswordValid = True
 
             if userValidObj.__len__() > 1:
-                if _isUserPasswordValid:
-                    _errTxt = ' with one of them having a valid password'
-                else:
-                    _errTxt = '. None of them have a valid password'
+                #if _isUserPasswordValid:
+                    #    _errTxt = ' with one of them having a valid password'
+                    #else:
+                    #    _errTxt = '. None of them have a valid password'
 
-                raise ValueError('ShireBackend.authenticate : The system found two active user staff records' + _errTxt)
+#               raise ValueError('ShireBackend.authenticate : The system found two active user staff records' + _errTxt)
+                raise ValueError('something')
+
+        except ValueError as errlogin:
+            messages.error(request, "There are multiple active user staff records with that username, please see the system administrator.")
+            return None
 
         except Exception as ex:
             return None

@@ -32,7 +32,14 @@
                 <input type="password" id="userPassword" name="txtPassword" class="form-control">
             </div>
 
-            {% if error_message %}
+            {% if messages %}
+            <div class="alert alert-danger mb-3  text-center" role="alert">
+                {% for message in messages %}
+                    {{ message }}
+                {% endfor %}
+            </div>
+
+            {% elif error_message %}
             <div class="alert alert-danger mb-3  text-center" role="alert">
                 {{ error_message }}
             </div>

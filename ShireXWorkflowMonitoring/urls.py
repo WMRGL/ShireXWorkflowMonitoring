@@ -27,6 +27,7 @@ urlpatterns = [
     path('HO/D-ONC/', HaemOncologyFunctionality.DONCSearch.as_view(), name="HaemOncDONCSearch"),
     path('HO/D-CS/', HaemOncologyFunctionality.DCSSearch.as_view(), name="HaemOncDCSSearch"),
     path('HO/R-BCR/', HaemOncologyFunctionality.RBCRSearch.as_view(), name="HaemOncRBCRSearch"),
+    path('HO/FAL/', HaemOncologyFunctionality.FALSearch.as_view(), name="HaemOncFALSearch"),
     path('HO/Everything/', HaemOncologyFunctionality.EverythingSearch.as_view(), name="HaemOncEverythingSearch"),
     path('HO/Allocate/<str:_labNumber>/<str:_workflowName>/', HaemOncologyFunctionality.SetAllocatedToForDNA.as_view(), name="HaemOncSetAllocatedTo"),
     path('Sample/<str:_labNumber>/<str:_workflowName>/', SampleFunctionality.SampleForm.as_view(), name="SampleForm"),

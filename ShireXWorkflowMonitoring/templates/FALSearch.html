@@ -11,7 +11,7 @@
             </div>
             <div class="col-10">
                 <h2 class="text-center">
-                    SNP Array Analysis Workflow
+                    F-AML/F-ALL Workflow
                 </h2>
             </div>
         </div>
@@ -129,34 +129,33 @@
                             </div>
                             <div class="col-2">
                                 <select class="form-select" name="ddlCriteriaReasonForDiseaseIndication1" id="ddlCriteriaReasonForDiseaseIndication1">
-                            {#        <option value="" {% if criteriaReasonForDiseaseIndication1 == "" %} selected="selected" {% endif %}>select...</option>#}
-                            {#        {% if criteriaReasonsForDiseaseIndications %}#}
-                            {#            {% for item in criteriaReasonsForDiseaseIndications %}#}
-                            {#                <option value="{{ item.REASON_CODE }}" {% if item.REASON_CODE == criteriaReasonForDiseaseIndication1 %} selected="selected" {% endif %}>{{ item.REASON_CODE }}</option>#}
-                            {#            {% endfor %}#}
-                            {#        {% endif %}#}
-                                    <option value="SNP array analysis">SNP Array Analysis</option>
+                                    <option value="" {% if criteriaReasonForDiseaseIndication1 == "" %} selected="selected" {% endif %}>select...</option>
+                                    {% if criteriaReasonsForDiseaseIndications %}
+                                        {% for item in criteriaReasonsForDiseaseIndications %}
+                                            <option value="{{ item.REASON_CODE }}" {% if item.REASON_CODE == criteriaReasonForDiseaseIndication1 %} selected="selected" {% endif %}>{{ item.REASON_CODE }}</option>
+                                        {% endfor %}
+                                    {% endif %}
                                 </select>
                             </div>
                             <div class="col-2">
-                         {#       <select class="form-select" name="ddlCriteriaReasonForDiseaseIndication2" id="ddlCriteriaReasonForDiseaseIndication2">#}
-                         {#          <option value="" {% if criteriaReasonForDiseaseIndication2 == "" %} selected="selected" {% endif %}>select...</option>#}
-                         {#           {% if criteriaReasonsForDiseaseIndications %}#}
-                         {#               {% for item in criteriaReasonsForDiseaseIndications %}#}
-                         {#                   <option value="{{ item.REASON_CODE }}" {% if item.REASON_CODE == criteriaReasonForDiseaseIndication2 %} selected="selected" {% endif %}>{{ item.REASON_CODE }}</option>#}
-                         {#               {% endfor %}#}
-                         {#           {% endif %}#}
-                         {#       </select>#}
+                                <select class="form-select" name="ddlCriteriaReasonForDiseaseIndication2" id="ddlCriteriaReasonForDiseaseIndication2">
+                                    <option value="" {% if criteriaReasonForDiseaseIndication2 == "" %} selected="selected" {% endif %}>select...</option>
+                                    {% if criteriaReasonsForDiseaseIndications %}
+                                        {% for item in criteriaReasonsForDiseaseIndications %}
+                                            <option value="{{ item.REASON_CODE }}" {% if item.REASON_CODE == criteriaReasonForDiseaseIndication2 %} selected="selected" {% endif %}>{{ item.REASON_CODE }}</option>
+                                        {% endfor %}
+                                    {% endif %}
+                                </select>
                             </div>
                             <div class="col-2">
-                         {#       <select class="form-select" name="ddlCriteriaReasonForDiseaseIndication3" id="ddlCriteriaReasonForDiseaseIndication3">#}
-                         {#           <option value="" {% if criteriaReasonForDiseaseIndication3 == "" %} selected="selected" {% endif %}>select...</option>#}
-                         {#           {% if criteriaReasonsForDiseaseIndications %}#}
-                         {#               {% for item in criteriaReasonsForDiseaseIndications %}#}
-                         {#                   <option value="{{ item.REASON_CODE }}" {% if item.REASON_CODE == criteriaReasonForDiseaseIndication3 %} selected="selected" {% endif %}>{{ item.REASON_CODE }}</option>#}
-                         {#               {% endfor %}#}
-                         {#           {% endif %}#}
-                         {#       </select>#}
+                                <select class="form-select" name="ddlCriteriaReasonForDiseaseIndication3" id="ddlCriteriaReasonForDiseaseIndication3">
+                                    <option value="" {% if criteriaReasonForDiseaseIndication3 == "" %} selected="selected" {% endif %}>select...</option>
+                                    {% if criteriaReasonsForDiseaseIndications %}
+                                        {% for item in criteriaReasonsForDiseaseIndications %}
+                                            <option value="{{ item.REASON_CODE }}" {% if item.REASON_CODE == criteriaReasonForDiseaseIndication3 %} selected="selected" {% endif %}>{{ item.REASON_CODE }}</option>
+                                        {% endfor %}
+                                    {% endif %}
+                                </select>
                             </div>
                             <div class="col-2">
                                 &nbsp;
@@ -263,7 +262,7 @@
                     {% for item in workflowCases %}
                         <tr>
                             <td>
-                                <a class="btn btn-primary" href="{% url 'HaemOncSetAllocatedTo' _labNumber=item.LABNO _workflowName='SNP' %}">&nbsp;</a>
+                                <a class="btn btn-primary" href="{% url 'HaemOncSetAllocatedTo' _labNumber=item.LABNO _workflowName='MPN' %}">&nbsp;</a>
                             </td>
                             {% if item.DECEASED_DATE %}
                             <td>
@@ -275,7 +274,7 @@
                             </td>
                             {% endif %}
                             <td>
-                                <a href="{% url 'SampleForm'  _labNumber=item.LABNO _workflowName='SNP' %}">{{ item.LABNO }}</a>
+                                <a href="{% url 'SampleForm'  _labNumber=item.LABNO _workflowName='MPN' %}">{{ item.LABNO }}</a>
                             </td>
                             <td>
                                 {{ item.DISEASE_CODE }} /<br>{{ item.REASON }}
@@ -418,33 +417,33 @@
             document.getElementById('txtPageNumber').value = '1';
         })
 
- {#     document.getElementById('ddlCriteriaDiseaseIndication1').addEventListener('change', function () {
- {#
- {#           if (IsFormValid()) {
- {#              document.getElementById('ddlCriteriaReasonForDiseaseIndication1').value = '';
- {#               document.getElementById('ddlCriteriaReasonForDiseaseIndication2').value = '';
- {#               document.getElementById('ddlCriteriaReasonForDiseaseIndication3').value = '';
- {#               DoPostBack();
- {#           }
- {#       } )
+        document.getElementById('ddlCriteriaDiseaseIndication1').addEventListener('change', function () {
 
- {#       document.getElementById('ddlCriteriaDiseaseIndication2').addEventListener('change', function () {
- {#           if (IsFormValid()) {
- {#               document.getElementById('ddlCriteriaReasonForDiseaseIndication1').value = '';
- {#               document.getElementById('ddlCriteriaReasonForDiseaseIndication2').value = '';
- {#               document.getElementById('ddlCriteriaReasonForDiseaseIndication3').value = '';
- {#               DoPostBack();
- {#           }
- {#       } )
+            if (IsFormValid()) {
+                document.getElementById('ddlCriteriaReasonForDiseaseIndication1').value = '';
+                document.getElementById('ddlCriteriaReasonForDiseaseIndication2').value = '';
+                document.getElementById('ddlCriteriaReasonForDiseaseIndication3').value = '';
+                DoPostBack();
+            }
+        } )
 
- {#        document.getElementById('ddlCriteriaDiseaseIndication3').addEventListener('change', function () {
- {#           if (IsFormValid()) {
- {#               document.getElementById('ddlCriteriaReasonForDiseaseIndication1').value = '';
- {#               document.getElementById('ddlCriteriaReasonForDiseaseIndication2').value = '';
- {#               document.getElementById('ddlCriteriaReasonForDiseaseIndication3').value = '';
- {#               DoPostBack();
- {#           }
- {#       } )
+        document.getElementById('ddlCriteriaDiseaseIndication2').addEventListener('change', function () {
+            if (IsFormValid()) {
+                document.getElementById('ddlCriteriaReasonForDiseaseIndication1').value = '';
+                document.getElementById('ddlCriteriaReasonForDiseaseIndication2').value = '';
+                document.getElementById('ddlCriteriaReasonForDiseaseIndication3').value = '';
+                DoPostBack();
+            }
+        } )
+
+        document.getElementById('ddlCriteriaDiseaseIndication3').addEventListener('change', function () {
+            if (IsFormValid()) {
+                document.getElementById('ddlCriteriaReasonForDiseaseIndication1').value = '';
+                document.getElementById('ddlCriteriaReasonForDiseaseIndication2').value = '';
+                document.getElementById('ddlCriteriaReasonForDiseaseIndication3').value = '';
+                DoPostBack();
+            }
+        } )
 
         document.getElementById('btnPageFirst').addEventListener('click', function () { DoSubmitFirstPage(); } );
         document.getElementById('btnPagePrevious').addEventListener('click', function () { DoSubmitPreviousPage(); } );
