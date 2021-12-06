@@ -989,12 +989,12 @@ class SNPSearch(TemplateView):
                     _reasonForDiseaseIndication1 = self.utilities.GetRequestKey(request,
                                                                                 "ddlCriteriaReasonForDiseaseIndication1",
                                                                                 enumDataType.String)
-                    _reasonForDiseaseIndication2 = self.utilities.GetRequestKey(request,
-                                                                                "ddlCriteriaReasonForDiseaseIndication2",
-                                                                                enumDataType.String)
-                    _reasonForDiseaseIndication3 = self.utilities.GetRequestKey(request,
-                                                                                "ddlCriteriaReasonForDiseaseIndication3",
-                                                                                enumDataType.String)
+                    #_reasonForDiseaseIndication2 = self.utilities.GetRequestKey(request,
+                    #                                                            "ddlCriteriaReasonForDiseaseIndication2",
+                    #                                                            enumDataType.String)
+                    #_reasonForDiseaseIndication3 = self.utilities.GetRequestKey(request,
+                    #                                                            "ddlCriteriaReasonForDiseaseIndication3",
+                    #                                                            enumDataType.String)
                     _lastName = self.utilities.GetRequestKey(request, "txtCriteriaLastname", enumDataType.String)
                     _labNumber = self.utilities.GetRequestKey(request, "txtCriteriaLabnumber", enumDataType.String)
                     _noResultStatus = self.utilities.GetRequestKey(request, "ddlCriteriaNoResult", enumDataType.Integer)
