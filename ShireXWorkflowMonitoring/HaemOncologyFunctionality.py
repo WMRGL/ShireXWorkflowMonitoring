@@ -1,6 +1,5 @@
 #Add Haem Onc specific classes in this file
 from django.http import HttpResponseRedirect
-from django.http import HttpResponse
 from django.shortcuts import render
 
 from django.urls import reverse

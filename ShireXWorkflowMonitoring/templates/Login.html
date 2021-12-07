@@ -16,7 +16,7 @@
             {% csrf_token %}
             <div class="mb-4">
                 <a href="https://bwc.nhs.uk/">
-                    <img src={% static 'BWCLogo.png' %}>
+                    <img src="{% static 'BWCLogo.png' %}"/>
                 </a>
             </div>
             <div class="mb-3">
@@ -25,7 +25,7 @@
 
             <div class="mb-3">
                 <label for="userName" class="form-label">User name</label>
-                <input type="text" id="userName" name="txtUsername" class="form-control" autofocus="true" autocomplete="off">
+                <input type="text" id="userName" name="txtUsername" class="form-control" autofocus autocomplete="off">
             </div>
             <div class="mb-3">
                 <label for="userPassword" class="form-label">Password</label>

@@ -4,11 +4,12 @@ from django.contrib import messages
 
 from .models import STAFF
 
+
 class ShireBackend(BaseBackend):
     def authenticate(self, request, username=None, password=None):
         _isUserPasswordValid = False
 
-            #Make sure the username and password are both provided
+        #Make sure the username and password are both provided
         if username==None or password==None:
             return None
 
