@@ -26,16 +26,16 @@ class ShireBackend(BaseBackend):
                     _isUserPasswordValid = True
 
             if userValidObj.__len__() > 1:
-                #if _isUserPasswordValid:
-                    #    _errTxt = ' with one of them having a valid password'
-                    #else:
-                    #    _errTxt = '. None of them have a valid password'
+                if _isUserPasswordValid:
+                    _errTxt = ' the password is correct for one of them.'
+                else:
+                    _errTxt = ' the password is incorrect for both of them.'
 
 #               raise ValueError('ShireBackend.authenticate : The system found two active user staff records' + _errTxt)
-                raise ValueError('something')
+                raise ValueError('Multiple users')
 
         except ValueError as errlogin:
-            messages.error(request, "There are multiple active user staff records with that username, please see the system administrator.")
+            messages.error(request, 'There are multiple active user staff records with that username, ' + _errTxt + ' Please see the system administrator.')
             return None
 
         except Exception as ex:
