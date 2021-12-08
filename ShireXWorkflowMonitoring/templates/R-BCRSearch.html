@@ -262,7 +262,7 @@
                     {% for item in workflowCases %}
                         <tr>
                             <td>
-                                <a class="btn btn-primary" href="{% url 'HaemOncSetAllocatedTo' _labNumber=item.LABNO _workflowName='R-BCR' %}">&nbsp;</a>
+                                <a class="btn btn-primary" href="{% url 'HaemOncSetAllocatedTo' _labNumber=item.LABNO _workflowName='RBCR' %}">&nbsp;</a>
                             </td>
                             {% if item.DECEASED_DATE %}
                             <td>
@@ -274,7 +274,7 @@
                             </td>
                             {% endif %}
                             <td>
-                                <a href="{% url 'SampleForm'  _labNumber=item.LABNO _workflowName='R-BCR' %}">{{ item.LABNO }}</a>
+                                <a href="{% url 'SampleForm'  _labNumber=item.LABNO _workflowName='RBCR' %}">{{ item.LABNO }}</a>
                             </td>
                             <td>
                                 {{ item.DISEASE_CODE }} /<br>{{ item.REASON }}
