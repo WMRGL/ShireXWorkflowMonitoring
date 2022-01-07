@@ -66,10 +66,20 @@ class Start(TemplateView):
 
             return render(request, self.template_name, _context)
 
+class AllocateComplete(TemplateView):
+
+    template_name = "AllocateComplete.html"
+
+    def get(self, request):
+        if not request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('LoginPage'))
+        else:
+            _context = None
+            return render(request, self.template_name, _context)
+
 class Authenticate():
     def DoLogout(request):
         logout(request)
-
         return HttpResponseRedirect(reverse('LoginPage'))
 
 class enumDataType(Enum):
@@ -83,7 +93,6 @@ class UtilityFunctions():
     def GetRequestKey(self, request, keyName, dataType):
         for _key in request.GET:
             if _key == keyName:
-
                 _strVal = request.GET[_key]
 
                 if dataType == enumDataType.Datetime:
@@ -107,7 +116,6 @@ class UtilityFunctions():
     def PostRequestKey(self, request, keyName, dataType):
         for _key in request.POST:
             if _key == keyName:
-
                 _strVal = request.POST[_key]
 
                 if dataType == enumDataType.Datetime:

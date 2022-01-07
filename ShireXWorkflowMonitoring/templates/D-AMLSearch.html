@@ -11,7 +11,7 @@
             </div>
             <div class="col-10">
                 <h2 class="text-center">
-                    D-AML Workflow
+                    AML & MDS Workflow
                 </h2>
             </div>
         </div>
@@ -262,7 +262,8 @@
                     {% for item in workflowCases %}
                         <tr>
                             <td>
-                                <a class="btn btn-primary" href="{% url 'HaemOncSetAllocatedTo' _labNumber=item.LABNO _workflowName='D-AML' %}">&nbsp;</a>
+                                {#<a class="btn btn-primary" href="{% url 'HaemOncSetAllocatedTo' _labNumber=item.LABNO _workflowName='DAML' %}" target="_blank" id="btnClaimX">&nbsp;</a>#}
+                                <a class="btn btn-primary" href="{% url 'HaemOncSetAllocatedTo' _labNumber=item.LABNO _workflowName='DAML' %}" id="btnClaim">&nbsp;</a>
                             </td>
                             {% if item.DECEASED_DATE %}
                             <td>
@@ -274,7 +275,7 @@
                             </td>
                             {% endif %}
                             <td>
-                                <a href="{% url 'SampleForm'  _labNumber=item.LABNO _workflowName='DAML' %}">{{ item.LABNO }}</a>
+                                <a href="{% url 'SampleForm'  _labNumber=item.LABNO _workflowName='DAML' %}" target="_blank">{{ item.LABNO }}</a>
                             </td>
                             <td>
                                 {{ item.DISEASE_CODE }} /<br>{{ item.REASON }}
@@ -413,7 +414,8 @@
     </div>
 
     <script>
-        window.addEventListener('load', function() {
+
+            window.addEventListener('load', function() {
             document.getElementById('txtPageNumber').value = '1';
         })
 
@@ -426,6 +428,13 @@
                 DoPostBack();
             }
         } )
+
+        document.getElementById('btnClaim').addEventListener('click', function () {
+        {#    var currentURL = window.location.href;#}
+        {#    createCookie("currenturl", currentURL);#}
+
+        })
+
 
         document.getElementById('ddlCriteriaDiseaseIndication2').addEventListener('change', function () {
             if (IsFormValid()) {

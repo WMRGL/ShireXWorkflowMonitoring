@@ -97,21 +97,23 @@
                                 </select>
                             </div>
                             <div class="col-2">
-                                <select class="form-select" name="ddlCriteriaDiseaseIndication2" id="ddlCriteriaDiseaseIndication2">
-                                    <option value="" {% if criteriaDiseaseIndication2 == "" %} selected="selected" {% endif %}>select...</option>
-                                    {% if criteriaDiseaseIndications %}
-                                        {% for item in criteriaDiseaseIndications %}
-                                            <option value="{{ item.DISEASE_CODE }}" {% if item.DISEASE_CODE == criteriaDiseaseIndication2 %} selected="selected" {% endif %}>{{ item.DISEASE_CODE }}</option>
-                                        {% endfor %}
-                                    {% endif %}
-                                </select>
+                            {#    <select class="form-select" name="ddlCriteriaDiseaseIndication2" id="ddlCriteriaDiseaseIndication2">#}
+                            {#        <option value="" {% if criteriaDiseaseIndication2 == "" %} selected="selected" {% endif %}>select...</option>#}
+                            {#       {% if criteriaDiseaseIndications %}#}
+                            {#            {% for item in criteriaDiseaseIndications %}#}
+                            {#                <option value="{{ item.DISEASE_CODE }}" {% if item.DISEASE_CODE == criteriaDiseaseIndication2 %} selected="selected" {% endif %}>{{ item.DISEASE_CODE }}</option>#}
+                            {#            {% endfor %}#}
+                            {#        {% endif %}#}
+                            {#    </select>#}
+                                <label for="ddlCriteriaRefKey" class="col-form-label">Key:</label>
                             </div>
                             <div class="col-2">
-                                <select class="form-select" name="ddlCriteriaDiseaseIndication3" id="ddlCriteriaDiseaseIndication3">
-                                    <option value="" {% if criteriaDiseaseIndication3 == "" %} selected="selected" {% endif %}>select...</option>
-                                    {% if criteriaDiseaseIndications %}
-                                        {% for item in criteriaDiseaseIndications %}
-                                            <option value="{{ item.DISEASE_CODE }}" {% if item.DISEASE_CODE == criteriaDiseaseIndication3 %} selected="selected" {% endif %}>{{ item.DISEASE_CODE }}</option>
+                            {#    <select class="form-select" name="ddlCriteriaDiseaseIndication3" id="ddlCriteriaDiseaseIndication3">#}
+                                <select class="form-select" name="ddlCriteriaRefKey" id="ddlCriteriaRefKey">
+                                    <option value="" {% if criteriaRefKey == "" %} selected="selected" {% endif %}>select...</option>
+                                    {% if criteriaRefKey %}
+                                        {% for item in criteriaRefKey %}
+                                            <option value="{{ item.REF }}" {% if item.REF == criteriaRefKey %} selected="selected" {% endif %}>{{ item.REF }}</option>
                                         {% endfor %}
                                     {% endif %}
                                 </select>
@@ -418,32 +420,32 @@
         })
 
         document.getElementById('ddlCriteriaDiseaseIndication1').addEventListener('change', function () {
-
             if (IsFormValid()) {
                 document.getElementById('ddlCriteriaReasonForDiseaseIndication1').value = '';
                 document.getElementById('ddlCriteriaReasonForDiseaseIndication2').value = '';
                 document.getElementById('ddlCriteriaReasonForDiseaseIndication3').value = '';
+                document.getElementById('ddlCriteriaRefKey').value = '';
                 DoPostBack();
             }
         } )
 
-        document.getElementById('ddlCriteriaDiseaseIndication2').addEventListener('change', function () {
-            if (IsFormValid()) {
-                document.getElementById('ddlCriteriaReasonForDiseaseIndication1').value = '';
-                document.getElementById('ddlCriteriaReasonForDiseaseIndication2').value = '';
-                document.getElementById('ddlCriteriaReasonForDiseaseIndication3').value = '';
-                DoPostBack();
-            }
-        } )
+        {#document.getElementById('ddlCriteriaDiseaseIndication2').addEventListener('change', function () {#}
+        {#   if (IsFormValid()) {#}
+        {#        document.getElementById('ddlCriteriaReasonForDiseaseIndication1').value = '';#}
+        {#        document.getElementById('ddlCriteriaReasonForDiseaseIndication2').value = '';#}
+        {#        document.getElementById('ddlCriteriaReasonForDiseaseIndication3').value = '';#}
+        {#        DoPostBack();#}
+        {#    }#}
+        {#} )#}
 
-        document.getElementById('ddlCriteriaDiseaseIndication3').addEventListener('change', function () {
-            if (IsFormValid()) {
-                document.getElementById('ddlCriteriaReasonForDiseaseIndication1').value = '';
-                document.getElementById('ddlCriteriaReasonForDiseaseIndication2').value = '';
-                document.getElementById('ddlCriteriaReasonForDiseaseIndication3').value = '';
-                DoPostBack();
-            }
-        } )
+        {#document.getElementById('ddlCriteriaDiseaseIndication3').addEventListener('change', function () {#}
+        {#    if (IsFormValid()) {#}
+        {#        document.getElementById('ddlCriteriaReasonForDiseaseIndication1').value = '';#}
+        {#        document.getElementById('ddlCriteriaReasonForDiseaseIndication2').value = '';#}
+        {#        document.getElementById('ddlCriteriaReasonForDiseaseIndication3').value = '';#}
+        {#        DoPostBack();#}
+        {#    }#}
+        {#} )#}
 
         document.getElementById('btnPageFirst').addEventListener('click', function () { DoSubmitFirstPage(); } );
         document.getElementById('btnPagePrevious').addEventListener('click', function () { DoSubmitPreviousPage(); } );
@@ -512,31 +514,31 @@
             let _errorMessage = ''
 
             let _indicationDisease1 = Nz(document.getElementById('ddlCriteriaDiseaseIndication1').value,'');
-            let _indicationDisease2 = Nz(document.getElementById('ddlCriteriaDiseaseIndication2').value,'');
-            let _indicationDisease3 = Nz(document.getElementById('ddlCriteriaDiseaseIndication3').value,'');
+            {#let _indicationDisease2 = Nz(document.getElementById('ddlCriteriaDiseaseIndication2').value,'');#}
+            {#let _indicationDisease3 = Nz(document.getElementById('ddlCriteriaDiseaseIndication3').value,'');#}
 
             let _reason1 = Nz(document.getElementById('ddlCriteriaReasonForDiseaseIndication1').value,'');
             let _reason2 = Nz(document.getElementById('ddlCriteriaReasonForDiseaseIndication2').value,'');
             let _reason3 = Nz(document.getElementById('ddlCriteriaReasonForDiseaseIndication3').value,'');
 
-            if (_indicationDisease2 != '' && _indicationDisease1 == '')
-            {
-                _errorMessage = _errorMessage + 'You must enter the indication search criteria in order \n';
-            }
-            else
-            {
-                if (_indicationDisease3 != '' && _indicationDisease1 == '')
-                {
-                    _errorMessage = _errorMessage + 'You must enter the indication search criteria in order \n';
-                }
-                else
-                {
-                    if (_indicationDisease3 != '' && _indicationDisease2 == '')
-                    {
-                        _errorMessage = _errorMessage + 'You must enter the indication search criteria in order \n';
-                    }
-                }
-            }
+            {#if (_indicationDisease2 != '' && _indicationDisease1 == '')#}
+            {#{#}
+            {#    _errorMessage = _errorMessage + 'You must enter the indication search criteria in order \n';#}
+            {#}#}
+            {#else#}
+            {#{#}
+            {#    if (_indicationDisease3 != '' && _indicationDisease1 == '')#}
+            {#    {#}
+            {#        _errorMessage = _errorMessage + 'You must enter the indication search criteria in order \n';#}
+            {#    }#}
+            {#    else#}
+            {#    {#}
+            {#        if (_indicationDisease3 != '' && _indicationDisease2 == '')#}
+            {#        {#}
+            {#            _errorMessage = _errorMessage + 'You must enter the indication search criteria in order \n';#}
+            {#        }#}
+            {#    }#}
+            {#}#}
 
             if (_reason2 != '' && _reason1 == '')
             {

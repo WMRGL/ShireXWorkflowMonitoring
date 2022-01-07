@@ -42,11 +42,12 @@ class BMTSearch(TemplateView):
             _reasonForDiseaseIndication3 = ""
             _lastName = ""
             _labNumber = ""
+            _RefKey = ""
             _noResultStatus = 0
             _searchCount = 0
 
             if not _isPostBack:
-                _dateFrom = datetime.today() - timedelta(days=30)
+                _dateFrom = datetime.today() - timedelta(days=60)
                 _dateTo = datetime.today() + timedelta(days=30)
                 _pageNumber = 1
                 _itemsPerPage = 20
@@ -69,13 +70,13 @@ class BMTSearch(TemplateView):
                     _noResultStatus = self.utilities.GetRequestKey(request, "ddlCriteriaNoResult", enumDataType.Integer)
                 except Exception as ex:
                     #If any errors occur return the default criteria
-                    _dateFrom = datetime.today() - timedelta(days=30)
+                    _dateFrom = datetime.today() - timedelta(days=60)
                     _dateTo = datetime.today() + timedelta(days=30)
                     _pageNumber = 1
                     _itemsPerPage = 20
 
             #_totalWorkflowCases = self.dataServices.GetDNAWorkflowCases('ONCOLOGY BMT', '', '', '', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1, _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName, _labNumber, _noResultStatus)
-            _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases('ONCOLOGY BMT', 'BMT', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1, _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName, _labNumber, _noResultStatus)
+            _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases('ONCOLOGY BMT', 'BMT', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1, _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName, _labNumber, _RefKey, _noResultStatus)
 
             _listOfSurnames = self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases)
 
@@ -164,11 +165,12 @@ class MPNSearch(TemplateView):
             _reasonForDiseaseIndication3 = ""
             _lastName = ""
             _labNumber = ""
+            _RefKey = ""
             _noResultStatus = 0
             _searchCount = 0
 
             if not _isPostBack:
-                _dateFrom = datetime.today() - timedelta(days=30)
+                _dateFrom = datetime.today() - timedelta(days=60)
                 _dateTo = datetime.today() + timedelta(days=30)
                 _pageNumber = 1
                 _itemsPerPage = 20
@@ -196,7 +198,7 @@ class MPNSearch(TemplateView):
                     _pageNumber = 1
                     _itemsPerPage = 20
 
-            _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases('2012_HAEM_ONC', 'MPN', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1, _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName, _labNumber, _noResultStatus)
+            _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases('2012_HAEM_ONC', 'MPN', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1, _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName, _labNumber, _RefKey, _noResultStatus)
             _listOfSurnames = self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases)
 
             _searchCount = _totalWorkflowCases.__len__()
@@ -283,11 +285,12 @@ class DAMLSearch(TemplateView):
             _reasonForDiseaseIndication3 = ""
             _lastName = ""
             _labNumber = ""
+            _RefKey = ""
             _noResultStatus = 0
             _searchCount = 0
 
             if not _isPostBack:
-                _dateFrom = datetime.today() - timedelta(days=30)
+                _dateFrom = datetime.today() - timedelta(days=60)
                 _dateTo = datetime.today() + timedelta(days=30)
                 _pageNumber = 1
                 _itemsPerPage = 20
@@ -315,7 +318,7 @@ class DAMLSearch(TemplateView):
                     _pageNumber = 1
                     _itemsPerPage = 20
 
-            _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases('2012_HAEM_ONC', 'DAML', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1, _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName, _labNumber, _noResultStatus)
+            _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases('2012_HAEM_ONC', 'DAML', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1, _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName, _labNumber, _RefKey, _noResultStatus)
             _listOfSurnames = self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases)
 
             _searchCount = _totalWorkflowCases.__len__()
@@ -402,11 +405,12 @@ class BreakSearch(TemplateView):
             _reasonForDiseaseIndication3 = ""
             _lastName = ""
             _labNumber = ""
+            _RefKey = ""
             _noResultStatus = 0
             _searchCount = 0
 
             if not _isPostBack:
-                _dateFrom = datetime.today() - timedelta(days=30)
+                _dateFrom = datetime.today() - timedelta(days=60)
                 _dateTo = datetime.today() + timedelta(days=30)
                 _pageNumber = 1
                 _itemsPerPage = 20
@@ -453,6 +457,7 @@ class BreakSearch(TemplateView):
                                                                         _reasonForDiseaseIndication2,
                                                                         _reasonForDiseaseIndication3,
                                                                         request.user.username, _lastName, _labNumber,
+                                                                        _RefKey,
                                                                         _noResultStatus)
             _listOfSurnames = self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases)
 
@@ -542,11 +547,12 @@ class MDSSearch(TemplateView):
             _reasonForDiseaseIndication3 = ""
             _lastName = ""
             _labNumber = ""
+            _RefKey = ""
             _noResultStatus = 0
             _searchCount = 0
 
             if not _isPostBack:
-                _dateFrom = datetime.today() - timedelta(days=30)
+                _dateFrom = datetime.today() - timedelta(days=60)
                 _dateTo = datetime.today() + timedelta(days=30)
                 _pageNumber = 1
                 _itemsPerPage = 20
@@ -593,6 +599,7 @@ class MDSSearch(TemplateView):
                                                                         _reasonForDiseaseIndication2,
                                                                         _reasonForDiseaseIndication3,
                                                                         request.user.username, _lastName, _labNumber,
+                                                                        _RefKey,
                                                                         _noResultStatus)
             _listOfSurnames = self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases)
 
@@ -682,11 +689,12 @@ class RAMLSearch(TemplateView):
             _reasonForDiseaseIndication3 = ""
             _lastName = ""
             _labNumber = ""
+            _RefKey = ""
             _noResultStatus = 0
             _searchCount = 0
 
             if not _isPostBack:
-                _dateFrom = datetime.today() - timedelta(days=30)
+                _dateFrom = datetime.today() - timedelta(days=60)
                 _dateTo = datetime.today() + timedelta(days=30)
                 _pageNumber = 1
                 _itemsPerPage = 20
@@ -733,6 +741,7 @@ class RAMLSearch(TemplateView):
                                                                         _reasonForDiseaseIndication2,
                                                                         _reasonForDiseaseIndication3,
                                                                         request.user.username, _lastName, _labNumber,
+                                                                        _RefKey,
                                                                         _noResultStatus)
             _listOfSurnames = self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases)
 
@@ -822,11 +831,12 @@ class AMLOddsSearch(TemplateView):
             _reasonForDiseaseIndication3 = ""
             _lastName = ""
             _labNumber = ""
+            _RefKey = ""
             _noResultStatus = 0
             _searchCount = 0
 
             if not _isPostBack:
-                _dateFrom = datetime.today() - timedelta(days=30)
+                _dateFrom = datetime.today() - timedelta(days=60)
                 _dateTo = datetime.today() + timedelta(days=30)
                 _pageNumber = 1
                 _itemsPerPage = 20
@@ -873,6 +883,7 @@ class AMLOddsSearch(TemplateView):
                                                                         _reasonForDiseaseIndication2,
                                                                         _reasonForDiseaseIndication3,
                                                                         request.user.username, _lastName, _labNumber,
+                                                                        _RefKey,
                                                                         _noResultStatus)
             _listOfSurnames = self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases)
 
@@ -962,11 +973,12 @@ class SNPSearch(TemplateView):
             _reasonForDiseaseIndication3 = ""
             _lastName = ""
             _labNumber = ""
+            _RefKey = ""
             _noResultStatus = 0
             _searchCount = 0
 
             if not _isPostBack:
-                _dateFrom = datetime.today() - timedelta(days=30)
+                _dateFrom = datetime.today() - timedelta(days=60)
                 _dateTo = datetime.today() + timedelta(days=30)
                 _pageNumber = 1
                 _itemsPerPage = 20
@@ -1013,6 +1025,7 @@ class SNPSearch(TemplateView):
                                                                         _reasonForDiseaseIndication2,
                                                                         _reasonForDiseaseIndication3,
                                                                         request.user.username, _lastName, _labNumber,
+                                                                        _RefKey,
                                                                         _noResultStatus)
             _listOfSurnames = self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases)
 
@@ -1102,11 +1115,12 @@ class WGSSearch(TemplateView):
             _reasonForDiseaseIndication3 = ""
             _lastName = ""
             _labNumber = ""
+            _RefKey = ""
             _noResultStatus = 0
             _searchCount = 0
 
             if not _isPostBack:
-                _dateFrom = datetime.today() - timedelta(days=30)
+                _dateFrom = datetime.today() - timedelta(days=60)
                 _dateTo = datetime.today() + timedelta(days=30)
                 _pageNumber = 1
                 _itemsPerPage = 20
@@ -1136,6 +1150,7 @@ class WGSSearch(TemplateView):
                                                                                 enumDataType.String)
                     _lastName = self.utilities.GetRequestKey(request, "txtCriteriaLastname", enumDataType.String)
                     _labNumber = self.utilities.GetRequestKey(request, "txtCriteriaLabnumber", enumDataType.String)
+                    _RefKey = self.utilities.GetRequestKey(request, "ddlCriteriaRefKey", enumDataType.String)
                     _noResultStatus = self.utilities.GetRequestKey(request, "ddlCriteriaNoResult", enumDataType.Integer)
                 except Exception as ex:
                     # If any errors occur return the default criteria
@@ -1153,6 +1168,7 @@ class WGSSearch(TemplateView):
                                                                         _reasonForDiseaseIndication2,
                                                                         _reasonForDiseaseIndication3,
                                                                         request.user.username, _lastName, _labNumber,
+                                                                        _RefKey,
                                                                         _noResultStatus)
             _listOfSurnames = self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases)
 
@@ -1180,6 +1196,8 @@ class WGSSearch(TemplateView):
                                                                                                _diseaseIndicationCode2,
                                                                                                _diseaseIndicationCode3)
 
+            _refKey = self.dataServices.GetDNARefKey(_diseaseIndicationCode1, _diseaseIndicationCode2,_diseaseIndicationCode3)
+
             _context = {
                 "criteriaDateFrom": _dateFrom,
                 "criteriaDateTo": _dateTo,
@@ -1198,6 +1216,7 @@ class WGSSearch(TemplateView):
                 "criteriaReasonForDiseaseIndication1": _reasonForDiseaseIndication1,
                 "criteriaReasonForDiseaseIndication2": _reasonForDiseaseIndication2,
                 "criteriaReasonForDiseaseIndication3": _reasonForDiseaseIndication3,
+                "criteriaRefKey": _refKey,
                 "criteriaSurnames": _listOfSurnames,
                 "criteriaSurname": _lastName,
                 "criteriaLabnumber": _labNumber,
@@ -1242,11 +1261,12 @@ class ALLSearch(TemplateView):
             _reasonForDiseaseIndication3 = ""
             _lastName = ""
             _labNumber = ""
+            _RefKey = ""
             _noResultStatus = 0
             _searchCount = 0
 
             if not _isPostBack:
-                _dateFrom = datetime.today() - timedelta(days=30)
+                _dateFrom = datetime.today() - timedelta(days=60)
                 _dateTo = datetime.today() + timedelta(days=30)
                 _pageNumber = 1
                 _itemsPerPage = 20
@@ -1293,6 +1313,7 @@ class ALLSearch(TemplateView):
                                                                         _reasonForDiseaseIndication2,
                                                                         _reasonForDiseaseIndication3,
                                                                         request.user.username, _lastName, _labNumber,
+                                                                        _RefKey,
                                                                         _noResultStatus)
             _listOfSurnames = self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases)
 
@@ -1382,11 +1403,12 @@ class CLLSearch(TemplateView):
             _reasonForDiseaseIndication3 = ""
             _lastName = ""
             _labNumber = ""
+            _RefKey = ""
             _noResultStatus = 0
             _searchCount = 0
 
             if not _isPostBack:
-                _dateFrom = datetime.today() - timedelta(days=30)
+                _dateFrom = datetime.today() - timedelta(days=60)
                 _dateTo = datetime.today() + timedelta(days=30)
                 _pageNumber = 1
                 _itemsPerPage = 20
@@ -1433,6 +1455,7 @@ class CLLSearch(TemplateView):
                                                                         _reasonForDiseaseIndication2,
                                                                         _reasonForDiseaseIndication3,
                                                                         request.user.username, _lastName, _labNumber,
+                                                                        _RefKey,
                                                                         _noResultStatus)
             _listOfSurnames = self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases)
 
@@ -1522,11 +1545,12 @@ class DHCLSearch(TemplateView):
             _reasonForDiseaseIndication3 = ""
             _lastName = ""
             _labNumber = ""
+            _RefKey = ""
             _noResultStatus = 0
             _searchCount = 0
 
             if not _isPostBack:
-                _dateFrom = datetime.today() - timedelta(days=30)
+                _dateFrom = datetime.today() - timedelta(days=60)
                 _dateTo = datetime.today() + timedelta(days=30)
                 _pageNumber = 1
                 _itemsPerPage = 20
@@ -1573,6 +1597,7 @@ class DHCLSearch(TemplateView):
                                                                         _reasonForDiseaseIndication2,
                                                                         _reasonForDiseaseIndication3,
                                                                         request.user.username, _lastName, _labNumber,
+                                                                        _RefKey,
                                                                         _noResultStatus)
             _listOfSurnames = self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases)
 
@@ -1662,11 +1687,12 @@ class DONCSearch(TemplateView):
             _reasonForDiseaseIndication3 = ""
             _lastName = ""
             _labNumber = ""
+            _RefKey = ""
             _noResultStatus = 0
             _searchCount = 0
 
             if not _isPostBack:
-                _dateFrom = datetime.today() - timedelta(days=30)
+                _dateFrom = datetime.today() - timedelta(days=60)
                 _dateTo = datetime.today() + timedelta(days=30)
                 _pageNumber = 1
                 _itemsPerPage = 20
@@ -1713,6 +1739,7 @@ class DONCSearch(TemplateView):
                                                                         _reasonForDiseaseIndication2,
                                                                         _reasonForDiseaseIndication3,
                                                                         request.user.username, _lastName, _labNumber,
+                                                                        _RefKey,
                                                                         _noResultStatus)
             _listOfSurnames = self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases)
 
@@ -1802,11 +1829,12 @@ class DCSSearch(TemplateView):
             _reasonForDiseaseIndication3 = ""
             _lastName = ""
             _labNumber = ""
+            _RefKey = ""
             _noResultStatus = 0
             _searchCount = 0
 
             if not _isPostBack:
-                _dateFrom = datetime.today() - timedelta(days=30)
+                _dateFrom = datetime.today() - timedelta(days=60)
                 _dateTo = datetime.today() + timedelta(days=30)
                 _pageNumber = 1
                 _itemsPerPage = 20
@@ -1853,6 +1881,7 @@ class DCSSearch(TemplateView):
                                                                         _reasonForDiseaseIndication2,
                                                                         _reasonForDiseaseIndication3,
                                                                         request.user.username, _lastName, _labNumber,
+                                                                        _RefKey,
                                                                         _noResultStatus)
             _listOfSurnames = self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases)
 
@@ -1942,11 +1971,12 @@ class RBCRSearch(TemplateView):
             _reasonForDiseaseIndication3 = ""
             _lastName = ""
             _labNumber = ""
+            _RefKey = ""
             _noResultStatus = 0
             _searchCount = 0
 
             if not _isPostBack:
-                _dateFrom = datetime.today() - timedelta(days=30)
+                _dateFrom = datetime.today() - timedelta(days=60)
                 _dateTo = datetime.today() + timedelta(days=30)
                 _pageNumber = 1
                 _itemsPerPage = 20
@@ -1993,6 +2023,7 @@ class RBCRSearch(TemplateView):
                                                                         _reasonForDiseaseIndication2,
                                                                         _reasonForDiseaseIndication3,
                                                                         request.user.username, _lastName, _labNumber,
+                                                                        _RefKey,
                                                                         _noResultStatus)
             _listOfSurnames = self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases)
 
@@ -2082,11 +2113,12 @@ class FALSearch(TemplateView):
             _reasonForDiseaseIndication3 = ""
             _lastName = ""
             _labNumber = ""
+            _RefKey = ""
             _noResultStatus = 0
             _searchCount = 0
 
             if not _isPostBack:
-                _dateFrom = datetime.today() - timedelta(days=30)
+                _dateFrom = datetime.today() - timedelta(days=60)
                 _dateTo = datetime.today() + timedelta(days=30)
                 _pageNumber = 1
                 _itemsPerPage = 20
@@ -2114,7 +2146,7 @@ class FALSearch(TemplateView):
                     _pageNumber = 1
                     _itemsPerPage = 20
 
-            _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases('2012_HAEM_ONC', 'FAL', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1, _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName, _labNumber, _noResultStatus)
+            _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases('2012_HAEM_ONC', 'FAL', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1, _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName, _labNumber, _RefKey, _noResultStatus)
             _listOfSurnames = self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases)
 
             _searchCount = _totalWorkflowCases.__len__()
@@ -2201,11 +2233,12 @@ class EverythingSearch(TemplateView):
             _reasonForDiseaseIndication3 = ""
             _lastName = ""
             _labNumber = ""
+            _RefKey = ""
             _noResultStatus = 0
             _searchCount = 0
 
             if not _isPostBack:
-                _dateFrom = datetime.today() - timedelta(days=30)
+                _dateFrom = datetime.today() - timedelta(days=60)
                 _dateTo = datetime.today() + timedelta(days=30)
                 _pageNumber = 1
                 _itemsPerPage = 20
@@ -2252,6 +2285,7 @@ class EverythingSearch(TemplateView):
                                                                         _reasonForDiseaseIndication2,
                                                                         _reasonForDiseaseIndication3,
                                                                         request.user.username, _lastName, _labNumber,
+                                                                        _RefKey,
                                                                         _noResultStatus)
             _listOfSurnames = self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases)
 
@@ -2323,10 +2357,8 @@ class SetAllocatedToForDNA(TemplateView):
     def get(self, request, _labNumber, _workflowName):
 
         try:
-
             _staffList = None
             _staff = None
-
             _staffQuery = STAFF.objects.filter(LOGON_NAME=request.user.username, EMPLOYMENT_END_DATE__isnull=True)
 
             if _staffQuery == None or _staffQuery.__len__() == 0:
@@ -2342,9 +2374,7 @@ class SetAllocatedToForDNA(TemplateView):
                     _staff = _item
 
             _isSupervisor = "N"
-
             _permissionName = "Is" + _workflowName + "Supervisor"
-
             _hasPermission = self.dataServices.UserHasPermission(request.user.username, _permissionName)
 
             if _hasPermission:
@@ -2352,32 +2382,29 @@ class SetAllocatedToForDNA(TemplateView):
                 _staffList = STAFF.objects.all
 
             _cancelURL = "HaemOnc" + _workflowName + "Search"
-
+            #_returnURL = resolve(request.path_info).url_name
             _context = {
-                "labNumber" : _labNumber,
-                "staffList" : _staffList,
-                "staff" : _staff,
-                "isSupervisor" : _isSupervisor,
-                "workflowName" : _workflowName,
-                "cancelURL" : _cancelURL,
+                "labNumber": _labNumber,
+                "staffList": _staffList,
+                "staff": _staff,
+                "isSupervisor": _isSupervisor,
+                "workflowName": _workflowName,
+                "cancelURL": _cancelURL,
+                #"returnURL": _returnURL,
             }
-
             return render(request, self.template_name, _context)
 
         except Exception as ex:
             _context = {
-                "labNumber" : _labNumber,
+                "labNumber": _labNumber,
                 "errorMessage": str(ex),
             }
-
             return render(request, self.template_name, _context)
 
     def post(self, request, _labNumber, _workflowName):
 
         try:
-
             _staffCode = self.utilities.PostRequestKey(request, "ddlStaffCode", enumDataType.String)
-
             _retVal = self.dataServices.SetAllocatedToForDNA(_labNumber, _staffCode)
 
             if _retVal != 1:
@@ -2391,14 +2418,9 @@ class SetAllocatedToForDNA(TemplateView):
 
             return HttpResponseRedirect(reverse(_urlName))
 
-
         except Exception as ex:
             _context = {
-                "labNumber" : _labNumber,
+                "labNumber": _labNumber,
                 "errorMessage": str(ex),
             }
-
             return render(request, self.template_name, _context)
-
-
-
