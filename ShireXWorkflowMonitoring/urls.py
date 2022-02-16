@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.urls import path
+from django.views.generic.base import TemplateView
 
 from ShireXWorkflowMonitoring import CommonFunctionality
 from ShireXWorkflowMonitoring import HaemOncologyFunctionality
@@ -31,4 +32,5 @@ urlpatterns = [
     path('HO/Everything/', HaemOncologyFunctionality.EverythingSearch.as_view(), name="HaemOncEverythingSearch"),
     path('HO/Allocate/<str:_labNumber>/<str:_workflowName>/', HaemOncologyFunctionality.SetAllocatedToForDNA.as_view(), name="HaemOncSetAllocatedTo"),
     path('Sample/<str:_labNumber>/<str:_workflowName>/', SampleFunctionality.SampleForm.as_view(), name="SampleForm"),
+    path('HO/Allocate/<str:_labNumber>/<str:_workflowName>/AllocateComplete/', TemplateView.as_view(template_name='AllocateComplete.html'), name="AllocateComplete"),
 ]

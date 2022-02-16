@@ -262,15 +262,16 @@
                     {% for item in workflowCases %}
                         <tr>
                             <td>
-                                <a class="btn btn-primary" href="{% url 'HaemOncSetAllocatedTo' _labNumber=item.LABNO _workflowName='MDS' %}">&nbsp;</a>
+                                {#<a class="btn btn-primary" href="{% url 'HaemOncSetAllocatedTo' _labNumber=item.LABNO _workflowName='MDS' %}">&nbsp;</a>#}
+                                <button class="btn btn-primary" id="{{item.LABNO}}" onclick="DoClaim(this.id)">&nbsp;</button>
                             </td>
                             {% if item.DECEASED_DATE %}
                             <td>
-                                {{ item.FIRSTNAME }}, {{ item.LASTNAME }} ( {{ item.DECEASED_DATE|date:'d-m-Y' }} )
+                                {{ item.LASTNAME }}, {{ item.FIRSTNAME }} ( {{ item.DECEASED_DATE|date:'d-m-Y' }} )
                             </td>
                             {% else %}
                             <td>
-                                {{ item.FIRSTNAME }}, {{ item.LASTNAME }}
+                                {{ item.LASTNAME }}, {{ item.FIRSTNAME }}
                             </td>
                             {% endif %}
                             <td>
@@ -571,6 +572,11 @@
                 _object = _defaultValue;
             }
             return _object
+        }
+
+        function DoClaim(labno) {
+            url="{% url 'HaemOncSetAllocatedTo' _labNumber=0 _workflowName='MDS' %}".replace('0', labno);
+            window.open(url);
         }
 
     </script>

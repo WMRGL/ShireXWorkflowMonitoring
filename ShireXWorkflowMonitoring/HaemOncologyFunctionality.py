@@ -288,6 +288,7 @@ class DAMLSearch(TemplateView):
             _RefKey = ""
             _noResultStatus = 0
             _searchCount = 0
+            _url = request.get_full_path
 
             if not _isPostBack:
                 _dateFrom = datetime.today() - timedelta(days=60)
@@ -311,6 +312,7 @@ class DAMLSearch(TemplateView):
                     _lastName = self.utilities.GetRequestKey(request, "txtCriteriaLastname", enumDataType.String)
                     _labNumber = self.utilities.GetRequestKey(request, "txtCriteriaLabnumber", enumDataType.String)
                     _noResultStatus = self.utilities.GetRequestKey(request, "ddlCriteriaNoResult", enumDataType.Integer)
+
                 except Exception as ex:
                     #If any errors occur return the default criteria
                     _dateFrom = datetime.today() - timedelta(days=365)
@@ -366,6 +368,7 @@ class DAMLSearch(TemplateView):
                 "criteriaLabnumber" : _labNumber,
                 "criteriaNoResult": _noResultStatus,
                 "searchCount": _searchCount,
+                "returnURL": _url,
             }
             return render(request, self.template_name, _context)
 
@@ -2382,7 +2385,7 @@ class SetAllocatedToForDNA(TemplateView):
                 _staffList = STAFF.objects.all
 
             _cancelURL = "HaemOnc" + _workflowName + "Search"
-            #_returnURL = resolve(request.path_info).url_name
+
             _context = {
                 "labNumber": _labNumber,
                 "staffList": _staffList,
@@ -2390,7 +2393,6 @@ class SetAllocatedToForDNA(TemplateView):
                 "isSupervisor": _isSupervisor,
                 "workflowName": _workflowName,
                 "cancelURL": _cancelURL,
-                #"returnURL": _returnURL,
             }
             return render(request, self.template_name, _context)
 
@@ -2414,9 +2416,10 @@ class SetAllocatedToForDNA(TemplateView):
                 }
                 return render(request, self.template_name, _context)
 
-            _urlName = "HaemOnc" + _workflowName + "Search"
+            #_urlName = "HaemOnc" + _workflowName + "Search"
+            _urlName = "AllocateComplete"
 
-            return HttpResponseRedirect(reverse(_urlName))
+            return HttpResponseRedirect(_urlName)
 
         except Exception as ex:
             _context = {
