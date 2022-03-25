@@ -583,7 +583,7 @@
         }
 
         function DoClaim(labno) {
-        url="{% url 'HaemOncSetAllocatedTo' _labNumber=0 _workflowName='DAML' %}".replace('0', labno);
+        url="{% url 'DNASetAllocatedTo' _labNumber=0 _workflowName='DAML' %}".replace('0', labno);
             window.open(url);
         }
 

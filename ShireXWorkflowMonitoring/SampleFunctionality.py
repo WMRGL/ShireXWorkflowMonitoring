@@ -31,7 +31,11 @@ class SampleForm(TemplateView):
 
             _worksheetResults = self.dataServices.GetSampleWorksheetResults(_labNumber)
 
-            _backURL = "HaemOnc" + _workflowName + "Search"
+            #if _workflowName == 'WGS':
+            #    _backURL = _workflowName + "Search"
+            #else:
+            #    _backURL = "HaemOnc" + _workflowName + "Search"
+            _backURL = "StartPage"
 
             _context = {
                 "Title": self.title,

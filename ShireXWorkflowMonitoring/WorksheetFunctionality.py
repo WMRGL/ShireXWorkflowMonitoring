@@ -154,3 +154,66 @@ class Worksheet():
                 _row['WORKSHEETS'] = None
 
         return _pageOfWorkflowCases
+
+class ExtractSheet():
+    dataServices = ShireData()
+
+    def AddExtractsToWorkflowCases(self, _pageOfWorkflowCases):
+        #An extension routine for the various workflow search routines
+        _previousLabNumber = ""
+
+        for _row in _pageOfWorkflowCases:
+            _labNumber = _row['LABNO']
+            _row['EXTRACTSHEETS'] = ""
+            #_row['RESULTS_OUTSTANDING'] = "no"
+            #_row['WORKSHEET_OUTSTANDING'] = "yes"
+
+            if _labNumber != _previousLabNumber:
+                # If the lab number is different, compile the worksheet/test/result information
+                _esResults = self.dataServices.GetSampleExtracts(_labNumber)
+
+                #_worksheetList = ["", ]
+                #_testResultList = ["", ]
+
+                _extractListString = ""
+                _extractDate = ""
+                _cDNA = ""
+                _extractsheet = ""
+
+                for _esRow in _esResults:
+                    # For each worksheet/test/result
+                    #_extractsheet = _esRow['EXTRACT_SHEET']
+                    _cDNA = _esRow['EXTRACTION_METHOD']
+                    if(_esRow['EXTRACTION_DATE'] != None):
+                        _extractDate = str(_esRow['EXTRACTION_DATE'].strftime("%d/%m/%Y"))[0:10]
+
+                    if (_esRow['EXTRACT_SHEET'] != None):
+                        _extractsheet = _esRow['EXTRACT_SHEET']
+
+                _extractsheetColour = "green"
+
+                if (_extractDate == None or _extractDate == "") and _cDNA == "cDNA Prep":
+                    _extractDate = ""
+                    _extractsheetColour = "orange"
+                else:
+                    if (_extractsheet == None or _extractsheet == "") and _cDNA == "cDNA Prep":
+                        _extractsheet = ""
+                        _extractsheetColour = "red"
+
+
+
+                _extractListString = _extractListString + "<span style='color: " + _extractsheetColour + "'>" + _cDNA + "<br>" + _extractsheet + "<br>" + _extractDate +  "</span>"
+
+                _esListString = ""
+
+                if _extractListString.__len__() > 0:
+                    # Remove the last set of <br><br>
+                    _len = len(_extractListString)
+
+                    _esListString = _extractListString #[0:(_len - 8)]
+
+                _row['EXTRACTSHEETS'] = _esListString
+
+            _previousLabNumber = _labNumber
+
+        return _pageOfWorkflowCases

@@ -211,6 +211,9 @@
                         Lab Number
                     </th>
                     <th scope="col">
+                        PartID
+                    </th>
+                    <th scope="col">
                         Indication / Reason
                     </th>
                     <th scope="col">
@@ -268,7 +271,10 @@
                             </td>
                             {% endif %}
                             <td>
-                                <a href="{% url 'SampleForm'  _labNumber=item.LABNO _workflowName='WGS' %}">{{ item.LABNO }}</a>
+                                <a href="{% url 'SampleForm'  _labNumber=item.LABNO _workflowName='WGS' %}" target="_blank">{{ item.LABNO }}</a>
+                            </td>
+                            <td>
+                                {{ item.mother_tel }}
                             </td>
                             <td>
                                 {{ item.DISEASE_CODE }} /<br>{{ item.REASON }}
@@ -568,7 +574,7 @@
         }
 
         function DoClaim(labno) {
-            url="{% url 'HaemOncSetAllocatedTo' _labNumber=0 _workflowName='WGS' %}".replace('0', labno);
+            url="{% url 'DNASetAllocatedTo' _labNumber=0 _workflowName='WGS' %}".replace('0', labno);
             window.open(url);
         }
 

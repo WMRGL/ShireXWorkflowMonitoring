@@ -275,7 +275,7 @@
                             </td>
                             {% endif %}
                             <td>
-                                <a href="{% url 'SampleForm'  _labNumber=item.LABNO _workflowName='MDS' %}">{{ item.LABNO }}</a>
+                                <a href="{% url 'SampleForm'  _labNumber=item.LABNO _workflowName='MDS' %}" target="_blank">{{ item.LABNO }}</a>
                             </td>
                             <td>
                                 {{ item.DISEASE_CODE }} /<br>{{ item.REASON }}
@@ -575,7 +575,7 @@
         }
 
         function DoClaim(labno) {
-            url="{% url 'HaemOncSetAllocatedTo' _labNumber=0 _workflowName='MDS' %}".replace('0', labno);
+            url="{% url 'DNASetAllocatedTo' _labNumber=0 _workflowName='MDS' %}".replace('0', labno);
             window.open(url);
         }
 

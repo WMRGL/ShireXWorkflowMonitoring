@@ -254,6 +254,9 @@
                         Wksheet / Result
                     </th>
                     <th scope="col">
+                        cDNA
+                    </th>
+                    <th scope="col">
                         Alert
                     </th>
                 </thead>
@@ -275,7 +278,7 @@
                             </td>
                             {% endif %}
                             <td>
-                                <a href="{% url 'SampleForm'  _labNumber=item.LABNO _workflowName='RAML' %}">{{ item.LABNO }}</a>
+                                <a href="{% url 'SampleForm'  _labNumber=item.LABNO _workflowName='RAML' %}" target="_blank">{{ item.LABNO }}</a>
                             </td>
                             <td>
                                 {{ item.DISEASE_CODE }} /<br>{{ item.REASON }}
@@ -375,6 +378,11 @@
 {#                                {% endif %}#}
 {#                            {% endif %}#}
                             {% endautoescape %}
+                            <td>
+                                {% autoescape off%}
+                                    {{ item.EXTRACTSHEETS }}
+                                {% endautoescape %}
+                            </td>
                             <td>
                                 {{ item.SampleAlert }}
                             </td>
@@ -575,7 +583,7 @@
         }
 
         function DoClaim(labno) {
-            url="{% url 'HaemOncSetAllocatedTo' _labNumber=0 _workflowName='RAML' %}".replace('0', labno);
+            url="{% url 'DNASetAllocatedTo' _labNumber=0 _workflowName='RAML' %}".replace('0', labno);
             window.open(url);
         }
 
