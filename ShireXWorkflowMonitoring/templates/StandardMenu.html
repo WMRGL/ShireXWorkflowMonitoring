@@ -46,14 +46,14 @@
                                 <li><a class="dropdown-item" href="{% url 'WGSSearch' %}">WGS</a></li>
                             </ul>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownCyto" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Cytogenetics
-                            </a>
+                        {#<li class="nav-item dropdown">#}
+                        {#    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownCyto" role="button" data-bs-toggle="dropdown" aria-expanded="false">#}
+                        {#        Cytogenetics#}
+                        {#    </a>#}
                             {#<ul class="dropdown-menu" aria-labelledby="navbarDropdownCyto">#}
                                 {#<li><a class="dropdown-item" href="#">Placeholder</a></li>#}
                             {#</ul>#}
-                        </li>
+                        {#</li>#}
                     </ul>
                     {% if request.user.is_authenticated %}
                     <ul class="navbar-nav justify-content-end mb-2 mb-lg-0">
