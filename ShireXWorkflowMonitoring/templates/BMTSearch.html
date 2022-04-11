@@ -206,13 +206,10 @@
             </div>
         {% endif %}
         <div class="container-fluid">
-            <table class="table table-bordered">
+            <table class="table table-bordered text-nowrap">
                 <thead class="bg-primary" style="color:white">
                     <th>
                         Claim
-                    </th>
-                    <th scope="col">
-                        Alert
                     </th>
                     <th scope="col">
                         Patient (Date deceased)
@@ -253,6 +250,9 @@
                     <th scope="col">
                         Wksheet / Result
                     </th>
+                    <th scope="col">
+                        Alert
+                    </th>
                 </thead>
                 <tbody>
                 {% if workflowCases %}
@@ -261,9 +261,6 @@
                             <td>
                                 {#<a class="btn btn-primary" href="{% url 'HaemOncSetAllocatedTo' _labNumber=item.LABNO _workflowName='BMT' %}">&nbsp;</a>#}
                                 <button class="btn btn-primary" id="{{item.LABNO}}" onclick="DoClaim(this.id)">&nbsp;</button>
-                            </td>
-                            <td>
-                                {{ item.SampleAlert }}
                             </td>
                             {% if item.DECEASED_DATE %}
                             <td>
@@ -357,6 +354,9 @@
                                 <td>
                                 {{ item.WORKSHEETS }}
                                 </td>
+                                <td>
+                                {{ item.SampleAlert }}
+                                </td>
 {#                                {% endif %}#}
 {#                            {% endif %}#}
                             {% endautoescape %}
@@ -374,6 +374,7 @@
                             &nbsp;
                         </td>
                     </tr>
+
                 {% endif %}
                 </tbody>
             </table>
