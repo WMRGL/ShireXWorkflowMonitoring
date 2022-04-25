@@ -41,7 +41,7 @@
 {#                                  The status of "not final" is a special criteria that is the default #}
 {#                                  search criteria i.e. all reports not finalised.  #}
                                     <option value="NOTFINAL" {% if criteriaReportStatus == "" %} selected="selected" {% endif %}>Not Final</option>
-                                    <option value="NOTFINALORNONE" {% if criteriaReportStatus == "" %} selected="selected" {% endif %}>Thribble</option>
+                                    <option value="NOTFINALORNONE" {% if criteriaReportStatus == "NOTFINALORNONE" %} selected="selected" {% endif %}>Written</option>
                                     <option value="NONE" {% if criteriaReportStatus == "NONE" %} selected="selected" {% endif %}>None</option>
                                     {% if criteriaReportStatuses %}
                                         {% for item in criteriaReportStatuses %}
