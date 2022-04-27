@@ -1,68 +1,69 @@
-{% load static %}
-   <div class="container mb-3 mt-3">
-        {# Note the use of the d- CSS below to hide the logo when the screen is small #}
-        {# Both d-none and d-sm-none are required, not just d-sm-none as the documentation indicates #}
+{#{% load static %} - note: Logo is not currently used, so this line serves no purpose#}
+<div class="container-fluid mb-3">
+{# Note the use of the d- CSS below to hide the logo when the screen is small #}
+{# Both d-none and d-sm-none are required, not just d-sm-none as the documentation indicates #}
 {#        <div class="text-centre d-none d-sm-none d-md-block p-3">#}
 {#            <a href="https://bwc.nhs.uk/">#}
 {#                <img src={% static 'BWCLogo.png' %}>#}
 {#            </a>#}
 {#        </div>#}
-        <nav class="navbar navbar-expand-md navbar-dark bg-primary">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="#">WMRGL</a>
-                {# The following button is the standard three bar menu icon that appears when screen is small #}
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                  <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="{% url 'StartPage' %}">Home</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Molecular
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li class="small text-muted">Haemato-oncology</li>
-                                <li><a class="dropdown-item" href="{% url 'HaemOncMolecularSearch' %}">All Molecular</a>
-                                <li><a class="dropdown-item" href="{% url 'HaemOncALLSearch' %}">ALL</a></li>
-                                <li><a class="dropdown-item" href="{% url 'HaemOncBreakSearch' %}">BREAK</a></li>
-                                {#<li><a class="dropdown-item" href="{% url 'HaemOncDONCSearch' %}">D-ONC</a></li>#}
-                                <li><a class="dropdown-item" href="{% url 'HaemOncRAMLSearch' %}">R-AML</a></li>
-                                {#<li><a class="dropdown-item" href="{% url 'HaemOncDHCLSearch' %}">D-HCL</a></li>#}
-                                <li><a class="dropdown-item" href="{% url 'HaemOncCLLSearch' %}">Lymphoid</a></li>
-                                <li><a class="dropdown-item" href="{% url 'HaemOncDAMLSearch' %}">AML & MDS</a></li>
-                                {#<li><a class="dropdown-item" href="{% url 'HaemOncAMLOddsSearch' %}">AML-Odds</a></li>#}
-                                <li><a class="dropdown-item" href="{% url 'HaemOncBMTSearch' %}">BMT</a></li>
-                                {#<li><a class="dropdown-item" href="{% url 'HaemOncDCSSearch' %}">D-CS</a></li>#}
-                                {#<li><a class="dropdown-item" href="{% url 'HaemOncMDSSearch' %}">MDS + D-ONC</a></li>#}
-                                <li><a class="dropdown-item" href="{% url 'HaemOncMPNSearch' %}">MPN</a></li>
-                                <li><a class="dropdown-item" href="{% url 'HaemOncRBCRSearch' %}">R-BCR</a></li>
-                                <li><a class="dropdown-item" href="{% url 'HaemOncFALSearch' %}">F-AML/F-ALL</a></li>
-                                <li><a class="dropdown-item" href="{% url 'HaemOncSNPSearch' %}">SNP - Array analysis</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li class="small text-muted">Other molecular</li>
-                                <li><a class="dropdown-item" href="{% url 'WGSSearch' %}">WGS</a></li>
-                            </ul>
-                        </li>
-                        {#<li class="nav-item dropdown">#}
-                        {#    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownCyto" role="button" data-bs-toggle="dropdown" aria-expanded="false">#}
-                        {#        Cytogenetics#}
-                        {#    </a>#}
-                            {#<ul class="dropdown-menu" aria-labelledby="navbarDropdownCyto">#}
-                                {#<li><a class="dropdown-item" href="#">Placeholder</a></li>#}
-                            {#</ul>#}
-                        {#</li>#}
-                    </ul>
-                    {% if request.user.is_authenticated %}
-                    <ul class="navbar-nav justify-content-end mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="{% url 'LogoutSystem' %}">Logout</a>
-                        </li>
-                    </ul>
-                    {% endif %}
-                </div>
+    <nav class="navbar navbar-expand-md navbar-dark bg-primary">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">WMRGL</a>
+            {# The following button is the standard three bar menu icon that appears when screen is small #}
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url 'StartPage' %}">Home</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Molecular
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li class="small text-muted">Haemato-oncology</li>
+                            <li><a class="dropdown-item" href="{% url 'HaemOncMolecularSearch' %}">All Molecular</a>
+                            <li><a class="dropdown-item" href="{% url 'HaemOncALLSearch' %}">ALL</a></li>
+                            <li><a class="dropdown-item" href="{% url 'HaemOncBreakSearch' %}">BREAK</a></li>
+                            {#<li><a class="dropdown-item" href="{% url 'HaemOncDONCSearch' %}">D-ONC</a></li>#}
+                            <li><a class="dropdown-item" href="{% url 'HaemOncRAMLSearch' %}">R-AML</a></li>
+                            {#<li><a class="dropdown-item" href="{% url 'HaemOncDHCLSearch' %}">D-HCL</a></li>#}
+                            <li><a class="dropdown-item" href="{% url 'HaemOncCLLSearch' %}">Lymphoid</a></li>
+                            <li><a class="dropdown-item" href="{% url 'HaemOncDAMLSearch' %}">AML & MDS</a></li>
+                            {#<li><a class="dropdown-item" href="{% url 'HaemOncAMLOddsSearch' %}">AML-Odds</a></li>#}
+                            <li><a class="dropdown-item" href="{% url 'HaemOncBMTSearch' %}">BMT</a></li>
+                            {#<li><a class="dropdown-item" href="{% url 'HaemOncDCSSearch' %}">D-CS</a></li>#}
+                            {#<li><a class="dropdown-item" href="{% url 'HaemOncMDSSearch' %}">MDS + D-ONC</a></li>#}
+                            <li><a class="dropdown-item" href="{% url 'HaemOncMPNSearch' %}">MPN</a></li>
+                            <li><a class="dropdown-item" href="{% url 'HaemOncRBCRSearch' %}">R-BCR</a></li>
+                            <li><a class="dropdown-item" href="{% url 'HaemOncFALSearch' %}">F-AML/F-ALL</a></li>
+                            <li><a class="dropdown-item" href="{% url 'HaemOncSNPSearch' %}">SNP - Array analysis</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li class="small text-muted">Other molecular</li>
+                            <li><a class="dropdown-item" href="{% url 'WGSSearch' %}">WGS</a></li>
+                        </ul>
+                    </li>
+                    {#Below is the menu structure for Cyto, which may be added at a later date#}
+                    {#<li class="nav-item dropdown">#}
+                    {#    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownCyto" role="button" data-bs-toggle="dropdown" aria-expanded="false">#}
+                    {#        Cytogenetics#}
+                    {#    </a>#}
+                    {#    <ul class="dropdown-menu" aria-labelledby="navbarDropdownCyto">#}
+                    {#        <li><a class="dropdown-item" href="#">Placeholder</a></li>#}
+                    {#    </ul>#}
+                    {#</li>#}
+                </ul>
+                {% if request.user.is_authenticated %}
+                <ul class="navbar-nav justify-content-end mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url 'LogoutSystem' %}">Logout</a>
+                    </li>
+                </ul>
+                {% endif %}
             </div>
-        </nav>
-    </div>
+        </div>
+    </nav>
+</div>
