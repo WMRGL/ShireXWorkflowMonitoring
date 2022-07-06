@@ -2330,7 +2330,7 @@ class WGSSearch(TemplateView):
 
             _priorities = self.dataServices.GetDNAPriority()
 
-            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_OTHER', 'WGS')
+            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('%', 'WGS')
 
             _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(_diseaseIndicationCode1,
                                                                                                _diseaseIndicationCode2,
