@@ -2299,7 +2299,7 @@ class WGSSearch(TemplateView):
                     _pageNumber = 1
                     _itemsPerPage = 20
 
-            _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases('2012_OTHER', 'WGS', _dateFrom, _dateTo,
+            _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases('%', 'WGS', _dateFrom, _dateTo,
                                                                         _reportStatus, _priority,
                                                                         _diseaseIndicationCode1,
                                                                         _diseaseIndicationCode2,
