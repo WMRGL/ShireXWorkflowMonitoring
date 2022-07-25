@@ -119,9 +119,7 @@ class ShireData():
 
     def GetDNARefKey(self, _diseaseCode1, _diseaseCode2, _diseaseCode3):
         with connection.cursor() as _cursor:
-            #_cursor.execute("{CALL dbo.uspShireXGetDNARefKey(%s, %s, %s)}", (_diseaseCode1, _diseaseCode2, _diseaseCode3))
-            _cursor.execute("{CALL dbo.uspShireXGetDNARefKey(%s, %s, %s)}",
-                            (_diseaseCode1, _diseaseCode2, _diseaseCode3))
+            _cursor.execute("{CALL dbo.uspShireXGetDNARefKey(%s, %s, %s)}", (_diseaseCode1, _diseaseCode2, _diseaseCode3))
 
             _results = self.utilities.ConvertCursorListToDict(_cursor)
 

@@ -2255,9 +2255,11 @@ class WGSSearch(TemplateView):
             _reasonForDiseaseIndication3 = ""
             _lastName = ""
             _labNumber = ""
-            _RefKey = ""
+            _refKey = ""
             _noResultStatus = 0
             _searchCount = 0
+            print(_diseaseIndicationCode1)
+            print(_refKey)
 
             if not _isPostBack:
                 _dateFrom = datetime.today() - timedelta(days=60)
@@ -2290,8 +2292,9 @@ class WGSSearch(TemplateView):
                                                                                 enumDataType.String)
                     _lastName = self.utilities.GetRequestKey(request, "txtCriteriaLastname", enumDataType.String)
                     _labNumber = self.utilities.GetRequestKey(request, "txtCriteriaLabnumber", enumDataType.String)
-                    _RefKey = self.utilities.GetRequestKey(request, "ddlCriteriaRefKey", enumDataType.String)
+                    _refKey = self.utilities.GetRequestKey(request, "ddlCriteriaRefKey", enumDataType.String)
                     _noResultStatus = self.utilities.GetRequestKey(request, "ddlCriteriaNoResult", enumDataType.Integer)
+
                 except Exception as ex:
                     # If any errors occur return the default criteria
                     _dateFrom = datetime.today() - timedelta(days=365)
@@ -2308,7 +2311,7 @@ class WGSSearch(TemplateView):
                                                                         _reasonForDiseaseIndication2,
                                                                         _reasonForDiseaseIndication3,
                                                                         request.user.username, _lastName, _labNumber,
-                                                                        _RefKey,
+                                                                        _refKey,
                                                                         _noResultStatus)
             _listOfSurnames = self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases)
 
@@ -2336,7 +2339,11 @@ class WGSSearch(TemplateView):
                                                                                                _diseaseIndicationCode2,
                                                                                                _diseaseIndicationCode3)
 
-            _refKey = self.dataServices.GetDNARefKey(_diseaseIndicationCode1, _diseaseIndicationCode2,_diseaseIndicationCode3)
+            _refKeys = self.dataServices.GetDNARefKey(_diseaseIndicationCode1, _diseaseIndicationCode2,_diseaseIndicationCode3)
+            print(_diseaseIndicationCode1)
+            print(_reasonForDiseaseIndication1)
+            print(_refKey)
+            print(_refKeys)
 
             _context = {
                 "criteriaDateFrom": _dateFrom,
@@ -2357,6 +2364,7 @@ class WGSSearch(TemplateView):
                 "criteriaReasonForDiseaseIndication2": _reasonForDiseaseIndication2,
                 "criteriaReasonForDiseaseIndication3": _reasonForDiseaseIndication3,
                 "criteriaRefKey": _refKey,
+                "criteriaRefKeys": _refKeys,
                 "criteriaSurnames": _listOfSurnames,
                 "criteriaSurname": _lastName,
                 "criteriaLabnumber": _labNumber,

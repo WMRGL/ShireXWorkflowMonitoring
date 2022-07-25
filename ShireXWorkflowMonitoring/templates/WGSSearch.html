@@ -103,8 +103,8 @@
                             <div class="col-2">
                                 <select class="form-select" name="ddlCriteriaRefKey" id="ddlCriteriaRefKey">
                                     <option value="" {% if criteriaRefKey == "" %} selected="selected" {% endif %}>select...</option>
-                                    {% if criteriaRefKey %}
-                                        {% for item in criteriaRefKey %}
+                                    {% if criteriaRefKeys %}
+                                        {% for item in criteriaRefKeys %}
                                             <option value="{{ item.REF }}" {% if item.REF == criteriaRefKey %} selected="selected" {% endif %}>{{ item.REF }}</option>
                                         {% endfor %}
                                     {% endif %}
