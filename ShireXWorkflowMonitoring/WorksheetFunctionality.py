@@ -28,8 +28,12 @@ class Worksheet():
                     _worksheet = _wsRow['WORKSHEET']
                     _worksheetFirstCheck = _wsRow['FIRST_RESULT_BY']
                     _worksheetSecondCheck = _wsRow['FIRST_RESULT_CHECKED_BY']
-                    _test = _wsRow['TEST']
-                    _result = _wsRow['RESULT']
+                    if (_wsRow['TEST']) == None:
+                        _test = 'Missing Test Data'
+                        _result = 'unknown result'
+                    else:
+                        _test = _wsRow['TEST']
+                        _result = _wsRow['RESULT']
                     _highlightColour = _wsRow['HighlightColour']
                     _retest = _wsRow['RETEST']
 
