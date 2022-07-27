@@ -64,6 +64,7 @@ MIDDLEWARE = [
 ]
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE=True
+
 SESSION_SAVE_EVERY_REQUEST=True
 SESSION_COOKIE_AGE=(30 * 60)        #30 mins.  Session age is recorded in seconds
 
