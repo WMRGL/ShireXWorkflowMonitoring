@@ -7,6 +7,7 @@ from ShireXWorkflowMonitoring.apps import ShireXWorkflowMonitoringConfig
 from ShireXWorkflowMonitoring.CommonFunctionality import UtilityFunctions
 from ShireXWorkflowMonitoring.DataServices import ShireData
 
+
 class SampleForm(TemplateView):
     template_name = "SampleForm.html"
     title = ShireXWorkflowMonitoringConfig.title
@@ -31,9 +32,9 @@ class SampleForm(TemplateView):
 
             _worksheetResults = self.dataServices.GetSampleWorksheetResults(_labNumber)
 
-            #if _workflowName == 'WGS':
+            # if _workflowName == 'WGS':
             #    _backURL = _workflowName + "Search"
-            #else:
+            # else:
             #    _backURL = "HaemOnc" + _workflowName + "Search"
             _backURL = "StartPage"
 
@@ -41,9 +42,9 @@ class SampleForm(TemplateView):
                 "Title": self.title,
                 "labNumber": _labNumber,
                 "sampleItem": _sampleItem,
-                "indicationReportBills" : _indicationReportBills,
+                "indicationReportBills": _indicationReportBills,
                 "tests": _tests,
-                "worksheetResults" : _worksheetResults,
+                "worksheetResults": _worksheetResults,
                 "backURL": _backURL,
             }
 

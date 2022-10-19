@@ -1,5 +1,5 @@
-#Add any classes or functions that are commonly used, but which are not
-#workflow based.
+# Add any classes or functions that are commonly used, but which are not
+# workflow based.
 
 from django.contrib.auth import authenticate
 from django.contrib.auth import login
@@ -12,6 +12,7 @@ from django.views.generic import TemplateView
 from ShireXWorkflowMonitoring.apps import ShireXWorkflowMonitoringConfig
 from datetime import datetime
 from enum import Enum
+
 
 class Login(TemplateView):
 
@@ -36,7 +37,7 @@ class Login(TemplateView):
 
                 return HttpResponseRedirect(reverse('StartPage'))
             else:
-                #Otherwise, return with failure message
+                # Otherwise, return with failure message
 
                 _context = {
                     "Title": self.title,
@@ -54,6 +55,7 @@ class Login(TemplateView):
 
             return render(request, self.template_name, _context)
 
+
 class Start(TemplateView):
 
     template_name = "Start.html"
@@ -66,6 +68,7 @@ class Start(TemplateView):
 
             return render(request, self.template_name, _context)
 
+
 class AllocateComplete(TemplateView):
 
     template_name = "AllocateComplete.html"
@@ -77,26 +80,30 @@ class AllocateComplete(TemplateView):
             _context = None
             return render(request, self.template_name, _context)
 
-class Authenticate():
+
+class Authenticate:
     def DoLogout(request):
         logout(request)
         return HttpResponseRedirect(reverse('LoginPage'))
 
-class enumDataType(Enum):
-    String="string",
-    Integer="integer",
-    Float="float",
-    Datetime="datetime",
-    Boolean="boolean"
 
-class UtilityFunctions():
+class enumDataType(Enum):
+    String = "string",
+    Integer = "integer",
+    Float = "float",
+    Datetime = "datetime",
+    Boolean = "boolean"
+
+
+class UtilityFunctions:
     def GetRequestKey(self, request, keyName, dataType):
         for _key in request.GET:
             if _key == keyName:
                 _strVal = request.GET[_key]
 
                 if dataType == enumDataType.Datetime:
-                    return datetime.strptime(_strVal, '%Y-%m-%d')  # IMPORTANT..The format string is different to a template filter and is specific!
+                    return datetime.strptime(_strVal, '%Y-%m-%d')
+                    # IMPORTANT The format string is different to a template filter and is specific!
 
                 if dataType == enumDataType.Integer:
                     return int(_strVal)
@@ -119,7 +126,8 @@ class UtilityFunctions():
                 _strVal = request.POST[_key]
 
                 if dataType == enumDataType.Datetime:
-                    return datetime.strptime(_strVal, '%Y-%m-%d')  # IMPORTANT..The format string is different to a template filter and is specific!
+                    return datetime.strptime(_strVal, '%Y-%m-%d')
+                    # IMPORTANT The format string is different to a template filter and is specific!
 
                 if dataType == enumDataType.Integer:
                     return int(_strVal)
@@ -137,10 +145,9 @@ class UtilityFunctions():
         return ""
 
     def ConvertCursorListToDict(self, cursor):
-        #Return all rows from a cursor as a dictionary (rows) of dictionary (columns)
+        # Return all rows from a cursor as a dictionary (rows) of dictionary (columns)
         columns = [col[0] for col in cursor.description]
         return [
             dict(zip(columns, row))
             for row in cursor.fetchall()
         ]
-

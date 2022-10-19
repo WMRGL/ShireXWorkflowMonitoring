@@ -1,25 +1,25 @@
 from ShireXWorkflowMonitoring.DataServices import ShireData
 
 
-class Worksheet():
+class Worksheet:
     dataServices = ShireData()
 
     def AddWorksheetTestResultsToWorkflowCases(self, _pageOfWorkflowCases):
-        #An extension routine for the various workflow search routines
+        # An extension routine for the various workflow search routines
         _previousLabNumber = ""
 
         for _row in _pageOfWorkflowCases:
             _labNumber = _row['LABNO']
             _row['WORKSHEETS'] = ""
-            #_row['RESULTS_OUTSTANDING'] = "no"
-            #_row['WORKSHEET_OUTSTANDING'] = "yes"
+            # _row['RESULTS_OUTSTANDING'] = "no"
+            # _row['WORKSHEET_OUTSTANDING'] = "yes"
 
             if _labNumber != _previousLabNumber:
                 # If the lab number is different, compile the worksheet/test/result information
                 _wsResults = self.dataServices.GetSampleWorksheetResults(_labNumber)
 
-                #_worksheetList = ["", ]
-                #_testResultList = ["", ]
+                # _worksheetList = ["", ]
+                # _testResultList = ["", ]
 
                 _worksheetListString = ""
 
@@ -28,7 +28,7 @@ class Worksheet():
                     _worksheet = _wsRow['WORKSHEET']
                     _worksheetFirstCheck = _wsRow['FIRST_RESULT_BY']
                     _worksheetSecondCheck = _wsRow['FIRST_RESULT_CHECKED_BY']
-                    if (_wsRow['TEST']) == None:
+                    if (_wsRow['TEST']) is None:
                         _test = 'Missing Test Data'
                         _result = 'unknown result'
                     else:
@@ -39,29 +39,31 @@ class Worksheet():
 
                     _worksheetColour = "green"
 
-                    if _worksheetSecondCheck == None or _worksheetSecondCheck == "":
+                    if _worksheetSecondCheck is None or _worksheetSecondCheck == "":
                         _worksheetColour = "orange"
                     else:
-                        if _worksheetFirstCheck == None or _worksheetFirstCheck == "":
+                        if _worksheetFirstCheck is None or _worksheetFirstCheck == "":
                             _worksheetColour = "red"
 
-                    if _highlightColour == None:
+                    if _highlightColour is None:
                         _highlightColour = "black"
 
-                    if _retest == None:
-                        _retest = 0         #False
+                    if _retest is None:
+                        _retest = 0         # False
 
                     _reTestString = ""
                     if _retest == -1:
                         _reTestString = " (A)"
 
-                    #_row['WORKSHEET_OUTSTANDING'] = "no"
+                    # _row['WORKSHEET_OUTSTANDING'] = "no"
 
-                    if (_result == None) or (_result == ''):
-                        #_row['RESULTS_OUTSTANDING'] = "yes"
+                    if (_result is None) or (_result == ''):
+                        # _row['RESULTS_OUTSTANDING'] = "yes"
                         _result = ""
 
-                    _worksheetListString =  _worksheetListString + "<span style='color: " + _worksheetColour + "'>" + _worksheet + _reTestString + " / " + "</span><span style='color: " + _highlightColour + "'>" + _test + ': ' + _result + "<span><br><br>"
+                    _worksheetListString = _worksheetListString + "<span style='color: " + _worksheetColour + "'>" + \
+                        _worksheet + _reTestString + " / " + "</span><span style='color: " +\
+                        _highlightColour + "'>" + _test + ': ' + _result + "<span><br><br>"
                     # If the worksheet is not in the list
                     # i.e. index() fails, add it, otherwise move on
                     # try:
@@ -75,13 +77,13 @@ class Worksheet():
                     #     # Do nothing
                     #     _stuff = 1
 
-                #_worksheetList.remove("")
-                #_testResultList.remove("")
+                # _worksheetList.remove("")
+                # _testResultList.remove("")
 
-                #_worksheetListString = ''.join(_worksheetList)
-                #_testResultListString = ''.join(_testResultList)
+                # _worksheetListString = ''.join(_worksheetList)
+                # _testResultListString = ''.join(_testResultList)
 
-                #_row['WORKSHEETS'] = _worksheetListString + " / " + _testResultListString
+                # _row['WORKSHEETS'] = _worksheetListString + " / " + _testResultListString
 
                 _wsListString = ""
 
@@ -98,7 +100,7 @@ class Worksheet():
         return _pageOfWorkflowCases
 
     def GetListOfSurnamesFromWorkflowCases(self, _workflowCases):
-        #An extension routine for the various workflow search routines
+        # An extension routine for the various workflow search routines
         _previousLabNumber = ""
 
         _lastnameList = ["", ]
@@ -108,7 +110,7 @@ class Worksheet():
 
             try:
                 _lastnameList.index(_lastname)
-            except:
+            except Exception:
                 _lastnameList.append(_lastname)
 
         _sortedListOfLastNames = sorted(_lastnameList)
@@ -116,7 +118,7 @@ class Worksheet():
         return _sortedListOfLastNames
 
     def AddTestsWithNoWorksheetsToWorkflowCases(self, _pageOfWorkflowCases):
-        #An extension routine for the various workflow search routines
+        # An extension routine for the various workflow search routines
         _previousLabNumber = ""
 
         for _row in _pageOfWorkflowCases:
@@ -159,25 +161,26 @@ class Worksheet():
 
         return _pageOfWorkflowCases
 
-class ExtractSheet():
+
+class ExtractSheet:
     dataServices = ShireData()
 
     def AddExtractsToWorkflowCases(self, _pageOfWorkflowCases):
-        #An extension routine for the various workflow search routines
+        # An extension routine for the various workflow search routines
         _previousLabNumber = ""
 
         for _row in _pageOfWorkflowCases:
             _labNumber = _row['LABNO']
             _row['EXTRACTSHEETS'] = ""
-            #_row['RESULTS_OUTSTANDING'] = "no"
-            #_row['WORKSHEET_OUTSTANDING'] = "yes"
+            # _row['RESULTS_OUTSTANDING'] = "no"
+            # _row['WORKSHEET_OUTSTANDING'] = "yes"
 
             if _labNumber != _previousLabNumber:
                 # If the lab number is different, compile the worksheet/test/result information
                 _esResults = self.dataServices.GetSampleExtracts(_labNumber)
 
-                #_worksheetList = ["", ]
-                #_testResultList = ["", ]
+                # _worksheetList = ["", ]
+                # _testResultList = ["", ]
 
                 _extractListString = ""
                 _extractDate = ""
@@ -186,27 +189,27 @@ class ExtractSheet():
 
                 for _esRow in _esResults:
                     # For each worksheet/test/result
-                    #_extractsheet = _esRow['EXTRACT_SHEET']
+                    # _extractsheet = _esRow['EXTRACT_SHEET']
                     _cDNA = _esRow['EXTRACTION_METHOD']
-                    if(_esRow['EXTRACTION_DATE'] != None):
+                    if _esRow['EXTRACTION_DATE'] is not None:
                         _extractDate = str(_esRow['EXTRACTION_DATE'].strftime("%d/%m/%Y"))[0:10]
 
-                    if (_esRow['EXTRACT_SHEET'] != None):
+                    if _esRow['EXTRACT_SHEET'] is not None:
                         _extractsheet = _esRow['EXTRACT_SHEET']
 
                 _extractsheetColour = "green"
 
-                if (_extractDate == None or _extractDate == "") and _cDNA == "cDNA Prep":
+                if (_extractDate is None or _extractDate == "") and _cDNA == "cDNA Prep":
                     _extractDate = ""
                     _extractsheetColour = "orange"
                 else:
-                    if (_extractsheet == None or _extractsheet == "") and _cDNA == "cDNA Prep":
+                    if (_extractsheet is None or _extractsheet == "") and _cDNA == "cDNA Prep":
                         _extractsheet = ""
                         _extractsheetColour = "red"
 
-
-
-                _extractListString = _extractListString + "<span style='color: " + _extractsheetColour + "'>" + _cDNA + "<br>" + _extractsheet + "<br>" + _extractDate +  "</span>"
+                _extractListString = _extractListString + "<span style='color: " + _extractsheetColour + \
+                    "'>" + _cDNA + \
+                    "<br>" + _extractsheet + "<br>" + _extractDate + "</span>"
 
                 _esListString = ""
 
@@ -214,7 +217,7 @@ class ExtractSheet():
                     # Remove the last set of <br><br>
                     _len = len(_extractListString)
 
-                    _esListString = _extractListString #[0:(_len - 8)]
+                    _esListString = _extractListString  # [0:(_len - 8)]
 
                 _row['EXTRACTSHEETS'] = _esListString
 

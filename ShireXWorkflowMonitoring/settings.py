@@ -21,6 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 with open(os.path.join(BASE_DIR, 'ShireXWorkflowMonitoring/secrets.json')) as secrets_file:
     secrets = json.load(secrets_file)
 
+
 def get_secret(setting, secrets=secrets):
     """Get secret setting or fail with ImproperlyConfigured"""
     try:
@@ -32,14 +33,16 @@ def get_secret(setting, secrets=secrets):
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-#SECRET_KEY = 'django-insecure-fa81xk74sqp8si==r-macjx*ptm8k8jy^48%501w=!5uq3bn&%'
+# SECRET_KEY = 'django-insecure-fa81xk74sqp8si==r-macjx*ptm8k8jy^48%501w=!5uq3bn&%'
+
+
 SECRET_KEY = get_secret("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['10.147.33.230']
-
+# ALLOWED_HOSTS = ['10.147.33.230', '127.0.0.1']
+ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
@@ -62,18 +65,17 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-SESSION_EXPIRE_AT_BROWSER_CLOSE=True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
-SESSION_SAVE_EVERY_REQUEST=True
-SESSION_COOKIE_AGE=(30 * 60)        #30 mins.  Session age is recorded in seconds
+SESSION_SAVE_EVERY_REQUEST = True
+SESSION_COOKIE_AGE = (30 * 60)        # 30 mins.  Session age is recorded in seconds
 
 ROOT_URLCONF = 'ShireXWorkflowMonitoring.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'ShireXWorkflowMonitoring/templates']
-        ,
+        'DIRS': [BASE_DIR / 'ShireXWorkflowMonitoring/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -100,7 +102,7 @@ DATABASES = {
         'PASSWORD': get_secret("DB_PASSWORD"),
         'HOST': get_secret("DB_HOST"),
         'PORT': '1433',
-        'OPTIONS': { 'driver' : 'ODBC Driver 17 for SQL Server'},
+        'OPTIONS': {'driver': 'ODBC Driver 17 for SQL Server'},
     }
 }
 

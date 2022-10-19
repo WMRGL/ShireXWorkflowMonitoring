@@ -9,19 +9,19 @@ class ShireBackend(BaseBackend):
     def authenticate(self, request, username=None, password=None):
         _isUserPasswordValid = False
 
-        #Make sure the username and password are both provided
-        if username==None or password==None:
+        # Make sure the username and password are both provided
+        if username is None or password is None:
             return None
 
         try:
             userValidObj = STAFF.objects.filter(LOGON_NAME=username, EMPLOYMENT_END_DATE__isnull=True)
 
-            if userValidObj == None:
+            if userValidObj is None:
                 return None
 
             for item in userValidObj:
-                #Do the password check separate, because the SQL server comparison
-                #is not case sensitive.  Whereas the code below is!
+                # Do the password check separate, because the SQL server comparison
+                # is not case-sensitive.  Whereas the code below is!
 
                 if item.PASSWORD == password:
                     _isUserPasswordValid = True
@@ -32,22 +32,23 @@ class ShireBackend(BaseBackend):
                 else:
                     _errTxt = ' the password is incorrect for both of them.'
 
-#               raise ValueError('ShireBackend.authenticate : The system found two active user staff records' + _errTxt)
+#               raise ValueError(ShireBackend.authenticate : The system found two active user staff records' + _errTxt)
                 raise ValueError('Multiple users')
 
-        except ValueError as errlogin:
-            messages.error(request, 'There are multiple active user staff records with that username, ' + _errTxt + ' Please see the system administrator.')
+        except ValueError:
+            messages.error(request, 'There are multiple active user staff records with that username, ' +
+                           _errTxt + ' Please see the system administrator.')
             return None
 
-        except Exception as ex:
+        except Exception:
             return None
 
-        #The following logic is predicated on each user being replicated in
-        #the standard Django structure (the User model class)
+        # The following logic is predicated on each user being replicated in
+        # the standard Django structure (the User model class)
 
-        if _isUserPasswordValid == True:
+        if _isUserPasswordValid:
             try:
-                #Try to find the user record in the auth_user table
+                # Try to find the user record in the auth_user table
                 user = User.objects.get(username=username)
             except User.DoesNotExist:
                 # If not found create a new user. There's no need to set a password
@@ -57,7 +58,7 @@ class ShireBackend(BaseBackend):
                 user.save()
             return user
 
-        #Otherwise
+        # Otherwise
         return None
 
     def get_user(self, user_id):
