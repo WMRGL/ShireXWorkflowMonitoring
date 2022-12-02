@@ -1,7 +1,6 @@
 # Add Haem Onc specific classes in this file
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-
 from django.urls import reverse
 from django.views.generic import TemplateView
 from ShireXWorkflowMonitoring.apps import ShireXWorkflowMonitoringConfig
@@ -179,6 +178,7 @@ class MPNSearch(TemplateView):
             _lastName = ""
             _labNumber = ""
             _RefKey = ""
+            _showAlerts = False
             _noResultStatus = 0
             _searchCount = 0
 
@@ -211,6 +211,8 @@ class MPNSearch(TemplateView):
                     _lastName = self.utilities.GetRequestKey(request, "txtCriteriaLastname", enumDataType.String)
                     _labNumber = self.utilities.GetRequestKey(request, "txtCriteriaLabnumber", enumDataType.String)
                     _noResultStatus = self.utilities.GetRequestKey(request, "ddlCriteriaNoResult", enumDataType.Integer)
+                    _showAlerts = self.utilities.GetRequestKey(request, "ddlAlertCriteria", enumDataType.Boolean)
+
                 except Exception:
                     # If any errors occur return the default criteria
                     _dateFrom = datetime.today() - timedelta(days=365)
@@ -223,6 +225,7 @@ class MPNSearch(TemplateView):
                 _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1,
                 _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName,
                 _labNumber, _RefKey, _noResultStatus)
+
             _listOfSurnames = self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases)
 
             _searchCount = _totalWorkflowCases.__len__()
@@ -239,6 +242,9 @@ class MPNSearch(TemplateView):
             _pageOfWorkflowCases = self.worksheetHelper.ConvertWorksheetsColumnEmptyStringToNone(_pageOfWorkflowCases)
 
             _pageOfWorkflowCases = self.extractsheetHelper.AddExtractsToWorkflowCases(_pageOfWorkflowCases)
+
+            # if _showAlerts:
+            #    _pageOfWorkflowCases.
 
             # Codes for the search criteria
             _reportStatuses = self.dataServices.GetReportStatus()
@@ -2262,11 +2268,27 @@ class WGSSearch(TemplateView):
                     _pageNumber = 1
                     _itemsPerPage = 20
 
+            _strCategory = ""
+
+            if _diseaseIndicationCode1 == 'WGS-CA' or \
+                    _diseaseIndicationCode2 == 'WGS-CA' or \
+                    _diseaseIndicationCode3 == 'WGS-CA':
+                _strCategory = "2012_SOLID_CANCER"
+            else:
+                _strCategory = "2012_OTHER"
+
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
-                '%', 'WGS', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
-                _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1,
-                _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName,
-                _labNumber, _refKey, _noResultStatus)
+               _strCategory, 'WGS', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
+               _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1,
+               _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName,
+               _labNumber, _refKey, _noResultStatus)
+
+            #_totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
+            #    '2012%', 'WGS', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
+            #    _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1,
+            #    _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName,
+            #    _labNumber, _refKey, _noResultStatus)
+
             _listOfSurnames = self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases)
 
             _searchCount = _totalWorkflowCases.__len__()
@@ -2333,8 +2355,97 @@ class WGSSearch(TemplateView):
             return render(request, self.template_name, context)
 
 
+class SetAllocatedToForDNANEW(TemplateView):
+    template_name = "ModifyDataForDNA.html"
+    title = ShireXWorkflowMonitoringConfig.title
+    utilities = UtilityFunctions()
+    dataServices = ShireData()
+
+    def get(self, request, _labNumber, _workflowName):
+
+        try:
+            if not request.user.is_authenticated:
+                return HttpResponseRedirect(reverse('LoginPage'))
+
+            _staffList = None
+            _staff = None
+            _staffQuery = STAFF.objects.filter(LOGON_NAME=request.user.username, EMPLOYMENT_END_DATE__isnull=True)
+            _reportStatus = ""
+            _reportStatuses = self.dataServices.GetReportStatus()
+
+            if _staffQuery is None or _staffQuery.__len__() == 0:
+                _context = {
+                    "labNumber": _labNumber,
+                    "errorMessage": "The system cannot find the staff code from the username"
+                }
+                return render(request, self.template_name, _context)
+            else:
+                # Convert the queryset, which should only have one record
+                # to a single instance of the Staff record
+                for _item in _staffQuery:
+                    _staff = _item
+
+            _isSupervisor = "N"
+            _permissionName = "Is" + _workflowName + "Supervisor"
+            _hasPermission = self.dataServices.UserHasPermission(request.user.username, _permissionName)
+
+            if _hasPermission:
+                _isSupervisor = "Y"
+                _staffList = STAFF.objects.all
+
+            _staffListAll = STAFF.objects.all
+            _cancelURL = "HaemOnc" + _workflowName + "Search"
+
+            _context = {
+                "labNumber": _labNumber,
+                "staffList": _staffList,
+                "staffListAll": _staffListAll,
+                "staff": _staff,
+                "isSupervisor": _isSupervisor,
+                "criteriaReportStatuses": _reportStatuses,
+                "workflowName": _workflowName,
+                "cancelURL": _cancelURL,
+            }
+            return render(request, self.template_name, _context)
+
+        except Exception as ex:
+            _context = {
+                "labNumber": _labNumber,
+                "errorMessage": str(ex),
+            }
+            return render(request, self.template_name, _context)
+
+    def post(self, request, _labNumber, _workflowName):
+
+        try:
+            _staffCode = self.utilities.PostRequestKey(request, "ddlStaffCode", enumDataType.String)
+            _reportStatus = self.utilities.PostRequestKey(request, "ddlCriteriaStatus", enumDataType.String)
+            _reportBy = self.utilities.PostRequestKey(request, "ddlReportBy", enumDataType.String)
+            _checkedBy = self.utilities.PostRequestKey(request, "ddlCheckedBy", enumDataType.String)
+            _retVal = self.dataServices.SetAllocatedToForDNA(_labNumber, _staffCode)
+
+            if _retVal != 1:
+                _context = {
+                    "labNumber": _labNumber,
+                    "errorMessage": "The system attempted to set the Allocated to column for you, "
+                                    "but failed at the database server.",
+                }
+                return render(request, self.template_name, _context)
+
+
+            # _urlName = "HaemOnc" + _workflowName + "Search"
+            _urlName = "AllocateComplete"
+
+            return HttpResponseRedirect(_urlName)
+
+        except Exception as ex:
+            _context = {
+                "labNumber": _labNumber,
+                "errorMessage": str(ex),
+            }
+            return render(request, self.template_name, _context)
+
 class SetAllocatedToForDNA(TemplateView):
-    # This class may need to be moved to the CommonFunctionality module
     template_name = "SetAllocatedToForDNA.html"
     title = ShireXWorkflowMonitoringConfig.title
     utilities = UtilityFunctions()
@@ -2415,9 +2526,7 @@ class SetAllocatedToForDNA(TemplateView):
             }
             return render(request, self.template_name, _context)
 
-
 class SetAllocatedToForCyto(TemplateView):  # placeholder - not yet ready for use
-    # This class may need to be moved to the CommonFunctionality module
     template_name = "SetAllocatedToForCyto.html"
     title = ShireXWorkflowMonitoringConfig.title
     utilities = UtilityFunctions()

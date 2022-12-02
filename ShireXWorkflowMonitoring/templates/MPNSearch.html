@@ -117,11 +117,14 @@
                                     {% endif %}
                                 </select>
                             </div>
-                            <div class="col-2">
-
+                            <div class="col-2" style="text-align:right">
+                                <label for="ddlAlertCriteria" class="col-form-label">Show Alerts First:</label>
                             </div>
                             <div class="col-2">
-
+                                <select class="form-select" name="ddlAlertCriteria" id="ddlAlertCriteria">
+                                    <option value="False">No</option>
+                                    <option value="True">Yes</option>
+                                </select>
                             </div>
                         </div>
                         <div class="row g-5 align-items-center" style="padding:5px">
@@ -207,11 +210,12 @@
             </div>
         {% endif %}
         <div class="container-fluid">
-            <table class="table table-bordered">
+            <table class="table table-bordered" Id="ResultsTable">
                 <thead class="bg-primary" style="color:white">
                     <th scope="col">
                         Claim
                     </th>
+                    {# <th scope="col" onclick="SortTable(1)"> #}
                     <th scope="col">
                         Patient (Date deceased)
                     </th>
@@ -586,6 +590,48 @@
                 _object = _defaultValue;
             }
             return _object
+        }
+
+        function SortTable(n){
+            {#  Doing it this way means it can only sort what's on the screen, but it'll reduce the SQL sproc calls #}
+
+            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+
+            table = document.getElementById("ResultsTable");
+            switching=true;
+            dir = "asc";
+           while(switching){
+               switching = false;
+               rows = table.rows;
+
+               for (i=1; i < rows.length-1; i++){
+               {# for (i=1; i < {{ searchCount }}-1; i++){ #}
+                   shouldSwitch = false;
+                   x = rows[i].getElementsByTagName("TD")[n];
+                   y = rows[i+1].getElementsByTagName("TD")[n];
+                   if (dir == "asc"){
+                       if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()){
+                           shouldSwitch = true;
+                           break;
+                       }
+                   }else if (dir="desc"){
+                       if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()){
+                           shouldSwitch = true;
+                           break;
+                       }
+                   }
+               }
+               if(shouldSwitch){
+                   rows[i].parentNode.insertBefore(rows[i+1], rows[i]);
+                   switching = true;
+                   switchcount++;
+               }else{
+                   if(switchcount==0 && dir == "asc"){
+                       dir = "desc";
+                       switching = true;
+                   }
+               }
+           }
         }
 
     </script>
