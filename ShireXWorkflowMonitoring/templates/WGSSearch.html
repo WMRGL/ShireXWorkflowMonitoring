@@ -200,11 +200,12 @@
             </div>
         {% endif %}
         <div class="container-fluid">
-            <table class="table table-bordered">
+            <table class="table table-bordered" Id="ResultsTable">
                 <thead class="bg-primary" style="color:white">
                     <th>
                         Claim
                     </th>
+                    {# <th scope="col" onclick="SortTable(1)"> #}
                     <th scope="col">
                         Patient (Date deceased)
                     </th>
@@ -435,7 +436,7 @@
         {#        document.getElementById('ddlCriteriaReasonForDiseaseIndication3').value = '';#}
         {#        DoPostBack();#}
         {#    }#}
-        {#} )#}
+        {# } )#}
 
         {#document.getElementById('ddlCriteriaDiseaseIndication3').addEventListener('change', function () {#}
         {#    if (IsFormValid()) {#}
@@ -444,7 +445,7 @@
         {#        document.getElementById('ddlCriteriaReasonForDiseaseIndication3').value = '';#}
         {#        DoPostBack();#}
         {#    }#}
-        {#} )#}
+        {# } )#}
 
         document.getElementById('btnPageFirst').addEventListener('click', function () { DoSubmitFirstPage(); } );
         document.getElementById('btnPagePrevious').addEventListener('click', function () { DoSubmitPreviousPage(); } );
@@ -523,7 +524,7 @@
             {#if (_indicationDisease2 != '' && _indicationDisease1 == '')#}
             {#{#}
             {#    _errorMessage = _errorMessage + 'You must enter the indication search criteria in order \n';#}
-            {#}#}
+            {# } #}
             {#else#}
             {#{#}
             {#    if (_indicationDisease3 != '' && _indicationDisease1 == '')#}
@@ -537,7 +538,7 @@
             {#            _errorMessage = _errorMessage + 'You must enter the indication search criteria in order \n';#}
             {#        }#}
             {#    }#}
-            {#}#}
+            {# } #}
 
             if (_reason2 != '' && _reason1 == '')
             {
@@ -577,6 +578,44 @@
         function DoClaim(labno) {
             url="{% url 'DNASetAllocatedTo' _labNumber=0 _workflowName='WGS' %}".replace('0', labno);
             window.open(url);
+        }
+
+        function SortTable(n){
+            {#  Doing it this way means it can only sort what's on the screen, but it'll reduce the SQL sproc calls #}
+           var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+           table = document.getElementById("ResultsTable");
+           switching=true;
+           dir = "asc";
+           while(switching){
+               switching = false;
+               rows = table.rows;
+               for (i=1; i < rows.length-1; i++){
+                   shouldSwitch = false;
+                   x = rows[i].getElementsByTagName("TD")[n];
+                   y = rows[i+1].getElementsByTagName("TD")[n];
+                   if (dir == "asc"){
+                       if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()){
+                           shouldSwitch = true;
+                           break;
+                       }
+                   }else if (dir="desc"){
+                       if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()){
+                           shouldSwitch = true;
+                           break;
+                       }
+                   }
+               }
+               if(shouldSwitch){
+                   rows[i].parentNode.insertBefore(rows[i+1], rows[i]);
+                   switching = true;
+                   switchcount++;
+               }else{
+                   if(switchcount==0 && dir == "asc"){
+                       dir = "desc";
+                       switching = true;
+                   }
+               }
+           }
         }
 
     </script>

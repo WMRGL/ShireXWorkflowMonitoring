@@ -207,11 +207,12 @@
             </div>
         {% endif %}
         <div class="container-fluid">
-            <table class="table table-bordered">
+            <table class="table table-bordered"  Id="ResultsTable">
                 <thead class="bg-primary" style="color:white">
                     <th>
                         Claim
                     </th>
+                    {#  <th scope="col" onclick="SortTable(1)"> #}
                     <th scope="col">
                         Patient (Date deceased)
                     </th>
@@ -263,7 +264,7 @@
                     {% for item in workflowCases %}
                         <tr>
                             <td>
-                                {#<a class="btn btn-primary" href="{% url 'HaemOncSetAllocatedTo' _labNumber=item.LABNO _workflowName='ALL' %}">&nbsp;</a>#}
+                                {# <a class="btn btn-primary" href="{% url 'HaemOncSetAllocatedTo' _labNumber=item.LABNO _workflowName='ALL' %}">&nbsp;</a> #}
                                 <button class="btn btn-primary" id="{{item.LABNO}}" onclick="DoClaim(this.id)">&nbsp;</button>
                             </td>
                             {% if item.DECEASED_DATE %}
@@ -578,6 +579,44 @@
         function DoClaim(labno) {
         url="{% url 'DNASetAllocatedTo' _labNumber=0 _workflowName='ALL' %}".replace('0', labno);
             window.open(url);
+        }
+
+        function SortTable(n){
+            {#  Doing it this way means it can only sort what's on the screen, but it'll reduce the SQL sproc calls #}
+           var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+           table = document.getElementById("ResultsTable");
+           switching=true;
+           dir = "asc";
+           while(switching){
+               switching = false;
+               rows = table.rows;
+               for (i=1; i < rows.length-1; i++){
+                   shouldSwitch = false;
+                   x = rows[i].getElementsByTagName("TD")[n];
+                   y = rows[i+1].getElementsByTagName("TD")[n];
+                   if (dir == "asc"){
+                       if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()){
+                           shouldSwitch = true;
+                           break;
+                       }
+                   }else if (dir="desc"){
+                       if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()){
+                           shouldSwitch = true;
+                           break;
+                       }
+                   }
+               }
+               if(shouldSwitch){
+                   rows[i].parentNode.insertBefore(rows[i+1], rows[i]);
+                   switching = true;
+                   switchcount++;
+               }else{
+                   if(switchcount==0 && dir == "asc"){
+                       dir = "desc";
+                       switching = true;
+                   }
+               }
+           }
         }
 
     </script>
