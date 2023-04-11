@@ -2283,12 +2283,6 @@ class WGSSearch(TemplateView):
                _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName,
                _labNumber, _refKey, _noResultStatus)
 
-            #_totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
-            #    '2012%', 'WGS', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
-            #    _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1,
-            #    _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName,
-            #    _labNumber, _refKey, _noResultStatus)
-
             _listOfSurnames = self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases)
 
             _searchCount = _totalWorkflowCases.__len__()
@@ -2309,7 +2303,7 @@ class WGSSearch(TemplateView):
 
             _priorities = self.dataServices.GetDNAPriority()
 
-            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('%', 'WGS')
+            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012%', 'WGS')
 
             _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(_diseaseIndicationCode1,
                                                                                                _diseaseIndicationCode2,
@@ -2354,96 +2348,146 @@ class WGSSearch(TemplateView):
 
             return render(request, self.template_name, context)
 
-
-class SetAllocatedToForDNANEW(TemplateView):
-    template_name = "ModifyDataForDNA.html"
+class GLHPanHaemSearch(TemplateView):
+    template_name = "GLHPanHaemSearch.html"
     title = ShireXWorkflowMonitoringConfig.title
     utilities = UtilityFunctions()
     dataServices = ShireData()
+    worksheetHelper = Worksheet()  # Composition, instead of inheritance
 
-    def get(self, request, _labNumber, _workflowName):
-
+    def get(self, request):
         try:
             if not request.user.is_authenticated:
                 return HttpResponseRedirect(reverse('LoginPage'))
 
-            _staffList = None
-            _staff = None
-            _staffQuery = STAFF.objects.filter(LOGON_NAME=request.user.username, EMPLOYMENT_END_DATE__isnull=True)
-            _reportStatus = ""
+            # If logged in determine if a postback, before extracting the search filters
+            if request.GET.__len__() == 0:
+                _isPostBack = False
+            else:
+                _isPostBack = True
+
+            _reportStatus = "NOTFINAL"
+            _priority = ""
+            _diseaseIndicationCode1 = ""
+            _diseaseIndicationCode2 = ""
+            _diseaseIndicationCode3 = ""
+            _reasonForDiseaseIndication1 = ""
+            _reasonForDiseaseIndication2 = ""
+            _reasonForDiseaseIndication3 = ""
+            _lastName = ""
+            _labNumber = ""
+            _refKey = ""
+            _noResultStatus = 0
+            _searchCount = 0
+
+            if not _isPostBack:
+                _dateFrom = datetime.today() - timedelta(days=60)
+                _dateTo = datetime.today() + timedelta(days=90)
+                _pageNumber = 1
+                _itemsPerPage = 20
+            else:
+                try:
+                    _dateFrom = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime)
+                    _dateTo = self.utilities.GetRequestKey(request, "txtCriteriaDateTo", enumDataType.Datetime)
+                    _pageNumber = self.utilities.GetRequestKey(request, "txtPageNumber", enumDataType.Integer)
+                    _itemsPerPage = self.utilities.GetRequestKey(request, "ddlCriteriaItemsPerPage",
+                                                                 enumDataType.Integer)
+                    _reportStatus = self.utilities.GetRequestKey(request, "ddlCriteriaStatus", enumDataType.String)
+                    _priority = self.utilities.GetRequestKey(request, "ddlCriteriaPriority", enumDataType.String)
+                    _diseaseIndicationCode1 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication1",
+                                                                           enumDataType.String)
+                    _diseaseIndicationCode2 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication2",
+                                                                           enumDataType.String)
+                    _diseaseIndicationCode3 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication3",
+                                                                           enumDataType.String)
+                    _reasonForDiseaseIndication1 = self.utilities.GetRequestKey(
+                        request, "ddlCriteriaReasonForDiseaseIndication1", enumDataType.String)
+                    _reasonForDiseaseIndication2 = self.utilities.GetRequestKey(
+                        request, "ddlCriteriaReasonForDiseaseIndication2", enumDataType.String)
+                    _reasonForDiseaseIndication3 = self.utilities.GetRequestKey(
+                        request, "ddlCriteriaReasonForDiseaseIndication3", enumDataType.String)
+                    _lastName = self.utilities.GetRequestKey(request, "txtCriteriaLastname", enumDataType.String)
+                    _labNumber = self.utilities.GetRequestKey(request, "txtCriteriaLabnumber", enumDataType.String)
+                    _refKey = self.utilities.GetRequestKey(request, "ddlCriteriaRefKey", enumDataType.String)
+                    _noResultStatus = self.utilities.GetRequestKey(request, "ddlCriteriaNoResult", enumDataType.Integer)
+
+                except Exception:
+                    # If any errors occur return the default criteria
+                    _dateFrom = datetime.today() - timedelta(days=365)
+                    _dateTo = datetime.today() + timedelta(days=30)
+                    _pageNumber = 1
+                    _itemsPerPage = 20
+
+            _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
+               '2012_HAEM_ONC', 'PanHaem', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
+               _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1,
+               _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName,
+               _labNumber, _refKey, _noResultStatus)
+
+            _listOfSurnames = self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases)
+
+            _searchCount = _totalWorkflowCases.__len__()
+
+            _workflowCases = Paginator(_totalWorkflowCases, _itemsPerPage)
+
+            _pageOfWorkflowCases = _workflowCases.page(_pageNumber)
+
+            # For each Lab No/Reason/Bill line extract the worksheet summary for that Lab No
+            _pageOfWorkflowCases = self.worksheetHelper.AddWorksheetTestResultsToWorkflowCases(_pageOfWorkflowCases)
+
+            _pageOfWorkflowCases = self.worksheetHelper.AddTestsWithNoWorksheetsToWorkflowCases(_pageOfWorkflowCases)
+
+            _pageOfWorkflowCases = self.worksheetHelper.ConvertWorksheetsColumnEmptyStringToNone(_pageOfWorkflowCases)
+
+            # Codes for the search criteria
             _reportStatuses = self.dataServices.GetReportStatus()
 
-            if _staffQuery is None or _staffQuery.__len__() == 0:
-                _context = {
-                    "labNumber": _labNumber,
-                    "errorMessage": "The system cannot find the staff code from the username"
-                }
-                return render(request, self.template_name, _context)
-            else:
-                # Convert the queryset, which should only have one record
-                # to a single instance of the Staff record
-                for _item in _staffQuery:
-                    _staff = _item
+            _priorities = self.dataServices.GetDNAPriority()
 
-            _isSupervisor = "N"
-            _permissionName = "Is" + _workflowName + "Supervisor"
-            _hasPermission = self.dataServices.UserHasPermission(request.user.username, _permissionName)
+            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', 'PanHaem')
 
-            if _hasPermission:
-                _isSupervisor = "Y"
-                _staffList = STAFF.objects.all
+            _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(_diseaseIndicationCode1,
+                                                                                               _diseaseIndicationCode2,
+                                                                                               _diseaseIndicationCode3)
 
-            _staffListAll = STAFF.objects.all
-            _cancelURL = "HaemOnc" + _workflowName + "Search"
+            _refKeys = self.dataServices.GetDNARefKey(_diseaseIndicationCode1, _diseaseIndicationCode2,
+                                                      _diseaseIndicationCode3)
 
             _context = {
-                "labNumber": _labNumber,
-                "staffList": _staffList,
-                "staffListAll": _staffListAll,
-                "staff": _staff,
-                "isSupervisor": _isSupervisor,
+                "criteriaDateFrom": _dateFrom,
+                "criteriaDateTo": _dateTo,
+                "Title": self.title,
+                "workflowCases": _pageOfWorkflowCases,
+                "itemsPerPage": _itemsPerPage,
                 "criteriaReportStatuses": _reportStatuses,
-                "workflowName": _workflowName,
-                "cancelURL": _cancelURL,
+                "criteriaReportStatus": _reportStatus,
+                "criteriaPriorities": _priorities,
+                "criteriaPriority": _priority,
+                "criteriaDiseaseIndications": _diseaseIndications,
+                "criteriaDiseaseIndication1": _diseaseIndicationCode1,
+                "criteriaDiseaseIndication2": _diseaseIndicationCode2,
+                "criteriaDiseaseIndication3": _diseaseIndicationCode3,
+                "criteriaReasonsForDiseaseIndications": _reasonsForDiseaseIndications,
+                "criteriaReasonForDiseaseIndication1": _reasonForDiseaseIndication1,
+                "criteriaReasonForDiseaseIndication2": _reasonForDiseaseIndication2,
+                "criteriaReasonForDiseaseIndication3": _reasonForDiseaseIndication3,
+                "criteriaRefKey": _refKey,
+                "criteriaRefKeys": _refKeys,
+                "criteriaSurnames": _listOfSurnames,
+                "criteriaSurname": _lastName,
+                "criteriaLabnumber": _labNumber,
+                "criteriaNoResult": _noResultStatus,
+                "searchCount": _searchCount,
             }
             return render(request, self.template_name, _context)
 
         except Exception as ex:
-            _context = {
-                "labNumber": _labNumber,
-                "errorMessage": str(ex),
+            context = {
+                "Title": self.title,
+                "errorMessage": "WGSSearch.get : " + str(ex)
             }
-            return render(request, self.template_name, _context)
 
-    def post(self, request, _labNumber, _workflowName):
-
-        try:
-            _staffCode = self.utilities.PostRequestKey(request, "ddlStaffCode", enumDataType.String)
-            _reportStatus = self.utilities.PostRequestKey(request, "ddlCriteriaStatus", enumDataType.String)
-            _reportBy = self.utilities.PostRequestKey(request, "ddlReportBy", enumDataType.String)
-            _checkedBy = self.utilities.PostRequestKey(request, "ddlCheckedBy", enumDataType.String)
-            _retVal = self.dataServices.SetAllocatedToForDNA(_labNumber, _staffCode)
-
-            if _retVal != 1:
-                _context = {
-                    "labNumber": _labNumber,
-                    "errorMessage": "The system attempted to set the Allocated to column for you, "
-                                    "but failed at the database server.",
-                }
-                return render(request, self.template_name, _context)
-
-
-            # _urlName = "HaemOnc" + _workflowName + "Search"
-            _urlName = "AllocateComplete"
-
-            return HttpResponseRedirect(_urlName)
-
-        except Exception as ex:
-            _context = {
-                "labNumber": _labNumber,
-                "errorMessage": str(ex),
-            }
-            return render(request, self.template_name, _context)
+            return render(request, self.template_name, context)
 
 class SetAllocatedToForDNA(TemplateView):
     template_name = "SetAllocatedToForDNA.html"
