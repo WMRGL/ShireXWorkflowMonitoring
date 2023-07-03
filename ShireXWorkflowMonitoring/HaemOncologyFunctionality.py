@@ -104,6 +104,7 @@ class BMTSearch(TemplateView):
 
             _pageOfWorkflowCases = self.worksheetHelper.ConvertWorksheetsColumnEmptyStringToNone(_pageOfWorkflowCases)
 
+            _pageOfWorkflowCases = self.extractsheetHelper.AddExtractsToWorkflowCases(_pageOfWorkflowCases)
             # Codes for the search criteria
             _reportStatuses = self.dataServices.GetReportStatus()
 
@@ -243,9 +244,6 @@ class MPNSearch(TemplateView):
 
             _pageOfWorkflowCases = self.extractsheetHelper.AddExtractsToWorkflowCases(_pageOfWorkflowCases)
 
-            # if _showAlerts:
-            #    _pageOfWorkflowCases.
-
             # Codes for the search criteria
             _reportStatuses = self.dataServices.GetReportStatus()
 
@@ -381,6 +379,8 @@ class DAMLSearch(TemplateView):
 
             _pageOfWorkflowCases = self.worksheetHelper.ConvertWorksheetsColumnEmptyStringToNone(_pageOfWorkflowCases)
 
+            _pageOfWorkflowCases = self.extractsheetHelper.AddExtractsToWorkflowCases(_pageOfWorkflowCases)
+
             # Codes for the search criteria
             _reportStatuses = self.dataServices.GetReportStatus()
 
@@ -515,6 +515,8 @@ class BreakSearch(TemplateView):
 
             _pageOfWorkflowCases = self.worksheetHelper.ConvertWorksheetsColumnEmptyStringToNone(_pageOfWorkflowCases)
 
+            _pageOfWorkflowCases = self.extractsheetHelper.AddExtractsToWorkflowCases(_pageOfWorkflowCases)
+
             # Codes for the search criteria
             _reportStatuses = self.dataServices.GetReportStatus()
 
@@ -648,6 +650,8 @@ class MDSSearch(TemplateView):
             _pageOfWorkflowCases = self.worksheetHelper.AddTestsWithNoWorksheetsToWorkflowCases(_pageOfWorkflowCases)
 
             _pageOfWorkflowCases = self.worksheetHelper.ConvertWorksheetsColumnEmptyStringToNone(_pageOfWorkflowCases)
+
+            _pageOfWorkflowCases = self.extractsheetHelper.AddExtractsToWorkflowCases(_pageOfWorkflowCases)
 
             # Codes for the search criteria
             _reportStatuses = self.dataServices.GetReportStatus()
@@ -1069,6 +1073,8 @@ class SNPSearch(TemplateView):
 
             _pageOfWorkflowCases = self.worksheetHelper.ConvertWorksheetsColumnEmptyStringToNone(_pageOfWorkflowCases)
 
+            _pageOfWorkflowCases = self.extractsheetHelper.AddExtractsToWorkflowCases(_pageOfWorkflowCases)
+
             # Codes for the search criteria
             _reportStatuses = self.dataServices.GetReportStatus()
 
@@ -1202,6 +1208,8 @@ class ALLSearch(TemplateView):
             _pageOfWorkflowCases = self.worksheetHelper.AddTestsWithNoWorksheetsToWorkflowCases(_pageOfWorkflowCases)
 
             _pageOfWorkflowCases = self.worksheetHelper.ConvertWorksheetsColumnEmptyStringToNone(_pageOfWorkflowCases)
+
+            _pageOfWorkflowCases = self.extractsheetHelper.AddExtractsToWorkflowCases(_pageOfWorkflowCases)
 
             # Codes for the search criteria
             _reportStatuses = self.dataServices.GetReportStatus()
@@ -1475,6 +1483,8 @@ class DHCLSearch(TemplateView):
 
             _pageOfWorkflowCases = self.worksheetHelper.ConvertWorksheetsColumnEmptyStringToNone(_pageOfWorkflowCases)
 
+            _pageOfWorkflowCases = self.extractsheetHelper.AddExtractsToWorkflowCases(_pageOfWorkflowCases)
+
             # Codes for the search criteria
             _reportStatuses = self.dataServices.GetReportStatus()
 
@@ -1746,6 +1756,8 @@ class DCSSearch(TemplateView):
 
             _pageOfWorkflowCases = self.worksheetHelper.ConvertWorksheetsColumnEmptyStringToNone(_pageOfWorkflowCases)
 
+            _pageOfWorkflowCases = self.extractsheetHelper.AddExtractsToWorkflowCases(_pageOfWorkflowCases)
+
             # Codes for the search criteria
             _reportStatuses = self.dataServices.GetReportStatus()
 
@@ -2016,6 +2028,8 @@ class FALSearch(TemplateView):
             _pageOfWorkflowCases = self.worksheetHelper.AddTestsWithNoWorksheetsToWorkflowCases(_pageOfWorkflowCases)
 
             _pageOfWorkflowCases = self.worksheetHelper.ConvertWorksheetsColumnEmptyStringToNone(_pageOfWorkflowCases)
+
+            _pageOfWorkflowCases = self.extractsheetHelper.AddExtractsToWorkflowCases(_pageOfWorkflowCases)
 
             # Codes for the search criteria
             _reportStatuses = self.dataServices.GetReportStatus()
@@ -2298,6 +2312,8 @@ class WGSSearch(TemplateView):
 
             _pageOfWorkflowCases = self.worksheetHelper.ConvertWorksheetsColumnEmptyStringToNone(_pageOfWorkflowCases)
 
+            _pageOfWorkflowCases = self.extractsheetHelper.AddExtractsToWorkflowCases(_pageOfWorkflowCases)
+
             # Codes for the search criteria
             _reportStatuses = self.dataServices.GetReportStatus()
 
@@ -2438,6 +2454,8 @@ class GLHPanHaemSearch(TemplateView):
             _pageOfWorkflowCases = self.worksheetHelper.AddTestsWithNoWorksheetsToWorkflowCases(_pageOfWorkflowCases)
 
             _pageOfWorkflowCases = self.worksheetHelper.ConvertWorksheetsColumnEmptyStringToNone(_pageOfWorkflowCases)
+
+            _pageOfWorkflowCases = self.extractsheetHelper.AddExtractsToWorkflowCases(_pageOfWorkflowCases)
 
             # Codes for the search criteria
             _reportStatuses = self.dataServices.GetReportStatus()

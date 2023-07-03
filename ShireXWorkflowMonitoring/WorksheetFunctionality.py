@@ -170,56 +170,47 @@ class ExtractSheet:
         _previousLabNumber = ""
 
         for _row in _pageOfWorkflowCases:
+
             _labNumber = _row['LABNO']
             _row['EXTRACTSHEETS'] = ""
-            # _row['RESULTS_OUTSTANDING'] = "no"
-            # _row['WORKSHEET_OUTSTANDING'] = "yes"
 
             if _labNumber != _previousLabNumber:
-                # If the lab number is different, compile the worksheet/test/result information
                 _esResults = self.dataServices.GetSampleExtracts(_labNumber)
-
-                # _worksheetList = ["", ]
-                # _testResultList = ["", ]
-
                 _extractListString = ""
                 _extractDate = ""
-                _cDNA = ""
+                _extract = ""
                 _extractsheet = ""
 
                 for _esRow in _esResults:
-                    # For each worksheet/test/result
-                    # _extractsheet = _esRow['EXTRACT_SHEET']
-                    _cDNA = _esRow['EXTRACTION_METHOD']
+                    _extract = _esRow['EXTRACTION_METHOD']
+
                     if _esRow['EXTRACTION_DATE'] is not None:
                         _extractDate = str(_esRow['EXTRACTION_DATE'].strftime("%d/%m/%Y"))[0:10]
 
                     if _esRow['EXTRACT_SHEET'] is not None:
                         _extractsheet = _esRow['EXTRACT_SHEET']
 
-                _extractsheetColour = "green"
+                    _extractsheetColour = "green"
 
-                if (_extractDate is None or _extractDate == "") and _cDNA == "cDNA Prep":
-                    _extractDate = ""
-                    _extractsheetColour = "orange"
-                else:
-                    if (_extractsheet is None or _extractsheet == "") and _cDNA == "cDNA Prep":
-                        _extractsheet = ""
-                        _extractsheetColour = "red"
+                    if (_extractDate is None or _extractDate == ""):
+                        _extractDate = ""
+                        _extractsheetColour = "orange"
+                    else:
+                        if (_extractsheet is None or _extractsheet == ""):
+                            _extractsheet = ""
+                            _extractsheetColour = "red"
 
-                _extractListString = _extractListString + "<span style='color: " + _extractsheetColour + \
-                    "'>" + _cDNA + \
-                    "<br>" + _extractsheet + "<br>" + _extractDate + "</span>"
+                    _extractListString = _extractListString + "<span style='color: " + _extractsheetColour + \
+                    "'>" + _extract + "</span>" + "<span><br><br>"
+                    _esListString = ""
 
-                _esListString = ""
+                    if _extractListString.__len__() > 0:
+                       _len = len(_extractListString)
 
-                if _extractListString.__len__() > 0:
-                    # Remove the last set of <br><br>
-                    _len = len(_extractListString)
+                    _esListString = _extractListString  [0:(_len - 8)]
 
-                    _esListString = _extractListString  # [0:(_len - 8)]
-
-                _row['EXTRACTSHEETS'] = _esListString
+                    _row['EXTRACTSHEETS'] = _esListString
+                    #_row['EXTRACTSHEETS'] = _extractListString
 
             _previousLabNumber = _labNumber
 
