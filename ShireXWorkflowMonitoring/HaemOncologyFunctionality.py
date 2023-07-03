@@ -21,6 +21,7 @@ class BMTSearch(TemplateView):
     utilities = UtilityFunctions()
     dataServices = ShireData()
     worksheetHelper = Worksheet()       # Composition, instead of inheritance
+    extractsheetHelper = ExtractSheet()
 
     def get(self, request):
         try:
@@ -295,6 +296,7 @@ class DAMLSearch(TemplateView):
     utilities = UtilityFunctions()
     dataServices = ShireData()
     worksheetHelper = Worksheet()       # Composition, instead of inheritance
+    extractsheetHelper = ExtractSheet()
 
     def get(self, request):
         try:
@@ -433,6 +435,7 @@ class BreakSearch(TemplateView):
     utilities = UtilityFunctions()
     dataServices = ShireData()
     worksheetHelper = Worksheet()  # Composition, instead of inheritance
+    extractsheetHelper = ExtractSheet()
 
     def get(self, request):
         try:
@@ -569,6 +572,7 @@ class MDSSearch(TemplateView):
     utilities = UtilityFunctions()
     dataServices = ShireData()
     worksheetHelper = Worksheet()  # Composition, instead of inheritance
+    extractsheetHelper = ExtractSheet()
 
     def get(self, request):
         try:
@@ -983,6 +987,7 @@ class SNPSearch(TemplateView):
     utilities = UtilityFunctions()
     dataServices = ShireData()
     worksheetHelper = Worksheet()  # Composition, instead of inheritance
+    extractsheetHelper = ExtractSheet()
 
     def get(self, request):
         try:
@@ -1127,6 +1132,7 @@ class ALLSearch(TemplateView):
     utilities = UtilityFunctions()
     dataServices = ShireData()
     worksheetHelper = Worksheet()  # Composition, instead of inheritance
+    extractsheetHelper = ExtractSheet()
 
     def get(self, request):
         try:
@@ -1401,6 +1407,7 @@ class DHCLSearch(TemplateView):
     utilities = UtilityFunctions()
     dataServices = ShireData()
     worksheetHelper = Worksheet()  # Composition, instead of inheritance
+    extractsheetHelper = ExtractSheet()
 
     def get(self, request):
         try:
@@ -1674,6 +1681,7 @@ class DCSSearch(TemplateView):
     utilities = UtilityFunctions()
     dataServices = ShireData()
     worksheetHelper = Worksheet()  # Composition, instead of inheritance
+    extractsheetHelper = ExtractSheet()
 
     def get(self, request):
         try:
@@ -1947,6 +1955,7 @@ class FALSearch(TemplateView):
     utilities = UtilityFunctions()
     dataServices = ShireData()
     worksheetHelper = Worksheet()       # Composition, instead of inheritance
+    extractsheetHelper = ExtractSheet()
 
     def get(self, request):
         try:
@@ -2218,6 +2227,7 @@ class WGSSearch(TemplateView):
     utilities = UtilityFunctions()
     dataServices = ShireData()
     worksheetHelper = Worksheet()  # Composition, instead of inheritance
+    extractsheetHelper = ExtractSheet()
 
     def get(self, request):
         try:
@@ -2370,6 +2380,7 @@ class GLHPanHaemSearch(TemplateView):
     utilities = UtilityFunctions()
     dataServices = ShireData()
     worksheetHelper = Worksheet()  # Composition, instead of inheritance
+    extractsheetHelper = ExtractSheet()
 
     def get(self, request):
         try:
