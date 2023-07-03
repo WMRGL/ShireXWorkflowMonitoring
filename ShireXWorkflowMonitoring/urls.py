@@ -20,6 +20,7 @@ urlpatterns = [
     path('Molecular/BREAK/', HaemOncologyFunctionality.BreakSearch.as_view(), name="HaemOncBreakSearch"),
     path('Molecular/SNPArrayAnalysis/', HaemOncologyFunctionality.SNPSearch.as_view(), name="HaemOncSNPSearch"),
     path('Molecular/WGS/', HaemOncologyFunctionality.WGSSearch.as_view(), name="HaemOncWGSSearch"),
+    path('Molecular/PanHaem/', HaemOncologyFunctionality.GLHPanHaemSearch.as_view(), name="HaemOncPanHaemSearch"),
     path('Molecular/ALL/', HaemOncologyFunctionality.ALLSearch.as_view(), name="HaemOncALLSearch"),
     path('Molecular/CLL/', HaemOncologyFunctionality.CLLSearch.as_view(), name="HaemOncCLLSearch"),
     path('Molecular/R-BCR/', HaemOncologyFunctionality.RBCRSearch.as_view(), name="HaemOncRBCRSearch"),

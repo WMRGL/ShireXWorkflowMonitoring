@@ -237,6 +237,9 @@
                         Wksheet / Result
                     </th>
                     <th scope="col">
+                        DNA/Quant
+                    </th>
+                    <th scope="col">
                         Alert
                     </th>
                 </thead>
@@ -358,6 +361,11 @@
 {#                                {% endif %}#}
 {#                            {% endif %}#}
                             {% endautoescape %}
+                            <td>
+                                {% autoescape off%}
+                                    {{ item.EXTRACTSHEETS }}
+                                {% endautoescape %}
+                            </td>
                             <td>
                                 {{ item.SampleAlert }}
                             </td>
