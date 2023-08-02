@@ -360,6 +360,11 @@
                                 {{ item.WORKSHEETS }}
                                 </td>
                                 <td>
+                                {% autoescape off%}
+                                    {{ item.EXTRACTSHEETS }}
+                                {% endautoescape %}
+                            </td>
+                                <td>
                                 {{ item.SampleAlert }}
                                 </td>
 {#                                {% endif %}#}

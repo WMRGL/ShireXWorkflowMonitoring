@@ -381,6 +381,11 @@
 {#                            {% endif %}#}
                             {% endautoescape %}
                             <td>
+                                {% autoescape off%}
+                                    {{ item.EXTRACTSHEETS }}
+                                {% endautoescape %}
+                            </td>
+                            <td>
                                 {{ item.SampleAlert }}
                             </td>
                         </tr>
