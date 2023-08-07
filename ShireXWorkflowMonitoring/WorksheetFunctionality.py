@@ -7,16 +7,18 @@ class Worksheet:
     def AddWorksheetTestResultsToWorkflowCases(self, _pageOfWorkflowCases):
         # An extension routine for the various workflow search routines
         _previousLabNumber = ""
+        _previousIndication = ""
 
         for _row in _pageOfWorkflowCases:
             _labNumber = _row['LABNO']
+            _indication = _row['DISEASE_CODE']
             _row['WORKSHEETS'] = ""
             # _row['RESULTS_OUTSTANDING'] = "no"
             # _row['WORKSHEET_OUTSTANDING'] = "yes"
 
-            if _labNumber != _previousLabNumber:
+            if _labNumber != _previousLabNumber or (_labNumber == _previousLabNumber and _indication != _previousIndication):
                 # If the lab number is different, compile the worksheet/test/result information
-                _wsResults = self.dataServices.GetSampleWorksheetResults(_labNumber)
+                _wsResults = self.dataServices.GetSampleWorksheetResults(_labNumber, _indication)
 
                 # _worksheetList = ["", ]
                 # _testResultList = ["", ]
@@ -96,6 +98,7 @@ class Worksheet:
                 _row['WORKSHEETS'] = _wsListString
 
             _previousLabNumber = _labNumber
+            _previousIndication = _indication
 
         return _pageOfWorkflowCases
 
@@ -120,14 +123,16 @@ class Worksheet:
     def AddTestsWithNoWorksheetsToWorkflowCases(self, _pageOfWorkflowCases):
         # An extension routine for the various workflow search routines
         _previousLabNumber = ""
+        _previousIndication = ""
 
         for _row in _pageOfWorkflowCases:
             _labNumber = _row['LABNO']
+            _indication = _row['DISEASE_CODE']
             _noWsString = ""
 
-            if _labNumber != _previousLabNumber:
+            if _labNumber != _previousLabNumber or (_labNumber == _previousLabNumber and _indication != _previousIndication):
                 # If the lab number is different, compile the information
-                _testsNoWorksheet = self.dataServices.GetSampleTestsNotAllocatedToWorksheet(_labNumber)
+                _testsNoWorksheet = self.dataServices.GetSampleTestsNotAllocatedToWorksheet(_labNumber, _indication)
 
                 _worksheetListString = _row['WORKSHEETS']
 
@@ -150,6 +155,7 @@ class Worksheet:
                     _row['WORKSHEETS'] = _worksheetListString + _noWsString
 
             _previousLabNumber = _labNumber
+            _previousIndication = _indication
 
         return _pageOfWorkflowCases
 
