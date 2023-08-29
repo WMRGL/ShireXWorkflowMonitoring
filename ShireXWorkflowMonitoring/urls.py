@@ -26,6 +26,7 @@ urlpatterns = [
     path('Molecular/R-BCR/', HaemOncologyFunctionality.RBCRSearch.as_view(), name="HaemOncRBCRSearch"),
     path('Molecular/FAL/', HaemOncologyFunctionality.FALSearch.as_view(), name="HaemOncFALSearch"),
     path('Molecular/HaemOncAll/', HaemOncologyFunctionality.HaemOncSearch.as_view(), name="HaemOncMolecularSearch"),
+    path('Molecular/SolidCancer/', HaemOncologyFunctionality.SolidCancerSearch.as_view(), name="SolidCancerSearch"),
     path('Molecular/Allocate/<str:_labNumber>/<str:_workflowName>/',
          HaemOncologyFunctionality.SetAllocatedToForDNA.as_view(), name="DNASetAllocatedTo"),
     path('Sample/<str:_labNumber>/<str:_workflowName>/', SampleFunctionality.SampleForm.as_view(), name="SampleForm"),
