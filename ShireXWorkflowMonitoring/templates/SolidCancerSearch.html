@@ -84,10 +84,10 @@
                             </div>
                         </div>
                         <div class="row g-5 align-items-center" style="padding:5px">
-                            <div class="col-2" style="text-align:right">
-                                <label for="ddlCriteriaDiseaseIndication1" class="col-form-label">Indication:</label>
+                            <div class="col-2 bg-light" style="text-align:right">
+                                <label for="ddlCriteriaDiseaseIndication1" class="col-form-label">Indication(s):</label>
                             </div>
-                            <div class="col-2" >
+                            <div class="col-2 bg-light">
                                 <select class="form-select" name="ddlCriteriaDiseaseIndication1" id="ddlCriteriaDiseaseIndication1">
                                     <option value="" {% if criteriaDiseaseIndication1 == "" %} selected="selected" {% endif %}>select...</option>
                                     {% if criteriaDiseaseIndications %}
@@ -97,24 +97,34 @@
                                     {% endif %}
                                 </select>
                             </div>
-                            <div class="col-2" style="text-align:right">
-                                <label for="ddlCriteriaRefKey" class="col-form-label" >Key:</label>
-                            </div>
-                            <div class="col-2">
-                                <select class="form-select" name="ddlCriteriaRefKey" id="ddlCriteriaRefKey">
-                                    <option value="" {% if criteriaRefKey == "" %} selected="selected" {% endif %}>select...</option>
-                                    {% if criteriaRefKeys %}
-                                        {% for item in criteriaRefKeys %}
-                                            <option value="{{ item.REF }}" {% if item.REF == criteriaRefKey %} selected="selected" {% endif %}>{{ item.REF }}</option>
+                            <div class="col-2 bg-light">
+                                <select class="form-select" name="ddlCriteriaDiseaseIndication2" id="ddlCriteriaDiseaseIndication2">
+                                    <option value="" {% if criteriaDiseaseIndication2 == "" %} selected="selected" {% endif %}>select...</option>
+                                    {% if criteriaDiseaseIndications %}
+                                        {% for item in criteriaDiseaseIndications %}
+                                            <option value="{{ item.DISEASE_CODE }}" {% if item.DISEASE_CODE == criteriaDiseaseIndication2 %} selected="selected" {% endif %}>{{ item.DISEASE_CODE }}</option>
                                         {% endfor %}
                                     {% endif %}
                                 </select>
                             </div>
-                            <div class="col-2">
-                                &nbsp;
+                            <div class="col-2 bg-light">
+                                <select class="form-select" name="ddlCriteriaDiseaseIndication3" id="ddlCriteriaDiseaseIndication3">
+                                    <option value="" {% if criteriaDiseaseIndication3 == "" %} selected="selected" {% endif %}>select...</option>
+                                    {% if criteriaDiseaseIndications %}
+                                        {% for item in criteriaDiseaseIndications %}
+                                            <option value="{{ item.DISEASE_CODE }}" {% if item.DISEASE_CODE == criteriaDiseaseIndication3 %} selected="selected" {% endif %}>{{ item.DISEASE_CODE }}</option>
+                                        {% endfor %}
+                                    {% endif %}
+                                </select>
+                            </div>
+                            <div class="col-2" style="text-align:right">
+                                <label for="ddlAlertCriteria" class="col-form-label">Show Alerts First:</label>
                             </div>
                             <div class="col-2">
-                                &nbsp;
+                                <select class="form-select" name="ddlAlertCriteria" id="ddlAlertCriteria">
+                                    <option value="False">No</option>
+                                    <option value="True">Yes</option>
+                                </select>
                             </div>
                         </div>
                         <div class="row g-5 align-items-center" style="padding:5px">
@@ -432,28 +442,28 @@
                 document.getElementById('ddlCriteriaReasonForDiseaseIndication1').value = '';
                 document.getElementById('ddlCriteriaReasonForDiseaseIndication2').value = '';
                 document.getElementById('ddlCriteriaReasonForDiseaseIndication3').value = '';
-                document.getElementById('ddlCriteriaRefKey').value = '';
+                {#  document.getElementById('ddlCriteriaRefKey').value = ''; #}
                 DoPostBack();
             }
         } )
 
-        {#document.getElementById('ddlCriteriaDiseaseIndication2').addEventListener('change', function () {#}
-        {#   if (IsFormValid()) {#}
-        {#        document.getElementById('ddlCriteriaReasonForDiseaseIndication1').value = '';#}
-        {#        document.getElementById('ddlCriteriaReasonForDiseaseIndication2').value = '';#}
-        {#        document.getElementById('ddlCriteriaReasonForDiseaseIndication3').value = '';#}
-        {#        DoPostBack();#}
-        {#    }#}
-        {# } )#}
+        document.getElementById('ddlCriteriaDiseaseIndication2').addEventListener('change', function () {
+           if (IsFormValid()) {
+                document.getElementById('ddlCriteriaReasonForDiseaseIndication1').value = '';
+                document.getElementById('ddlCriteriaReasonForDiseaseIndication2').value = '';
+                document.getElementById('ddlCriteriaReasonForDiseaseIndication3').value = '';
+                DoPostBack();
+            }
+         } )
 
-        {#document.getElementById('ddlCriteriaDiseaseIndication3').addEventListener('change', function () {#}
-        {#    if (IsFormValid()) {#}
-        {#        document.getElementById('ddlCriteriaReasonForDiseaseIndication1').value = '';#}
-        {#        document.getElementById('ddlCriteriaReasonForDiseaseIndication2').value = '';#}
-        {#        document.getElementById('ddlCriteriaReasonForDiseaseIndication3').value = '';#}
-        {#        DoPostBack();#}
-        {#    }#}
-        {# } )#}
+        document.getElementById('ddlCriteriaDiseaseIndication3').addEventListener('change', function () {
+            if (IsFormValid()) {
+                document.getElementById('ddlCriteriaReasonForDiseaseIndication1').value = '';
+                document.getElementById('ddlCriteriaReasonForDiseaseIndication2').value = '';
+                document.getElementById('ddlCriteriaReasonForDiseaseIndication3').value = '';
+                DoPostBack();
+            }
+         } )
 
         document.getElementById('btnPageFirst').addEventListener('click', function () { DoSubmitFirstPage(); } );
         document.getElementById('btnPagePrevious').addEventListener('click', function () { DoSubmitPreviousPage(); } );
@@ -522,8 +532,8 @@
             let _errorMessage = ''
 
             let _indicationDisease1 = Nz(document.getElementById('ddlCriteriaDiseaseIndication1').value,'');
-            {#let _indicationDisease2 = Nz(document.getElementById('ddlCriteriaDiseaseIndication2').value,'');#}
-            {#let _indicationDisease3 = Nz(document.getElementById('ddlCriteriaDiseaseIndication3').value,'');#}
+            let _indicationDisease2 = Nz(document.getElementById('ddlCriteriaDiseaseIndication2').value,'');
+            let _indicationDisease3 = Nz(document.getElementById('ddlCriteriaDiseaseIndication3').value,'');
 
             let _reason1 = Nz(document.getElementById('ddlCriteriaReasonForDiseaseIndication1').value,'');
             let _reason2 = Nz(document.getElementById('ddlCriteriaReasonForDiseaseIndication2').value,'');
