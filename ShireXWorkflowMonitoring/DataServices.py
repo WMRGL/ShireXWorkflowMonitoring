@@ -7,12 +7,12 @@ class ShireData:
 
     utilities = UtilityFunctions()
 
-    def GetDNAWorkflowCases(self, _indicationCategory1, _workFlow, _dateFrom, _dateTo, _reportStatus, _priority,
+    def GetDNAWorkflowCases(self, _indicationCategory1, _indicationCategory2, _workFlow, _dateFrom, _dateTo, _reportStatus, _priority,
                             _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonCode1,
                             _reasonCode2, _reasonCode3, _username, _surname, _labNumber, _RefKey, _NoResultStatus):
         with connection.cursor() as _cursor:
-            _cursor.execute("{CALL dbo.uspShireXGetDNAWorkflowCases(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, "
-                            "%s, %s, %s, %s, %s)}", (_indicationCategory1, _workFlow, _dateFrom, _dateTo, _reportStatus,
+            _cursor.execute("{CALL dbo.uspShireXGetDNAWorkflowCases(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, "
+                            "%s, %s, %s, %s, %s)}", (_indicationCategory1, _indicationCategory2, _workFlow, _dateFrom, _dateTo, _reportStatus,
                                                      _priority, _diseaseIndicationCode1, _diseaseIndicationCode2,
                                                      _diseaseIndicationCode3, _reasonCode1, _reasonCode2, _reasonCode3,
                                                      _username, _surname, _labNumber, _RefKey, _NoResultStatus))
@@ -87,9 +87,9 @@ class ShireData:
 
             return _retVal
 
-    def GetDNADiseaseIndication(self, _indicationCategory1, _workFlow):
+    def GetDNADiseaseIndication(self, _indicationCategory1, _indicationCategory2, _workFlow):
         with connection.cursor() as _cursor:
-            _cursor.execute("{CALL dbo.uspShireXGetDNADiseaseIndication(%s,%s)}", (_indicationCategory1, _workFlow))
+            _cursor.execute("{CALL dbo.uspShireXGetDNADiseaseIndication(%s,%s,%s)}", (_indicationCategory1, _indicationCategory2, _workFlow))
 
             _results = self.utilities.ConvertCursorListToDict(_cursor)
 

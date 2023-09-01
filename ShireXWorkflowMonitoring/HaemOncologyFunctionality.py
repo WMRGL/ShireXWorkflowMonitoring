@@ -84,7 +84,7 @@ class BMTSearch(TemplateView):
                     _itemsPerPage = 20
 
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
-                'ONCOLOGY BMT', 'BMT', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
+                'ONCOLOGY BMT', '', 'BMT', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
                 _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1,
                 _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName,
                 _labNumber, _RefKey, _noResultStatus)
@@ -110,7 +110,7 @@ class BMTSearch(TemplateView):
 
             _priorities = self.dataServices.GetDNAPriority()
 
-            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('ONCOLOGY BMT', 'BMT')
+            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('ONCOLOGY BMT', '', 'BMT')
 
             _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication('BMT', '', '')
 
@@ -222,7 +222,7 @@ class MPNSearch(TemplateView):
                     _itemsPerPage = 20
 
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
-                '2012_HAEM_ONC', 'MPN', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
+                '2012_HAEM_ONC', '', 'MPN', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
                 _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1,
                 _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName,
                 _labNumber, _RefKey, _noResultStatus)
@@ -249,7 +249,7 @@ class MPNSearch(TemplateView):
 
             _priorities = self.dataServices.GetDNAPriority()
 
-            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', 'MPN')
+            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', '', 'MPN')
 
             _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(
                 _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3)
@@ -361,7 +361,7 @@ class DAMLSearch(TemplateView):
                     _itemsPerPage = 20
 
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
-                '2012_HAEM_ONC', 'DAML', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
+                '2012_HAEM_ONC', '', 'DAML', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
                 _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1,
                 _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName,
                 _labNumber, _RefKey, _noResultStatus)
@@ -387,7 +387,7 @@ class DAMLSearch(TemplateView):
 
             _priorities = self.dataServices.GetDNAPriority()
 
-            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', 'DAML')
+            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', '', 'DAML')
 
             _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(
                 _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3)
@@ -498,7 +498,7 @@ class BreakSearch(TemplateView):
                     _itemsPerPage = 20
 
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
-                '2012_HAEM_ONC', 'BREAK', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
+                '2012_HAEM_ONC', '', 'BREAK', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
                 _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1,
                 _reasonForDiseaseIndication2,  _reasonForDiseaseIndication3, request.user.username, _lastName,
                 _labNumber,  _RefKey, _noResultStatus)
@@ -524,7 +524,7 @@ class BreakSearch(TemplateView):
 
             _priorities = self.dataServices.GetDNAPriority()
 
-            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', 'BREAK')
+            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', '', 'BREAK')
 
             _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(_diseaseIndicationCode1,
                                                                                                _diseaseIndicationCode2,
@@ -635,7 +635,7 @@ class MDSSearch(TemplateView):
                     _itemsPerPage = 20
 
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
-                '2012_HAEM_ONC', 'MDS', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
+                '2012_HAEM_ONC', '', 'MDS', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
                 _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1,
                 _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName,
                 _labNumber, _RefKey, _noResultStatus)
@@ -661,7 +661,7 @@ class MDSSearch(TemplateView):
 
             _priorities = self.dataServices.GetDNAPriority()
 
-            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', 'MDS')
+            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', '', 'MDS')
 
             _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(
                 _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3)
@@ -771,7 +771,7 @@ class RAMLSearch(TemplateView):
                     _itemsPerPage = 20
 
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
-                '2012_HAEM_ONC', 'RAML', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
+                '2012_HAEM_ONC', '', 'RAML', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
                 _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1,
                 _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName,
                 _labNumber, _RefKey, _noResultStatus)
@@ -797,7 +797,7 @@ class RAMLSearch(TemplateView):
 
             _priorities = self.dataServices.GetDNAPriority()
 
-            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', 'RAML')
+            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', '', 'RAML')
 
             _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(
                 _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3)
@@ -906,7 +906,7 @@ class AMLOddsSearch(TemplateView):
                     _pageNumber = 1
                     _itemsPerPage = 20
 
-            _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases('2012_HAEM_ONC', 'AMLOdds', _dateFrom, _dateTo,
+            _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases('2012_HAEM_ONC', '', 'AMLOdds', _dateFrom, _dateTo,
                                                                         _reportStatus, _priority,
                                                                         _diseaseIndicationCode1,
                                                                         _diseaseIndicationCode2,
@@ -939,7 +939,7 @@ class AMLOddsSearch(TemplateView):
 
             _priorities = self.dataServices.GetDNAPriority()
 
-            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', 'AMLOdds')
+            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', '', 'AMLOdds')
 
             _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(_diseaseIndicationCode1,
                                                                                                _diseaseIndicationCode2,
@@ -1051,7 +1051,7 @@ class SNPSearch(TemplateView):
                     _pageNumber = 1
                     _itemsPerPage = 20
 
-            _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases('2012_HAEM_ONC', 'SNP', _dateFrom, _dateTo,
+            _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases('2012_HAEM_ONC', '', 'SNP', _dateFrom, _dateTo,
                                                                         _reportStatus, _priority,
                                                                         _diseaseIndicationCode1,
                                                                         _diseaseIndicationCode2,
@@ -1084,7 +1084,7 @@ class SNPSearch(TemplateView):
 
             _priorities = self.dataServices.GetDNAPriority()
 
-            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', 'SNP')
+            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', '', 'SNP')
 
             _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(_diseaseIndicationCode1,
                                                                                                _diseaseIndicationCode2,
@@ -1195,7 +1195,7 @@ class ALLSearch(TemplateView):
                     _itemsPerPage = 20
 
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
-                '2012_HAEM_ONC', 'ALL', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
+                '2012_HAEM_ONC', '', 'ALL', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
                 _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1,
                 _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName,
                 _labNumber, _RefKey, _noResultStatus)
@@ -1221,7 +1221,7 @@ class ALLSearch(TemplateView):
 
             _priorities = self.dataServices.GetDNAPriority()
 
-            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', 'ALL')
+            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', '', 'ALL')
 
             _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(_diseaseIndicationCode1,
                                                                                                _diseaseIndicationCode2,
@@ -1332,7 +1332,7 @@ class CLLSearch(TemplateView):
                     _itemsPerPage = 20
 
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
-                '2012_HAEM_ONC', 'CLL', _dateFrom, _dateTo,  _reportStatus, _priority,  _diseaseIndicationCode1,
+                '2012_HAEM_ONC', '', 'CLL', _dateFrom, _dateTo,  _reportStatus, _priority,  _diseaseIndicationCode1,
                 _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1,
                 _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName,
                 _labNumber, _RefKey, _noResultStatus)
@@ -1359,7 +1359,7 @@ class CLLSearch(TemplateView):
 
             _priorities = self.dataServices.GetDNAPriority()
 
-            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', 'CLL')
+            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', '', 'CLL')
 
             _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(_diseaseIndicationCode1,
                                                                                                _diseaseIndicationCode2,
@@ -1470,7 +1470,7 @@ class DHCLSearch(TemplateView):
                     _itemsPerPage = 20
 
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
-                '2012_HAEM_ONC', 'DHCL', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
+                '2012_HAEM_ONC', '', 'DHCL', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
                 _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1,
                 _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName,
                 _labNumber, _RefKey, _noResultStatus)
@@ -1496,7 +1496,7 @@ class DHCLSearch(TemplateView):
 
             _priorities = self.dataServices.GetDNAPriority()
 
-            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', 'DHCL')
+            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', '', 'DHCL')
 
             _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(_diseaseIndicationCode1,
                                                                                                _diseaseIndicationCode2,
@@ -1607,7 +1607,7 @@ class DONCSearch(TemplateView):
                     _itemsPerPage = 20
 
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
-                '2012_HAEM_ONC', 'DONC', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
+                '2012_HAEM_ONC', '', 'DONC', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
                 _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1,
                 _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName,
                 _labNumber, _RefKey, _noResultStatus)
@@ -1633,7 +1633,7 @@ class DONCSearch(TemplateView):
 
             _priorities = self.dataServices.GetDNAPriority()
 
-            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', 'DONC')
+            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', '', 'DONC')
 
             _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(_diseaseIndicationCode1,
                                                                                                _diseaseIndicationCode2,
@@ -1744,7 +1744,7 @@ class DCSSearch(TemplateView):
                     _itemsPerPage = 20
 
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
-                '2012_HAEM_ONC', 'DCS', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
+                '2012_HAEM_ONC', '', 'DCS', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
                 _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1,
                 _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName,
                 _labNumber, _RefKey, _noResultStatus)
@@ -1770,7 +1770,7 @@ class DCSSearch(TemplateView):
 
             _priorities = self.dataServices.GetDNAPriority()
 
-            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', 'DCS')
+            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', '', 'DCS')
 
             _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(_diseaseIndicationCode1,
                                                                                                _diseaseIndicationCode2,
@@ -1881,7 +1881,7 @@ class RBCRSearch(TemplateView):
                     _itemsPerPage = 20
 
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
-                '2012_HAEM_ONC', 'RBCR', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
+                '2012_HAEM_ONC', '', 'RBCR', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
                 _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1,
                 _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName,
                 _labNumber, _RefKey, _noResultStatus)
@@ -1907,7 +1907,7 @@ class RBCRSearch(TemplateView):
 
             _priorities = self.dataServices.GetDNAPriority()
 
-            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', 'RBCR')
+            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', '', 'RBCR')
 
             _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(_diseaseIndicationCode1,
                                                                                                _diseaseIndicationCode2,
@@ -2018,7 +2018,7 @@ class FALSearch(TemplateView):
                     _itemsPerPage = 20
 
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
-                '2012_HAEM_ONC', 'FAL', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
+                '2012_HAEM_ONC', '', 'FAL', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
                 _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1,
                 _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName,
                 _labNumber, _RefKey, _noResultStatus)
@@ -2044,7 +2044,7 @@ class FALSearch(TemplateView):
 
             _priorities = self.dataServices.GetDNAPriority()
 
-            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', 'FAL')
+            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', '', 'FAL')
 
             _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(
                 _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3)
@@ -2154,7 +2154,7 @@ class HaemOncSearch(TemplateView):
                     _itemsPerPage = 20
 
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
-                '2012_HAEM_ONC', '', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
+                '2012_HAEM_ONC', 'ONCOLOGY BMT', '', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
                 _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1,
                 _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName,
                 _labNumber, _RefKey, _noResultStatus)
@@ -2180,7 +2180,7 @@ class HaemOncSearch(TemplateView):
 
             _priorities = self.dataServices.GetDNAPriority()
 
-            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', '')
+            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', '', '')
 
             _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(
                 _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3)
@@ -2293,7 +2293,7 @@ class GLHPanHaemSearch(TemplateView):
                     _itemsPerPage = 20
 
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
-               '2012_HAEM_ONC', 'PanHaem', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
+               '2012_HAEM_ONC', '', 'PanHaem', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
                _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1,
                _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName,
                _labNumber, _refKey, _noResultStatus)
@@ -2320,7 +2320,7 @@ class GLHPanHaemSearch(TemplateView):
 
             _priorities = self.dataServices.GetDNAPriority()
 
-            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', 'PanHaem')
+            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', '', 'PanHaem')
 
             _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(_diseaseIndicationCode1,
                                                                                                _diseaseIndicationCode2,

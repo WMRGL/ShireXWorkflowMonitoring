@@ -83,17 +83,9 @@ class SolidCancerSearch(TemplateView):
                     _pageNumber = 1
                     _itemsPerPage = 20
 
-            #_strCategory = ""
-
-            #if _diseaseIndicationCode1 in ('MEN2', 'PP', 'TS') or \
-            #        _diseaseIndicationCode2 in ('MEN2', 'PP', 'TS') or \
-            #        _diseaseIndicationCode3 in ('MEN2', 'PP', 'TS'):
-            #    _strCategory = "2012_RARE_DIS"
-            #else:
-            #    _strCategory = "2012_SOLID_CANCER"
 
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
-                '2012_%', 'SC', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
+                '2012_SOLID_CANCER', '2012_RARE_DIS', 'SC', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
                 _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1,
                 _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName,
                 _labNumber, _RefKey, _noResultStatus)
@@ -119,7 +111,7 @@ class SolidCancerSearch(TemplateView):
 
             _priorities = self.dataServices.GetDNAPriority()
 
-            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_SOLID_CANCER', 'SC')
+            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_SOLID_CANCER', '2012_RARE_DIS', 'SC')
 
             _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(_diseaseIndicationCode1,
                                                                                                _diseaseIndicationCode2,
@@ -230,17 +222,9 @@ class WGSSearch(TemplateView):
                     _pageNumber = 1
                     _itemsPerPage = 20
 
-            #_strCategory = ""
-
-            #if _diseaseIndicationCode1 == 'WGS-CA' or \
-            #        _diseaseIndicationCode2 == 'WGS-CA' or \
-            #        _diseaseIndicationCode3 == 'WGS-CA':
-            #    _strCategory = "2012_SOLID_CANCER"
-            #else:
-            #    _strCategory = "2012_OTHER"
 
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
-               '2012_%', 'WGS', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
+               '2012_SOLID_CANCER', '2012_OTHER', 'WGS', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
                _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1,
                _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName,
                _labNumber, _refKey, _noResultStatus)
@@ -267,7 +251,7 @@ class WGSSearch(TemplateView):
 
             _priorities = self.dataServices.GetDNAPriority()
 
-            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012%', 'WGS')
+            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_SOLID_CANCER', '2012_OTHER', 'WGS')
 
             _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(_diseaseIndicationCode1,
                                                                                                _diseaseIndicationCode2,
