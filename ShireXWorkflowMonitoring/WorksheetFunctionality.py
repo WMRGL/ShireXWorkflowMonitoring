@@ -180,44 +180,45 @@ class ExtractSheet:
             _labNumber = _row['LABNO']
             _row['EXTRACTSHEETS'] = ""
 
-            #if _labNumber != _previousLabNumber:
-            _esResults = self.dataServices.GetSampleExtracts(_labNumber)
-            _extractListString = ""
-            _extractDate = ""
-            _extract = ""
-            _extractsheet = ""
+            if _labNumber != _previousLabNumber:
+                _esResults = self.dataServices.GetSampleExtracts(_labNumber)
+                _extractListString = ""
 
-            for _esRow in _esResults:
-                _extract = _esRow['EXTRACTION_METHOD']
+                for _esRow in _esResults:
 
-                if _esRow['EXTRACTION_DATE'] is not None:
-                    _extractDate = str(_esRow['EXTRACTION_DATE'].strftime("%d/%m/%Y"))[0:10]
+                    if _esRow['EXTRACTION_METHOD'] is not None:
+                        _extract = _esRow['EXTRACTION_METHOD']
 
-                if _esRow['EXTRACT_SHEET'] is not None:
-                    _extractsheet = _esRow['EXTRACT_SHEET']
+                    if _esRow['EXTRACTION_DATE'] is not None:
+                        _extractDate = str(_esRow['EXTRACTION_DATE'].strftime("%d/%m/%Y"))[0:10]
+                    else:
+                        _extractDate = ""
 
-                _extractsheetColour = "green"
-
-                if (_extractDate is None or _extractDate == ""):
-                    _extractDate = ""
-                    _extractsheetColour = "orange"
-                else:
-                    if (_extractsheet is None or _extractsheet == ""):
+                    if _esRow['EXTRACT_SHEET'] is not None:
+                        _extractsheet = _esRow['EXTRACT_SHEET']
+                    else:
                         _extractsheet = ""
-                        _extractsheetColour = "red"
 
-                _extractListString = _extractListString + "<span style='color: " + _extractsheetColour + \
-                "'>" + _extract + "</span>" + "<span><br><br>"
-                _esListString = ""
+                    _extractsheetColour = "green"
 
-                if _extractListString.__len__() > 0:
-                    _len = len(_extractListString)
+                    if (_extractDate is None or _extractDate == ""):
+                        _extractsheetColour = "orange"
+                    else:
+                        if (_extractsheet is None or _extractsheet == ""):
+                            _extractsheet = ""
+                            _extractsheetColour = "red"
 
-                _esListString = _extractListString  [0:(_len - 8)]
+                    _extractListString = _extractListString + "<span style='color: " + _extractsheetColour + \
+                    "'>" + _extract + "</span>" + "<span><br><br>"
+                    _esListString = ""
 
-                _row['EXTRACTSHEETS'] = _esListString
-                    #_row['EXTRACTSHEETS'] = _extractListString
+                    if _extractListString.__len__() > 0:
+                        _len = len(_extractListString)
 
-        # _previousLabNumber = _labNumber
+                    _esListString = _extractListString  [0:(_len - 8)]
+
+                    _row['EXTRACTSHEETS'] = _esListString
+
+            _previousLabNumber = _labNumber
 
         return _pageOfWorkflowCases
