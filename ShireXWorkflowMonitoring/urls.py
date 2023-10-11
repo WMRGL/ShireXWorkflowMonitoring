@@ -19,6 +19,7 @@ urlpatterns = [
     path('Molecular/MPN/', HaemOncologyFunctionality.MPNSearch.as_view(), name="HaemOncMPNSearch"),
     path('Molecular/D-AML/', HaemOncologyFunctionality.DAMLSearch.as_view(), name="HaemOncDAMLSearch"),
     path('Molecular/R-AML/', HaemOncologyFunctionality.RAMLSearch.as_view(), name="HaemOncRAMLSearch"),
+    path('Molecular/RNA/', HaemOncologyFunctionality.RNASearch.as_view(), name="HaemOncRNASearch"),
     path('Molecular/BREAK/', HaemOncologyFunctionality.BreakSearch.as_view(), name="HaemOncBreakSearch"),
     path('Molecular/SNPArrayAnalysis/', HaemOncologyFunctionality.SNPSearch.as_view(), name="HaemOncSNPSearch"),
     path('Molecular/WGS/', CancerFunctionality.WGSSearch.as_view(), name="WGSSearch"),
