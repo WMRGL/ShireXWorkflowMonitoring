@@ -11,6 +11,7 @@ class Worksheet:
 
         for _row in _pageOfWorkflowCases:
             _labNumber = _row['LABNO']
+            _workflow = _row['Wkflw']
             _indication = _row['DISEASE_CODE']
             _row['WORKSHEETS'] = ""
             # _row['RESULTS_OUTSTANDING'] = "no"
@@ -18,6 +19,7 @@ class Worksheet:
 
             if _labNumber != _previousLabNumber or (_labNumber == _previousLabNumber and _indication != _previousIndication):
                 # If the lab number is different, compile the worksheet/test/result information
+
                 _wsResults = self.dataServices.GetSampleWorksheetResults(_labNumber, _indication)
 
                 # _worksheetList = ["", ]
@@ -132,8 +134,8 @@ class Worksheet:
 
             if _labNumber != _previousLabNumber or (_labNumber == _previousLabNumber and _indication != _previousIndication):
                 # If the lab number is different, compile the information
-                _testsNoWorksheet = self.dataServices.GetSampleTestsNotAllocatedToWorksheet(_labNumber, _indication)
 
+                _testsNoWorksheet = self.dataServices.GetSampleTestsNotAllocatedToWorksheet(_labNumber, _indication)
                 _worksheetListString = _row['WORKSHEETS']
 
                 if _testsNoWorksheet.__len__() > 0:

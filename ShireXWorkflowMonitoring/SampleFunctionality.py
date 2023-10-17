@@ -14,7 +14,7 @@ class SampleForm(TemplateView):
     utilities = UtilityFunctions()
     dataServices = ShireData()
 
-    def get(self, request, _labNumber, _workflowName):
+    def get(self, request, _labNumber, _workflowName, _indication):
 
         try:
             if not request.user.is_authenticated:
@@ -30,7 +30,7 @@ class SampleForm(TemplateView):
 
             _tests = self.dataServices.GetSampleTests(_labNumber)
 
-            _worksheetResults = self.dataServices.GetSampleWorksheetResults(_labNumber)
+            _worksheetResults = self.dataServices.GetSampleWorksheetResults(_labNumber, _indication)
 
             # if _workflowName == 'WGS':
             #    _backURL = _workflowName + "Search"

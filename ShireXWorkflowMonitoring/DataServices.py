@@ -31,7 +31,7 @@ class ShireData:
 
     def GetSampleWorksheetResults(self, _LabNumber, _indication):
         with connection.cursor() as _cursor:
-            _cursor.execute("{CALL dbo.uspShireXGetSampleWorksheetResults(%s, %s)}", (_LabNumber, _indication,))
+            _cursor.execute("{CALL dbo.uspShireXGetSampleWorksheetResults(%s,%s)}", (_LabNumber, _indication,))
 
             _results = self.utilities.ConvertCursorListToDict(_cursor)
 
@@ -106,7 +106,7 @@ class ShireData:
 
     def GetSampleTestsNotAllocatedToWorksheet(self, _LabNumber, _indication):
         with connection.cursor() as _cursor:
-            _cursor.execute("{CALL dbo.uspShireXGetSampleTestsNotAllocatedToWorksheet(%s,%s)}", (_LabNumber,_indication))
+            _cursor.execute("{CALL dbo.uspShireXGetSampleTestsNotAllocatedToWorksheet(%s,%s)}", (_LabNumber, _indication,))
 
             _results = self.utilities.ConvertCursorListToDict(_cursor)
 
