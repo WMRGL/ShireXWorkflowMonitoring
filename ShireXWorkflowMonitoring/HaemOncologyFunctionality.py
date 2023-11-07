@@ -226,34 +226,21 @@ class MPNSearch(TemplateView):
                 _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1,
                 _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName,
                 _labNumber, _RefKey, _noResultStatus)
-
             _listOfSurnames = self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases)
-
             _searchCount = _totalWorkflowCases.__len__()
-
             _workflowCases = Paginator(_totalWorkflowCases, _itemsPerPage)
-
             _pageOfWorkflowCases = _workflowCases.page(_pageNumber)
-
             # For each Lab No/Reason/Bill line extract the worksheet summary for that Lab No
             _pageOfWorkflowCases = self.worksheetHelper.AddWorksheetTestResultsToWorkflowCases(_pageOfWorkflowCases)
-
             _pageOfWorkflowCases = self.worksheetHelper.AddTestsWithNoWorksheetsToWorkflowCases(_pageOfWorkflowCases)
-
             _pageOfWorkflowCases = self.worksheetHelper.ConvertWorksheetsColumnEmptyStringToNone(_pageOfWorkflowCases)
-
             _pageOfWorkflowCases = self.extractsheetHelper.AddExtractsToWorkflowCases(_pageOfWorkflowCases)
-
             # Codes for the search criteria
             _reportStatuses = self.dataServices.GetReportStatus()
-
             _priorities = self.dataServices.GetDNAPriority()
-
             _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', '', 'MPN')
-
             _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(
                 _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3)
-
             _context = {
                 "criteriaDateFrom": _dateFrom,
                 "criteriaDateTo": _dateTo,
@@ -278,6 +265,7 @@ class MPNSearch(TemplateView):
                 "criteriaNoResult": _noResultStatus,
                 "searchCount": _searchCount,
             }
+
             return render(request, self.template_name, _context)
 
         except Exception as ex:

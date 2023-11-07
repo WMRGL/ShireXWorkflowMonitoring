@@ -32,7 +32,7 @@ urlpatterns = [
     path('Molecular/SolidCancer/', CancerFunctionality.SolidCancerSearch.as_view(), name="SCSearch"),
     path('Molecular/Allocate/<str:_labNumber>/<str:_workflowName>/',
          AllocationFunctionality.SetAllocatedToForDNA.as_view(), name="DNASetAllocatedTo"),
-    path('Sample/<str:_labNumber>/<str:_workflowName>/<str:_indication>', SampleFunctionality.SampleForm.as_view(), name="SampleForm"),
+    path('Sample/<str:_labNumber>/<str:_indication>', SampleFunctionality.SampleForm.as_view(), name="SampleForm"),
     path('Molecular/Allocate/<str:_labNumber>/<str:_workflowName>/AllocateComplete/',
          TemplateView.as_view(template_name='AllocateComplete.html'), name="AllocateComplete"),
 ]

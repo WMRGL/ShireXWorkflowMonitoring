@@ -14,7 +14,7 @@ class SampleForm(TemplateView):
     utilities = UtilityFunctions()
     dataServices = ShireData()
 
-    def get(self, request, _labNumber, _workflowName, _indication):
+    def get(self, request, _labNumber, _indication):
 
         try:
             if not request.user.is_authenticated:

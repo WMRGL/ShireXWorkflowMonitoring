@@ -11,7 +11,7 @@ class Worksheet:
 
         for _row in _pageOfWorkflowCases:
             _labNumber = _row['LABNO']
-            _workflow = _row['Wkflw']
+            #_workflow = _row['Wkflw']
             _indication = _row['DISEASE_CODE']
             _row['WORKSHEETS'] = ""
             # _row['RESULTS_OUTSTANDING'] = "no"

@@ -210,7 +210,7 @@
             <table class="table table-bordered"  Id="ResultsTable">
                 <thead class="bg-primary" style="color:white">
                     <th>
-                        Claim
+
                     </th>
                     {# <th scope="col" onclick="SortTable(1)"> #}
                     <th scope="col">
@@ -268,7 +268,7 @@
                         <tr>
                             <td>
                                 {#<a class="btn btn-primary" href="{% url 'HaemOncSetAllocatedTo' _labNumber=item.LABNO _workflowName=item.Wkflw %}">&nbsp;</a>#}
-                                <button class="btn btn-primary" id="{{item.LABNO}}" name="{{item.Wkflw}}" onclick="DoClaim(this.id, this.name)">&nbsp;</button>
+                                {#<button class="btn btn-primary" id="{{item.LABNO}}" name="" onclick="DoClaim(this.id, this.name)">&nbsp;</button>#}
                             </td>
                             {% if item.DECEASED_DATE %}
                             <td>
@@ -280,7 +280,7 @@
                             </td>
                             {% endif %}
                             <td>
-                                <a href="{% url 'SampleForm'  _labNumber=item.LABNO _workflowName=item.Wkflw _indication=item.DISEASE_CODE %}" target="_blank">{{ item.LABNO }}</a>
+                                <a href="{% url 'SampleForm'  _labNumber=item.LABNO _indication=item.DISEASE_CODE %}" target="_blank">{{ item.LABNO }}</a>
                             </td>
                             <td>
                                 {{ item.DISEASE_CODE }} /<br>{{ item.REASON }}
