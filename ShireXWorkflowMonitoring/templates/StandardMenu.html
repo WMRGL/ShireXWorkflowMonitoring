@@ -1,3 +1,47 @@
+<style>
+    .navbar .dropdown-menu {
+    display: block;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: all 0.5s ease-in-out;
+    transform: translateY(-10px);
+    }
+
+    /* This CSS will expand the dropdown menu when the 'show' class is added  - MW*/
+    .navbar .dropdown:hover .dropdown-menu {
+        opacity: 1;
+        max-height: 550px; 
+        transform: translateY(0);
+    }
+
+    /* Apply to all buttons - MW*/
+    button {
+        border-radius: 8px; /* Adjust as needed - MW*/
+    }
+
+    /* Apply to the navbar - MW*/
+    .navbar {
+        border-radius: 8px; /* Adjust as needed - MW*/
+    }
+
+    /* Apply to dropdown menus - MW*/
+    .dropdown-menu {
+        border-radius: 8px; /* Adjust as needed - MW*/
+    }
+
+    /* Apply to all divs with a specific class - MW*/
+    .div-class {
+        border-radius: 8px; /* Adjust as needed - MW*/
+    }
+
+    /* Apply to input fields - MW*/
+    input[type="text"], input[type="email"], textarea {
+        border-radius: 8px; /* Adjust as needed - MW*/
+    }
+
+</style>
+
 {#{% load static %} - note: Logo is not currently used, so this line serves no purpose#}
 <div class="container-fluid mb-3">
 {# Note the use of the d- CSS below to hide the logo when the screen is small #}
@@ -74,3 +118,32 @@
         </div>
     </nav>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var dropdowns = document.querySelectorAll('.navbar .dropdown');
+    
+        dropdowns.forEach(function(dropdown) {
+            dropdown.addEventListener('mouseenter', function() {
+                var menu = this.querySelector('.dropdown-menu');
+                menu.classList.remove('show'); // Reset the animation - MW
+                setTimeout(function() { // Reapply the class after a short delay - MW
+                    menu.classList.add('show');
+                }, 10);
+            });
+    
+            dropdown.addEventListener('mouseleave', function() {
+                this.querySelector('.dropdown-menu').classList.remove('show');
+            });
+        });
+    });
+</script>
+<script type="text/javascript">
+    window.addEventListener("beforeunload", function (e) {
+        navigator.sendBeacon('/logout/');
+
+        // Uncomment the following line to show a confirmation dialog
+            //e.preventDefault();
+            //e.returnValue = '';
+    });
+</script>
