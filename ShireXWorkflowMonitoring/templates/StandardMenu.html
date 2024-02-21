@@ -1,76 +1,353 @@
-{#{% load static %} - note: Logo is not currently used, so this line serves no purpose#}
-<div class="container-fluid mb-3">
-{# Note the use of the d- CSS below to hide the logo when the screen is small #}
-{# Both d-none and d-sm-none are required, not just d-sm-none as the documentation indicates #}
-{#        <div class="text-centre d-none d-sm-none d-md-block p-3">#}
-{#            <a href="https://bwc.nhs.uk/">#}
-{#                <img src={% static 'BWCLogo.png' %}>#}
-{#            </a>#}
-{#        </div>#}
-    <nav class="navbar navbar-expand-md navbar-dark bg-primary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">WMRGL</a>
-            {# The following button is the standard three bar menu icon that appears when screen is small #}
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{% url 'StartPage' %}">Home</a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            HaemOnc
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li class="small text-muted">Haemato-oncology</li>
-                            <li><a class="dropdown-item" href="{% url 'HaemOncMolecularSearch' %}">All Molecular</a>
-                            <li><a class="dropdown-item" href="{% url 'HaemOncALLSearch' %}">ALL</a></li>
-                            <li><a class="dropdown-item" href="{% url 'HaemOncBreakSearch' %}">BREAK</a></li>
-                            <li><a class="dropdown-item" href="{% url 'HaemOncRAMLSearch' %}">R-AML</a></li>
-                            <li><a class="dropdown-item" href="{% url 'HaemOncCLLSearch' %}">Lymphoid</a></li>
-                            <li><a class="dropdown-item" href="{% url 'HaemOncDAMLSearch' %}">AML & MDS</a></li>
-                            <li><a class="dropdown-item" href="{% url 'HaemOncBMTSearch' %}">BMT</a></li>
-                            <li><a class="dropdown-item" href="{% url 'HaemOncMPNSearch' %}">MPN</a></li>
-                            <li><a class="dropdown-item" href="{% url 'HaemOncRBCRSearch' %}">R-BCR</a></li>
-                            <li><a class="dropdown-item" href="{% url 'HaemOncFALSearch' %}">F-AML/F-ALL</a></li>
-                            <li><a class="dropdown-item" href="{% url 'HaemOncSNPSearch' %}">SNP - Array analysis</a></li>
-                            <li><a class="dropdown-item" href="{% url 'HaemOncPanHaemSearch' %}">GLH Pan Haem</a></li>
-                            <li><a class="dropdown-item" href="{% url 'HaemOncRNASearch' %}">RNA Sequencing</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li class="small text-muted">Cancer</li>
-                            <li><a class="dropdown-item" href="{% url 'WGSSearch' %}">WGS</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Cancer
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            {#<li class="small text-muted">Cancer</li>#}
-                            <li><a class="dropdown-item" href="{% url 'WGSSearch' %}">WGS</a></li>
-                            <li><a class="dropdown-item" href="{% url 'SCSearch' %}">Solid Cancer</a></li>
-                        </ul>
-                    </li>
-                    {#Below is the menu structure for Cyto, which may be added at a later date#}
-                    {#<li class="nav-item dropdown">#}
-                    {#    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownCyto" role="button" data-bs-toggle="dropdown" aria-expanded="false">#}
-                    {#        Cytogenetics#}
-                    {#    </a>#}
-                    {#    <ul class="dropdown-menu" aria-labelledby="navbarDropdownCyto">#}
-                    {#        <li><a class="dropdown-item" href="#">Placeholder</a></li>#}
-                    {#    </ul>#}
-                    {#</li>#}
-                </ul>
-                {% if request.user.is_authenticated %}
-                <ul class="navbar-nav justify-content-end mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{% url 'LogoutSystem' %}">Logout</a>
-                    </li>
-                </ul>
-                {% endif %}
+<style>
+    .navbar .dropdown-menu {
+display: block;
+max-height: 0;
+overflow: hidden;
+opacity: 0;
+transition: all 0.5s ease-in-out;
+transform: translateY(-10px);
+}
+
+/* This CSS will expand the dropdown menu when the 'show' class is added  - MW*/
+.navbar .dropdown:hover .dropdown-menu {
+    opacity: 1;
+    max-height: 550px;
+    transform: translateY(0);
+}
+
+/* Apply to all buttons - MW*/
+button {
+    border-radius: 8px; /* Adjust as needed - MW*/
+}
+
+/* Apply to the navbar - MW*/
+.navbar {
+    border-radius: 8px; /* Adjust as needed - MW*/
+}
+
+/* Apply to dropdown menus - MW*/
+.dropdown-menu {
+    border-radius: 8px; /* Adjust as needed - MW*/
+}
+
+/* Apply to all divs with a specific class - MW*/
+.div-class {
+    border-radius: 8px; /* Adjust as needed - MW*/
+}
+
+/* Apply to input fields - MW*/
+input[type="text"], input[type="email"], textarea {
+    border-radius: 8px; /* Adjust as needed - MW*/
+}
+
+:root {
+--background-color: #ffffff; /* Light mode background color */
+--text-color: #000000;       /* Light mode text color */
+}
+
+body {
+transition: background-color 0.5s, color 0.5s;
+}
+
+.toggle-container {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 15px;
+    right: 100px;
+}
+
+.toggle-checkbox {
+    display: none;
+}
+
+.toggle-label {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 30px;
+    background-color: #2196F3; /* Blue background for sun */
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+.toggle-sun,
+.toggle-moon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+}
+
+.toggle-sun {
+    left: 5px;
+    color: #FFD700; /* Yellow color for sun */
+    opacity: 1;
+    transition: opacity 0.5s;
+}
+
+.toggle-moon {
+    right: 5px;
+    color: #000; /* Black color for moon */
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+.toggle-checkbox:checked + .toggle-label {
+    background-color: #595352; /* Black background for moon when checked */
+}
+
+.toggle-checkbox:checked + .toggle-label .toggle-sun {
+    opacity: 0;
+}
+
+.toggle-checkbox:checked + .toggle-label .toggle-moon {
+    opacity: 1;
+}
+
+    /* Settings Button */
+.settings-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+
+/* Font Size Modal styles */
+.font-size-modal {
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+}
+
+.font-size-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.font-size-option {
+  padding: 10px;
+  margin: 5px;
+}
+
+</style>
+{% load static %}
+<head>
+    <link rel="stylesheet" href="{% static 'Styles.css' %}">
+</head>
+<body>
+    <script src="{% static 'Scripts.js' %}"></script>
+    {#{% load static %} - note: Logo is not currently used, so this line serves no purpose#}
+    <div class="container-fluid mb-3">
+    {# Note the use of the d- CSS below to hide the logo when the screen is small #}
+    {# Both d-none and d-sm-none are required, not just d-sm-none as the documentation indicates #}
+    {#        <div class="text-centre d-none d-sm-none d-md-block p-3">#}
+    {#            <a href="https://bwc.nhs.uk/">#}
+    {#                <img src={% static 'BWCLogo.png' %}>#}
+    {#            </a>#}
+    {#        </div>#}
+        <nav class="navbar navbar-expand-md navbar-dark bg-primary">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="#">WMRGL</a>
+                {# The following button is the standard three bar menu icon that appears when screen is small #}
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{% url 'StartPage' %}">Home</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                HaemOnc
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li class="small text-muted">Haemato-oncology</li>
+                                <li><a class="dropdown-item" href="{% url 'HaemOncMolecularSearch' %}">All Molecular</a>
+                                <li><a class="dropdown-item" href="{% url 'HaemOncALLSearch' %}">ALL</a></li>
+                                <li><a class="dropdown-item" href="{% url 'HaemOncBreakSearch' %}">BREAK</a></li>
+                                <li><a class="dropdown-item" href="{% url 'HaemOncRAMLSearch' %}">R-AML</a></li>
+                                <li><a class="dropdown-item" href="{% url 'HaemOncCLLSearch' %}">Lymphoid</a></li>
+                                <li><a class="dropdown-item" href="{% url 'HaemOncDAMLSearch' %}">AML & MDS</a></li>
+                                <li><a class="dropdown-item" href="{% url 'HaemOncBMTSearch' %}">BMT</a></li>
+                                <li><a class="dropdown-item" href="{% url 'HaemOncMPNSearch' %}">MPN</a></li>
+                                <li><a class="dropdown-item" href="{% url 'HaemOncRBCRSearch' %}">R-BCR</a></li>
+                                <li><a class="dropdown-item" href="{% url 'HaemOncFALSearch' %}">F-AML/F-ALL</a></li>
+                                <li><a class="dropdown-item" href="{% url 'HaemOncSNPSearch' %}">SNP - Array analysis</a></li>
+                                <li><a class="dropdown-item" href="{% url 'HaemOncPanHaemSearch' %}">GLH Pan Haem</a></li>
+                                <li><a class="dropdown-item" href="{% url 'HaemOncRNASearch' %}">RNA Sequencing</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li class="small text-muted">Cancer</li>
+                                <li><a class="dropdown-item" href="{% url 'WGSSearch' %}">WGS</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Cancer
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                {#<li class="small text-muted">Cancer</li>#}
+                                <li><a class="dropdown-item" href="{% url 'WGSSearch' %}">WGS</a></li>
+                                <li><a class="dropdown-item" href="{% url 'SCSearch' %}">Solid Cancer</a></li>
+                            </ul>
+                        </li>
+
+                        {#Below is the menu structure for Cyto, which may be added at a later date#}
+                        {#<li class="nav-item dropdown">#}
+                        {#    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownCyto" role="button" data-bs-toggle="dropdown" aria-expanded="false">#}
+                        {#        Cytogenetics#}
+                        {#    </a>#}
+                        {#    <ul class="dropdown-menu" aria-labelledby="navbarDropdownCyto">#}
+                        {#        <li><a class="dropdown-item" href="#">Placeholder</a></li>#}
+                        {#    </ul>#}
+                        {#</li>#}
+                    </ul>
+                    <ul>
+                    <!--<div class="toggle-container">
+                        <input type="checkbox" id="dark-mode-toggle" class="toggle-checkbox">
+                        <label for="dark-mode-toggle" class="toggle-label">
+                            <span class="toggle-moon">🌙</span>
+                            <span class="toggle-sun">☀️</span>
+                        </label>
+                    </div>-->
+                    </ul>
+                    {% if request.user.is_authenticated %}
+                    <ul class="navbar-nav justify-content-end mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{% url 'LogoutSystem' %}">Logout</a>
+                        </li>
+
+                    </ul>
+                    {% endif %}
+                </div>
+                <!-- Settings Button -->
+                <button id="settings-btn" class="settings-btn">Settings</button>
+
+                <!-- Font Size Modal -->
+                <div id="font-size-modal" class="font-size-modal" style="display: none;">
+                <div class="font-size-content">
+                    <span class="close">&times;</span>
+                    <h2>Choose Font Size</h2>
+                    <button class="font-size-option" onclick="changeFontSize('small')">Small</button>
+                    <button class="font-size-option" onclick="changeFontSize('medium')">Medium</button>
+                    <button class="font-size-option" onclick="changeFontSize('large')">Large</button>
+                </div>
+                </div>
+
             </div>
-        </div>
-    </nav>
-</div>
+        </nav>
+    </div>
+
+    <!--<script src = "ShireXWorkflowMonitoring/templates/Scripts.js"></script>-->
+    <script src="{% static 'js/Scripts.js' %}"></script>
+    </body>
+
+    <script>document.addEventListener("DOMContentLoaded", function() {
+        var dropdowns = document.querySelectorAll('.navbar .dropdown');
+    
+        dropdowns.forEach(function(dropdown) {
+            dropdown.addEventListener('mouseenter', function() {
+                var menu = this.querySelector('.dropdown-menu');
+                menu.classList.remove('show'); // Reset the animation - MW
+                setTimeout(function() { // Reapply the class after a short delay - MW
+                    menu.classList.add('show');
+                }, 10);
+            });
+    
+            dropdown.addEventListener('mouseleave', function() {
+                this.querySelector('.dropdown-menu').classList.remove('show');
+            });
+        });
+        
+
+        const darkModeToggle = document.getElementById('dark-mode-toggle'); // Corrected method name
+        if (darkModeToggle) {
+            darkModeToggle.addEventListener('change', function() {
+                const isDarkMode = this.checked;
+                document.body.classList.toggle('dark-mode', isDarkMode);
+                localStorage.setItem('darkMode', isDarkMode ? 'true' : 'false');
+                applyDarkModeStyles(isDarkMode);
+            });
+
+            // Apply user preferences on page load
+            const isDarkMode = localStorage.getItem('darkMode') === 'true';
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+                darkModeToggle.checked = true;
+            }
+            applyDarkModeStyles(isDarkMode);
+        }
+
+        // Function to apply dark or light mode styles
+        function applyDarkModeStyles(isDarkMode) {
+            if (isDarkMode) {
+                document.body.style.backgroundColor = '#595352';
+                document.body.style.color = '#fff';
+            } else {
+                document.body.style.backgroundColor = '#ffffff';
+                document.body.style.color = '#000';
+            }
+        }
+    });
+    
+    
+    // Get the modal
+    var modal = document.getElementById("font-size-modal");
+    
+    // Get the button that opens the modal
+    var btn = document.getElementById("settings-btn");
+    
+    // Get the <span> element that closes the modal
+    var span = document.getElementsByClassName("close")[0];
+    
+    // When the user clicks the button, open the modal
+    btn.onclick = function() {
+      modal.style.display = "block";
+    }
+    
+    // When the user clicks on <span> (x), close the modal
+    span.onclick = function() {
+      modal.style.display = "none";
+    }
+    
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+    
+    // Function to change font size
+    function changeFontSize(size) {
+      var body = document.body;
+      if(size === 'small') {
+        body.style.fontSize = '12px';
+      } else if(size === 'medium') {
+        body.style.fontSize = '16px'; // This is typically the default size
+      } else if(size === 'large') {
+        body.style.fontSize = '20px';
+      }
+      modal.style.display = "none"; // Close the modal after selection
+    }</script>
+</body>
