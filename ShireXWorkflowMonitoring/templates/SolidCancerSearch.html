@@ -267,6 +267,13 @@
                     <th scope="col">
                         Alert
                     </th>
+                    <th scope="col">
+                        Value 2
+                    </th>
+                    <th scope="col">
+                        comments
+                    </th>
+
                 </thead>
                 <tbody>
                 {% if workflowCases %}
@@ -395,7 +402,16 @@
                                 {% endautoescape %}
                             </td>
                             <td>
+                                {{ item.DNAQuantification }}
+                            </td>
+                            <td>
                                 {{ item.SampleAlert }}
+                            </td>
+                            <td>
+                                {{ item.value2 }}
+                            </td>
+                            <td>
+                                {{ item.comment }}
                             </td>
                         </tr>
                     {% endfor %}

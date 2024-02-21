@@ -1,226 +1,130 @@
 from ShireXWorkflowMonitoring.DataServices import ShireData
 
-
+# Define the Worksheet class to handle operations related to worksheets in workflow cases - MW
 class Worksheet:
-    dataServices = ShireData()
+    # Initialize the dataServices attribute with an instance of ShireData for database interactions - MW
+    def __init__(self):
+        self.dataServices = ShireData()
 
-    def AddWorksheetTestResultsToWorkflowCases(self, _pageOfWorkflowCases):
-        # An extension routine for the various workflow search routines
-        _previousLabNumber = ""
-        _previousIndication = ""
+    # Method to add worksheet test results to each workflow case page - MW
+    def AddWorksheetTestResultsToWorkflowCases(self, pageOfWorkflowCases):
+        # Loop through each row in the provided page of workflow cases - MW
+        for row in pageOfWorkflowCases:
+            labNumber = row['LABNO'] # Retrieve lab number from the row - MW
+            indication = row['DISEASE_CODE'] # Retrieve disease code (indication) from the row - MW
+            wsResults = self.dataServices.GetSampleWorksheetResults(labNumber, indication) # Retrieve worksheet results for the current lab number and indication - MW
+            worksheetListString = self._compileWorksheetListString(wsResults) # Compile a string of worksheet results - MW
+            row['WORKSHEETS'] = worksheetListString # Assign the string to the 'WORKSHEETS' key in the row - MW
+        return pageOfWorkflowCases # Return the modified page of workflow cases - MW
 
-        for _row in _pageOfWorkflowCases:
-            _labNumber = _row['LABNO']
-            #_workflow = _row['Wkflw']
-            _indication = _row['DISEASE_CODE']
-            _row['WORKSHEETS'] = ""
-            # _row['RESULTS_OUTSTANDING'] = "no"
-            # _row['WORKSHEET_OUTSTANDING'] = "yes"
+    # Method to compile worksheet list string from worksheet results - MW
+    def _compileWorksheetListString(self, wsResults):
+        worksheetListString = "" # Initialize an empty string to store worksheet information - MW
+        for wsRow in wsResults:
+            # Extract and process worksheet details - MW
+            worksheet, worksheetColour = self._processWorksheetDetails(wsRow)
+            test, result, highlightColour = self._processTestResultDetails(wsRow)
+            # Assemble the worksheet information string with HTML styling - MW
+            worksheetListString += "<span style='color: " + worksheetColour + "'>" + worksheet + \
+                                   " / </span><span style='color: " + highlightColour + "'>" + \
+                                   test + ': ' + result + "</span><br><br>"
+        return worksheetListString # Return the final assembled string - MW
 
-            if _labNumber != _previousLabNumber or (_labNumber == _previousLabNumber and _indication != _previousIndication):
-                # If the lab number is different, compile the worksheet/test/result information
+    # Method to process worksheet details and determine the coloring logic - MW
+    def _processWorksheetDetails(self, wsRow):
+        worksheet = wsRow.get('WORKSHEET', '')
+        firstCheck = wsRow.get('FIRST_RESULT_BY', '')
+        secondCheck = wsRow.get('FIRST_RESULT_CHECKED_BY', '')
+        worksheetColour = "green" if secondCheck else "orange" if firstCheck else "red"
+        return worksheet, worksheetColour
 
-                _wsResults = self.dataServices.GetSampleWorksheetResults(_labNumber, _indication)
+    # Method to process test and result details, handling missing data - MW
+    def _processTestResultDetails(self, wsRow):
+        test = wsRow.get('TEST', 'Missing Test Data')
+        result = wsRow.get('RESULT', 'unknown result') if wsRow.get('RESULT') else ''
+        highlightColour = wsRow.get('HighlightColour', 'black')
+        return test, result, highlightColour
 
-                # _worksheetList = ["", ]
-                # _testResultList = ["", ]
+        # Method to extract a list of surnames from the given workflow cases - MW
+    def GetListOfSurnamesFromWorkflowCases(self, workflowCases):
+        lastnameSet = set()  # Use a set for unique entries - MW
+        for row in workflowCases:
+            lastname = row.get('LASTNAME', '')  # Extract the last name from the row - MW
+            lastnameSet.add(lastname)  # Add to the set for uniqueness - MW
+        sortedLastNames = sorted(list(lastnameSet))  # Convert to a sorted list - MW
+        return sortedLastNames  # Return the sorted list of unique last names - MW
 
-                _worksheetListString = ""
+    # Method to add tests without worksheets to workflow cases - MW
+    def AddTestsWithNoWorksheetsToWorkflowCases(self, pageOfWorkflowCases):
+        for row in pageOfWorkflowCases:
+            labNumber = row['LABNO']
+            indication = row['DISEASE_CODE']
+            testsNoWorksheet = self.dataServices.GetSampleTestsNotAllocatedToWorksheet(labNumber,
+                                                                                       indication)  # Retrieve tests not allocated to worksheets - MW
+            if testsNoWorksheet:
+                noWsString = self._compileTestsNoWorksheetString(
+                    testsNoWorksheet)  # Compile a string of tests without worksheets - MW
+                existingWsString = row.get('WORKSHEETS', '')
+                row[
+                    'WORKSHEETS'] = existingWsString + noWsString if existingWsString else noWsString  # Append or assign the string to the 'WORKSHEETS' key - MW
+        return pageOfWorkflowCases  # Return the modified page of workflow cases - MW
 
-                for _wsRow in _wsResults:
-                    # For each worksheet/test/result
-                    _worksheet = _wsRow['WORKSHEET']
-                    _worksheetFirstCheck = _wsRow['FIRST_RESULT_BY']
-                    _worksheetSecondCheck = _wsRow['FIRST_RESULT_CHECKED_BY']
-                    if (_wsRow['TEST']) is None:
-                        _test = 'Missing Test Data'
-                        _result = 'unknown result'
-                    else:
-                        _test = _wsRow['TEST']
-                        _result = _wsRow['RESULT']
-                    _highlightColour = _wsRow['HighlightColour']
-                    _retest = _wsRow['RETEST']
+    # Helper method to compile a string of tests that are not allocated to any worksheet - MW
+    def _compileTestsNoWorksheetString(self, testsNoWorksheet):
+        noWsString = "<span>Tests not allocated to w/s: "
+        for item in testsNoWorksheet:
+            testName = item.get("TEST", "Unknown Test")
+            noWsString += testName + ", "
+        noWsString = noWsString.rstrip(", ") + "</span>"  # Remove trailing comma and add closing tag - MW
+        return noWsString  # Return the compiled string - MW
 
-                    _worksheetColour = "green"
-
-                    if _worksheetSecondCheck is None or _worksheetSecondCheck == "":
-                        _worksheetColour = "orange"
-                    else:
-                        if _worksheetFirstCheck is None or _worksheetFirstCheck == "":
-                            _worksheetColour = "red"
-
-                    if _highlightColour is None:
-                        _highlightColour = "black"
-
-                    if _retest is None:
-                        _retest = 0         # False
-
-                    _reTestString = ""
-                    if _retest == -1:
-                        _reTestString = " (A)"
-
-                    # _row['WORKSHEET_OUTSTANDING'] = "no"
-
-                    if (_result is None) or (_result == ''):
-                        # _row['RESULTS_OUTSTANDING'] = "yes"
-                        _result = ""
-
-                    _worksheetListString = _worksheetListString + "<span style='color: " + _worksheetColour + "'>" + \
-                        _worksheet + _reTestString + " / " + "</span><span style='color: " +\
-                        _highlightColour + "'>" + _test + ': ' + _result + "<span><br><br>"
-                    # If the worksheet is not in the list
-                    # i.e. index() fails, add it, otherwise move on
-                    # try:
-                    #     _worksheetList.index(_worksheet)
-                    # except:
-                    #     _worksheetList.append(_worksheet)
-                    #
-                    # try:
-                    #     _testResultList.append(_test + ': ' + _result)
-                    # except:
-                    #     # Do nothing
-                    #     _stuff = 1
-
-                # _worksheetList.remove("")
-                # _testResultList.remove("")
-
-                # _worksheetListString = ''.join(_worksheetList)
-                # _testResultListString = ''.join(_testResultList)
-
-                # _row['WORKSHEETS'] = _worksheetListString + " / " + _testResultListString
-
-                _wsListString = ""
-
-                if _worksheetListString.__len__() > 0:
-                    # Remove the last set of <br><br>
-                    _len = len(_worksheetListString)
-
-                    _wsListString = _worksheetListString[0:(_len - 8)]
-
-                _row['WORKSHEETS'] = _wsListString
-
-            _previousLabNumber = _labNumber
-            _previousIndication = _indication
-
-        return _pageOfWorkflowCases
-
-    def GetListOfSurnamesFromWorkflowCases(self, _workflowCases):
-        # An extension routine for the various workflow search routines
-        _previousLabNumber = ""
-
-        _lastnameList = ["", ]
-
-        for _row in _workflowCases:
-            _lastname = _row['LASTNAME']
-
-            try:
-                _lastnameList.index(_lastname)
-            except Exception:
-                _lastnameList.append(_lastname)
-
-        _sortedListOfLastNames = sorted(_lastnameList)
-
-        return _sortedListOfLastNames
-
-    def AddTestsWithNoWorksheetsToWorkflowCases(self, _pageOfWorkflowCases):
-        # An extension routine for the various workflow search routines
-        _previousLabNumber = ""
-        _previousIndication = ""
-
-        for _row in _pageOfWorkflowCases:
-            _labNumber = _row['LABNO']
-            _indication = _row['DISEASE_CODE']
-            _noWsString = ""
-
-            if _labNumber != _previousLabNumber or (_labNumber == _previousLabNumber and _indication != _previousIndication):
-                # If the lab number is different, compile the information
-
-                _testsNoWorksheet = self.dataServices.GetSampleTestsNotAllocatedToWorksheet(_labNumber, _indication)
-                _worksheetListString = _row['WORKSHEETS']
-
-                if _testsNoWorksheet.__len__() > 0:
-                    if _worksheetListString.__len__() > 0:
-                        _noWsString = "<br><br><span>Tests not allocated to w/s: "
-                    else:
-                        _noWsString = "<span>Tests not allocated to w/s: "
-
-                    for _item in _testsNoWorksheet:
-                        _testName = _item["TEST"]
-
-                        _noWsString = _noWsString + _testName + ", "
-
-                    # Remove the last comma and close the span
-                    _len = len(_noWsString)
-
-                    _noWsString = _noWsString[0:(_len - 3)] + "</span>"
-
-                    _row['WORKSHEETS'] = _worksheetListString + _noWsString
-
-            _previousLabNumber = _labNumber
-            _previousIndication = _indication
-
-        return _pageOfWorkflowCases
-
-    def ConvertWorksheetsColumnEmptyStringToNone(self, _pageOfWorkflowCases):
-
-        for _row in _pageOfWorkflowCases:
-            if _row['WORKSHEETS'] == "" or _row['WORKSHEETS'] == " ":
-                _row['WORKSHEETS'] = None
-
-        return _pageOfWorkflowCases
+    # Method to convert empty strings in the 'WORKSHEETS' column to None - MW
+    def ConvertWorksheetsColumnEmptyStringToNone(self, pageOfWorkflowCases):
+        for row in pageOfWorkflowCases:
+            if not row.get('WORKSHEETS'):  # Check if 'WORKSHEETS' is empty or None - MW
+                row['WORKSHEETS'] = None  # Set 'WORKSHEETS' to None - MW
+        return pageOfWorkflowCases  # Return the modified page of workflow cases - MW
 
 
+
+# Define the ExtractSheet class with similar structured methods - MW
+# The ExtractSheet class focuses on handling extract sheets with methods like AddExtractsToWorkflowCases - MW
 class ExtractSheet:
-    dataServices = ShireData()
+    # Initialize the dataServices attribute with an instance of ShireData for database interactions - MW
+    def __init__(self):
+        self.dataServices = ShireData()
 
-    def AddExtractsToWorkflowCases(self, _pageOfWorkflowCases):
-        # An extension routine for the various workflow search routines
-        _previousLabNumber = ""
+    # Method to add extract sheet information to each page of workflow cases - MW
+    def AddExtractsToWorkflowCases(self, pageOfWorkflowCases):
+        for row in pageOfWorkflowCases:
+            labNumber = row['LABNO']  # Retrieve lab number from the row - MW
+            extracts = self.dataServices.GetSampleExtracts(
+                labNumber)  # Retrieve extract sheet data for the lab number - MW
+            extractString = self._compileExtractString(
+                extracts)  # Compile a string representation of the extracts - MW
+            row[
+                'EXTRACTSHEETS'] = extractString  # Assign compiled string to the 'EXTRACTSHEETS' key in the row - MW
+        return pageOfWorkflowCases  # Return the modified page of workflow cases - MW
 
-        for _row in _pageOfWorkflowCases:
+    # Helper method to compile a string representation of extract sheets from extract data - MW
+    def _compileExtractString(self, extracts):
+        extractListString = ""
+        for extract in extracts:
+            # Extract necessary fields from each extract record - MW
+            extractionMethod = extract.get('EXTRACTION_METHOD', 'Unknown Method')
+            extractDate = extract.get('EXTRACTION_DATE', '')
+            extractSheet = extract.get('EXTRACT_SHEET', '')
 
-            _labNumber = _row['LABNO']
-            _row['EXTRACTSHEETS'] = ""
+            # Determine the color for extract sheet based on its completion status - MW
+            extractSheetColor = "green" if extractSheet else "red"
 
-            if _labNumber != _previousLabNumber:
-                _esResults = self.dataServices.GetSampleExtracts(_labNumber)
-                _extractListString = ""
+            # Format extract date if available - MW
+            if extractDate:
+                extractDateFormatted = extractDate.strftime("%d/%m/%Y")
+            else:
+                extractDateFormatted = "Date Unknown"
 
-                for _esRow in _esResults:
+            # Assemble the extract information into a HTML styled string - MW
+            extractListString += f"<span style='color: {extractSheetColor};'>{extractionMethod} on {extractDateFormatted}</span><br>"
 
-                    if _esRow['EXTRACTION_METHOD'] is not None:
-                        _extract = _esRow['EXTRACTION_METHOD']
-
-                    if _esRow['EXTRACTION_DATE'] is not None:
-                        _extractDate = str(_esRow['EXTRACTION_DATE'].strftime("%d/%m/%Y"))[0:10]
-                    else:
-                        _extractDate = ""
-
-                    if _esRow['EXTRACT_SHEET'] is not None:
-                        _extractsheet = _esRow['EXTRACT_SHEET']
-                    else:
-                        _extractsheet = ""
-
-                    _extractsheetColour = "green"
-
-                    if (_extractDate is None or _extractDate == ""):
-                        _extractsheetColour = "orange"
-                    else:
-                        if (_extractsheet is None or _extractsheet == ""):
-                            _extractsheet = ""
-                            _extractsheetColour = "red"
-
-                    _extractListString = _extractListString + "<span style='color: " + _extractsheetColour + \
-                    "'>" + _extract + "</span>" + "<span><br><br>"
-                    _esListString = ""
-
-                    if _extractListString.__len__() > 0:
-                        _len = len(_extractListString)
-
-                    _esListString = _extractListString  [0:(_len - 8)]
-
-                    _row['EXTRACTSHEETS'] = _esListString
-
-            _previousLabNumber = _labNumber
-
-        return _pageOfWorkflowCases
+        return extractListString  # Return the compiled string of extract sheet information - MW
