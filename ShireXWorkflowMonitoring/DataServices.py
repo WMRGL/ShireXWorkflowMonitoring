@@ -1,11 +1,15 @@
 from ShireXWorkflowMonitoring.CommonFunctionality import UtilityFunctions
 from ShireXWorkflowMonitoring.CommonFunctionality import enumDataType
 from django.db import connection
-
+from django.http import JsonResponse
 
 class ShireData:
 
     utilities = UtilityFunctions()
+
+
+
+
 
     def GetDNAWorkflowCases(self, _indicationCategory1, _indicationCategory2, _workFlow, _dateFrom, _dateTo, _reportStatus, _priority,
                             _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonCode1,
@@ -20,6 +24,7 @@ class ShireData:
             _workflowCases = self.utilities.ConvertCursorListToDict(_cursor)
 
             return _workflowCases
+
 
     def GetSampleIndicationReportBill(self, _LabNumber):
         with connection.cursor() as _cursor:
@@ -128,3 +133,39 @@ class ShireData:
             _results = self.utilities.ConvertCursorListToDict(_cursor)
 
             return _results
+
+    def GetComment(self, _LabNumber, _pageOfWorkflowCases):
+        for row in _pageOfWorkflowCases:
+            LabNumber = row['LABNO']
+            with connection.cursor() as _cursor:
+                _cursor.execute("{CALL dbo.uspShireXGetCommentCancer(%s)}", [LabNumber])
+                _results = self.utilities.ConvertCursorListToDict(_cursor)
+                return _results
+
+    def GetValue1(self, _LabNumber, _pageOfWorkflowCases):
+        for row in _pageOfWorkflowCases:
+            LabNumber = row['LABNO']
+            with connection.cursor() as _cursor:
+                _cursor.execute("{CALL dbo.uspShireXGetValue1(%s)}", [LabNumber])
+                _results = self.utilities.ConvertCursorListToDict(_cursor)
+                return _results
+
+    def GetValue2(self, _LabNumber, _pageOfWorkflowCases):
+        _resultsDict = {}
+        for row in _pageOfWorkflowCases:
+            LabNumber = row['LABNO']
+            with connection.cursor() as _cursor:
+                _cursor.execute("{CALL dbo.uspShireXGetValue2(%s)}", [LabNumber])
+                _results = self.utilities.ConvertCursorListToDict(_cursor)
+
+                if _results:
+                    _resultsDict[LabNumber] = _results[0]
+                return _results
+
+    def GetResults(self, _LabNumber, _pageOfWorkflowCases):
+        for row in _pageOfWorkflowCases:
+            LabNumber = row['LABNO']
+            with connection.cursor() as _cursor:
+                _cursor.execute("{CALL dbo.uspShireXGetResultCancer(%s)}", [LabNumber])
+                _results = self.utilities.ConvertCursorListToDict(_cursor)
+                return _results

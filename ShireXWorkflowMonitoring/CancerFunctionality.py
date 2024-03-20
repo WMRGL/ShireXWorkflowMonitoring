@@ -19,7 +19,7 @@ class SolidCancerSearch(TemplateView):
     template_name = "SolidCancerSearch.html"
     # Set the title using a title attribute from another config class - MW
     title = ShireXWorkflowMonitoringConfig.title
-    # InitialiSe instances of utility and data service classes - MW
+    # Initialise instances of utility and data service classes - MW
     utilities = UtilityFunctions()
     dataServices = ShireData()
     worksheetHelper = Worksheet()       # Composition, instead of inheritance
@@ -35,10 +35,6 @@ class SolidCancerSearch(TemplateView):
             # If logged in determine if a postback, before extracting the search filters
             #Determine if the request is a postback (form submission) or not - MW
             _isPostBack = bool(request.GET)
-            #if request.GET.__len__() == 0:
-             #   _isPostBack = False
-            #else:
-             #   _isPostBack = True
 
             # Initialize search filters with default values - MW
             # These filters are used in querying the database - MW
@@ -55,12 +51,9 @@ class SolidCancerSearch(TemplateView):
             _RefKey = ""
             _noResultStatus = 0
             _searchCount = 0
-            try:
-                _comment = self.dataServices.GetComment(_labNumber)
-                _value2 = self.dataServices.GetValue2(_labNumber)
-            except AttributeError:
-                _comment = None
-                _value2 = None
+            _worksheet = self.utilities.GetRequestKey(request, "WORKSHEET", enumDataType.String)
+            _probe_primer = self.utilities.GetRequestKey(request, "PROBE_PRIMER", enumDataType.String)
+            _lane = self.utilities.GetRequestKey(request, "LANE", enumDataType.String)
 
             # Set default date range and pagination values for first-time page load - MW
             # Modify these values if it's a postback with user-specified filters - MW
@@ -103,6 +96,27 @@ class SolidCancerSearch(TemplateView):
                     _pageNumber = 1
                     _itemsPerPage = 20
 
+            try:
+                _totalWorkflowCases2 = self.dataServices.GetDNAWorkflowCases(
+                    '2012_SOLID_CANCER', '2012_RARE_DIS', 'SC', _dateFrom, _dateTo, _reportStatus, _priority,
+                    _diseaseIndicationCode1,
+                    _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1,
+                    _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName,
+                    _labNumber, _RefKey, _noResultStatus)
+                _workflowCases2 = Paginator(_totalWorkflowCases2, _itemsPerPage)
+                _pageOfWorkflowCases2 = _workflowCases2.page(_pageNumber)
+                _comment = self.dataServices.GetComment(_labNumber, _pageOfWorkflowCases2)
+                _value2 = self.dataServices.GetValue2(_labNumber, _pageOfWorkflowCases2)
+                _value1 = self.dataServices.GetValue1(_labNumber, _pageOfWorkflowCases2)
+                _result = self.dataServices.GetResults(_labNumber, _pageOfWorkflowCases2)
+
+            except AttributeError:
+                _comment = None
+                _value2 = None
+                _value1 = None
+                _result = None
+
+
             # Query the data service for workflow cases based on the search criteria - MW
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
                 '2012_SOLID_CANCER', '2012_RARE_DIS', 'SC', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
@@ -136,7 +150,6 @@ class SolidCancerSearch(TemplateView):
             _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(_diseaseIndicationCode1,
                                                                                                _diseaseIndicationCode2,
                                                                                                _diseaseIndicationCode3)
-
             # Prepare the context dictionary with all the necessary data for rendering the template - MW
             # This includes the extracted and processed data, search criteria, and configuration items - MW
             _context = {
@@ -162,9 +175,14 @@ class SolidCancerSearch(TemplateView):
                 "criteriaLabnumber": _labNumber,
                 "criteriaNoResult": _noResultStatus,
                 "searchCount": _searchCount,
-                'comments': _comment,
-                'value2': _value2,
+                "result": _result,
+                "value1": _value1,
+                "comments": _comment,
+                "value2": _value2,
             }
+            print(_result)
+            print(_comment)
+            print(_value1)
             # Render the template with the context data - MW
             return render(request, self.template_name, _context)
 

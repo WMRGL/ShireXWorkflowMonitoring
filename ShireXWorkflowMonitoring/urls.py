@@ -8,7 +8,10 @@ from ShireXWorkflowMonitoring import CancerFunctionality
 from ShireXWorkflowMonitoring import AllocationFunctionality
 from ShireXWorkflowMonitoring import SampleFunctionality
 
+
+
 app_name = "ShireXWorkflowMonitoringApplication"
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -35,4 +38,5 @@ urlpatterns = [
     path('Sample/<str:_labNumber>/<str:_indication>', SampleFunctionality.SampleForm.as_view(), name="SampleForm"),
     path('Molecular/Allocate/<str:_labNumber>/<str:_workflowName>/AllocateComplete/',
          TemplateView.as_view(template_name='AllocateComplete.html'), name="AllocateComplete"),
+
 ]

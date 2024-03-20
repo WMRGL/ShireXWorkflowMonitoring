@@ -268,6 +268,12 @@
                         Alert
                     </th>
                     <th scope="col">
+                        Result
+                    </th>
+                    <th scope="col">
+                        Value 1
+                    </th>
+                    <th scope="col">
                         Value 2
                     </th>
                     <th scope="col">
@@ -292,7 +298,7 @@
                                 {{ item.LASTNAME }}, {{ item.FIRSTNAME }}
                             </td>
                             {% endif %}
-                            <td>
+                            <td id="labnoCell">
                                 <a href="{% url 'SampleForm'  _labNumber=item.LABNO _indication=item.DISEASE_CODE %}" target="_blank">{{ item.LABNO }}</a>
                             </td>
                             <td>
@@ -404,17 +410,26 @@
                             <td>
                                 {{ item.DNAQuantification }}
                             </td>
-                            <td>
+                           .<!--<td>
                                 {{ item.SampleAlert }}
+                            </td>-->
+                            <td>
+                                <!--{{ result|cut:"[{'RESULT':"|cut:"}]" }}-->
+                                {{ result }}
                             </td>
                             <td>
-                                {{ item.value2 }}
+                                {{ value1|cut:"[{'VALUE1':"|cut:"}]" }}
                             </td>
                             <td>
-                                {{ item.comment }}
+                                {{ value2|cut:"[{'VALUE2':"|cut:"}]" }}
+                            </td>
+                            <td>
+                                {{ comments|cut:"[{'COMMENT':"|cut:"}]" }}
                             </td>
                         </tr>
                     {% endfor %}
+                    
+                    
                 {% else %}
                     <tr>
                         <td>
@@ -651,6 +666,7 @@
                }
            }
         }
+
 
     </script>
 

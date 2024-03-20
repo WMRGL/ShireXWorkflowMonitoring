@@ -32,6 +32,7 @@ class SampleForm(TemplateView):
 
             _worksheetResults = self.dataServices.GetSampleWorksheetResults(_labNumber, _indication)
 
+
             # if _workflowName == 'WGS':
             #    _backURL = _workflowName + "Search"
             # else:
@@ -57,3 +58,4 @@ class SampleForm(TemplateView):
             }
 
             return render(request, self.template_name, _context)
+
