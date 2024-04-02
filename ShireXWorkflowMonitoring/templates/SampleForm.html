@@ -78,6 +78,18 @@
                         <th scope="col">
                             Report by
                         </th>
+                        <th scope="col">
+                            Value 1
+                        </th>
+                        <th scope="col">
+                            Value 2
+                        </th>
+                        <th scope="col">
+                            Comment
+                        </th>
+                        <th scope="col">
+                            Result
+                        </th>
                     </thead>
                     <tbody>
                         {% if indicationReportBills %}
@@ -115,6 +127,18 @@
                                     </td>
                                     <td>
                                         {{ item.REPORT_BY }}
+                                    </td>
+                                    <td>
+                                        {{ value1|cut:"[{'VALUE1':"|cut:"}]" }}
+                                    </td>
+                                    <td>
+                                        {{ value2|cut:"[{'VALUE2':"|cut:"}]" }}
+                                    </td>
+                                    <td>
+                                        {{ comments|cut:"[{'COMMENT':"|cut:"}]" }}
+                                    </td>
+                                    <td>
+                                        {{ result }}
                                     </td>
                                 </tr>
                             {% endfor %}
@@ -193,7 +217,7 @@
                         </th>
                         <th scope="col">
                             2nd Check by
-                        </th>
+                        </th>0
                         <th scope="col">
                             Test
                         </th>
@@ -202,6 +226,12 @@
                         </th>
                         <th scope="col">
                             Value 1
+                        </th>
+                        <th scope="col">
+                            Value 2
+                        </th>
+                        <th scope="col">
+                            comments
                         </th>
                     </thead>
                     <tbody>
@@ -225,6 +255,12 @@
                                     </td>
                                     <td>
                                         {{ item.VALUE1 }}
+                                    </td>
+                                    <td>
+                                        {{ value2|cut:"[{'VALUE2':"|cut:"}]" }}
+                                    </td>
+                                    <td>
+                                        {{ comments|cut:"[{'COMMENT':"|cut:"}]" }}
                                     </td>
                                 </tr>
                             {% endfor %}

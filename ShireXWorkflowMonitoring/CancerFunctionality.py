@@ -105,16 +105,13 @@ class SolidCancerSearch(TemplateView):
                     _labNumber, _RefKey, _noResultStatus)
                 _workflowCases2 = Paginator(_totalWorkflowCases2, _itemsPerPage)
                 _pageOfWorkflowCases2 = _workflowCases2.page(_pageNumber)
-                _comment = self.dataServices.GetComment(_labNumber, _pageOfWorkflowCases2)
-                _value2 = self.dataServices.GetValue2(_labNumber, _pageOfWorkflowCases2)
-                _value1 = self.dataServices.GetValue1(_labNumber, _pageOfWorkflowCases2)
-                _result = self.dataServices.GetResults(_labNumber, _pageOfWorkflowCases2)
+                #_comment = self.dataServices.GetComment(_labNumber, _pageOfWorkflowCases2)
+                #_value2 = self.dataServices.GetValue2(_labNumber, _pageOfWorkflowCases2)
+                #_value1 = self.dataServices.GetValue1(_labNumber, _pageOfWorkflowCases2)
+                #_result = self.dataServices.GetResults(_labNumber, _pageOfWorkflowCases2)
 
             except AttributeError:
-                _comment = None
-                _value2 = None
-                _value1 = None
-                _result = None
+                _pageOfWorkflowCases2 = None
 
 
             # Query the data service for workflow cases based on the search criteria - MW
@@ -175,14 +172,14 @@ class SolidCancerSearch(TemplateView):
                 "criteriaLabnumber": _labNumber,
                 "criteriaNoResult": _noResultStatus,
                 "searchCount": _searchCount,
-                "result": _result,
-                "value1": _value1,
-                "comments": _comment,
-                "value2": _value2,
+                #"result": _result,
+                #"value1": _value1,
+                #"comments": _comment,
+                #"value2": _value2,
             }
-            print(_result)
-            print(_comment)
-            print(_value1)
+            #print(_result)
+            #print(_comment)
+            #print(_value1)
             # Render the template with the context data - MW
             return render(request, self.template_name, _context)
 

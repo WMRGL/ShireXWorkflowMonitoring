@@ -134,38 +134,38 @@ class ShireData:
 
             return _results
 
-    def GetComment(self, _LabNumber, _pageOfWorkflowCases):
-        for row in _pageOfWorkflowCases:
-            LabNumber = row['LABNO']
-            with connection.cursor() as _cursor:
-                _cursor.execute("{CALL dbo.uspShireXGetCommentCancer(%s)}", [LabNumber])
-                _results = self.utilities.ConvertCursorListToDict(_cursor)
-                return _results
+    #def GetComment(self, _LabNumber, _pageOfWorkflowCases):
+     #   for row in _pageOfWorkflowCases:
+      #      LabNumber = row['LABNO']
+       #     with connection.cursor() as _cursor:
+        #        _cursor.execute("{CALL dbo.uspShireXGetCommentCancer(%s)}", [LabNumber])
+         #       _results = self.utilities.ConvertCursorListToDict(_cursor)
+          #      return _results
 
-    def GetValue1(self, _LabNumber, _pageOfWorkflowCases):
-        for row in _pageOfWorkflowCases:
-            LabNumber = row['LABNO']
-            with connection.cursor() as _cursor:
-                _cursor.execute("{CALL dbo.uspShireXGetValue1(%s)}", [LabNumber])
-                _results = self.utilities.ConvertCursorListToDict(_cursor)
-                return _results
+    def GetComment(self, _LabNumber):
+        LabNumber = _LabNumber
+        with connection.cursor() as _cursor:
+            _cursor.execute("{CALL dbo.uspShireXGetCommentCancer(%s)}", [LabNumber])
+            _results = self.utilities.ConvertCursorListToDict(_cursor)
+            return _results
 
-    def GetValue2(self, _LabNumber, _pageOfWorkflowCases):
-        _resultsDict = {}
-        for row in _pageOfWorkflowCases:
-            LabNumber = row['LABNO']
-            with connection.cursor() as _cursor:
-                _cursor.execute("{CALL dbo.uspShireXGetValue2(%s)}", [LabNumber])
-                _results = self.utilities.ConvertCursorListToDict(_cursor)
+    def GetValue1(self, _LabNumber):
+        LabNumber = _LabNumber
+        with connection.cursor() as _cursor:
+            _cursor.execute("{CALL dbo.uspShireXGetValue1(%s)}", [LabNumber])
+            _results = self.utilities.ConvertCursorListToDict(_cursor)
+            return _results
 
-                if _results:
-                    _resultsDict[LabNumber] = _results[0]
-                return _results
+    def GetValue2(self, _LabNumber):
+        LabNumber = _LabNumber
+        with connection.cursor() as _cursor:
+            _cursor.execute("{CALL dbo.uspShireXGetValue2(%s)}", [LabNumber])
+            _results = self.utilities.ConvertCursorListToDict(_cursor)
+            return _results
 
-    def GetResults(self, _LabNumber, _pageOfWorkflowCases):
-        for row in _pageOfWorkflowCases:
-            LabNumber = row['LABNO']
-            with connection.cursor() as _cursor:
-                _cursor.execute("{CALL dbo.uspShireXGetResultCancer(%s)}", [LabNumber])
-                _results = self.utilities.ConvertCursorListToDict(_cursor)
-                return _results
+    def GetResults(self, _LabNumber):
+        LabNumber = _LabNumber
+        with connection.cursor() as _cursor:
+            _cursor.execute("{CALL dbo.uspShireXGetResultCancer(%s)}", [LabNumber])
+            _results = self.utilities.ConvertCursorListToDict(_cursor)
+            return _results

@@ -32,6 +32,11 @@ class SampleForm(TemplateView):
 
             _worksheetResults = self.dataServices.GetSampleWorksheetResults(_labNumber, _indication)
 
+            _comment = self.dataServices.GetComment(_labNumber)
+            _value2 = self.dataServices.GetValue2(_labNumber)
+            _value1 = self.dataServices.GetValue1(_labNumber)
+            _result = self.dataServices.GetResults(_labNumber)
+
 
             # if _workflowName == 'WGS':
             #    _backURL = _workflowName + "Search"
@@ -47,6 +52,10 @@ class SampleForm(TemplateView):
                 "tests": _tests,
                 "worksheetResults": _worksheetResults,
                 "backURL": _backURL,
+                "result": _result,
+                "value1": _value1,
+                "comments": _comment,
+                "value2": _value2,
             }
 
             return render(request, self.template_name, _context)

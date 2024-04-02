@@ -267,18 +267,7 @@
                     <th scope="col">
                         Alert
                     </th>
-                    <th scope="col">
-                        Result
-                    </th>
-                    <th scope="col">
-                        Value 1
-                    </th>
-                    <th scope="col">
-                        Value 2
-                    </th>
-                    <th scope="col">
-                        comments
-                    </th>
+                    
 
                 </thead>
                 <tbody>
@@ -410,22 +399,10 @@
                             <td>
                                 {{ item.DNAQuantification }}
                             </td>
-                           .<!--<td>
+                           .<td>
                                 {{ item.SampleAlert }}
-                            </td>-->
-                            <td>
-                                <!--{{ result|cut:"[{'RESULT':"|cut:"}]" }}-->
-                                {{ result }}
                             </td>
-                            <td>
-                                {{ value1|cut:"[{'VALUE1':"|cut:"}]" }}
-                            </td>
-                            <td>
-                                {{ value2|cut:"[{'VALUE2':"|cut:"}]" }}
-                            </td>
-                            <td>
-                                {{ comments|cut:"[{'COMMENT':"|cut:"}]" }}
-                            </td>
+                            
                         </tr>
                     {% endfor %}
                     
