@@ -134,14 +134,6 @@ class ShireData:
 
             return _results
 
-    #def GetComment(self, _LabNumber, _pageOfWorkflowCases):
-     #   for row in _pageOfWorkflowCases:
-      #      LabNumber = row['LABNO']
-       #     with connection.cursor() as _cursor:
-        #        _cursor.execute("{CALL dbo.uspShireXGetCommentCancer(%s)}", [LabNumber])
-         #       _results = self.utilities.ConvertCursorListToDict(_cursor)
-          #      return _results
-
     def GetComment(self, _LabNumber):
         LabNumber = _LabNumber
         with connection.cursor() as _cursor:
