@@ -96,24 +96,6 @@ class SolidCancerSearch(TemplateView):
                     _pageNumber = 1
                     _itemsPerPage = 20
 
-            try:
-                _totalWorkflowCases2 = self.dataServices.GetDNAWorkflowCases(
-                    '2012_SOLID_CANCER', '2012_RARE_DIS', 'SC', _dateFrom, _dateTo, _reportStatus, _priority,
-                    _diseaseIndicationCode1,
-                    _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1,
-                    _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName,
-                    _labNumber, _RefKey, _noResultStatus)
-                _workflowCases2 = Paginator(_totalWorkflowCases2, _itemsPerPage)
-                _pageOfWorkflowCases2 = _workflowCases2.page(_pageNumber)
-                #_comment = self.dataServices.GetComment(_labNumber, _pageOfWorkflowCases2)
-                #_value2 = self.dataServices.GetValue2(_labNumber, _pageOfWorkflowCases2)
-                #_value1 = self.dataServices.GetValue1(_labNumber, _pageOfWorkflowCases2)
-                #_result = self.dataServices.GetResults(_labNumber, _pageOfWorkflowCases2)
-
-            except AttributeError:
-                _pageOfWorkflowCases2 = None
-
-
             # Query the data service for workflow cases based on the search criteria - MW
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
                 '2012_SOLID_CANCER', '2012_RARE_DIS', 'SC', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
@@ -172,14 +154,8 @@ class SolidCancerSearch(TemplateView):
                 "criteriaLabnumber": _labNumber,
                 "criteriaNoResult": _noResultStatus,
                 "searchCount": _searchCount,
-                #"result": _result,
-                #"value1": _value1,
-                #"comments": _comment,
-                #"value2": _value2,
             }
-            #print(_result)
-            #print(_comment)
-            #print(_value1)
+
             # Render the template with the context data - MW
             return render(request, self.template_name, _context)
 
@@ -337,6 +313,3 @@ class WGSSearch(TemplateView):
             }
 
             return render(request, self.template_name, context)
-
-
-

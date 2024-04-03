@@ -7,23 +7,23 @@ class ShireData:
 
     utilities = UtilityFunctions()
 
-
-
-
-
     def GetDNAWorkflowCases(self, _indicationCategory1, _indicationCategory2, _workFlow, _dateFrom, _dateTo, _reportStatus, _priority,
                             _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonCode1,
                             _reasonCode2, _reasonCode3, _username, _surname, _labNumber, _RefKey, _NoResultStatus):
         with connection.cursor() as _cursor:
-            _cursor.execute("{CALL dbo.uspShireXGetDNAWorkflowCases(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, "
-                            "%s, %s, %s, %s, %s)}", (_indicationCategory1, _indicationCategory2, _workFlow, _dateFrom, _dateTo, _reportStatus,
-                                                     _priority, _diseaseIndicationCode1, _diseaseIndicationCode2,
-                                                     _diseaseIndicationCode3, _reasonCode1, _reasonCode2, _reasonCode3,
-                                                     _username, _surname, _labNumber, _RefKey, _NoResultStatus))
+            try:
+                _cursor.execute("{CALL dbo.uspShireXGetDNAWorkflowCases(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, "
+                                "%s, %s, %s, %s, %s)}", (_indicationCategory1, _indicationCategory2, _workFlow, _dateFrom, _dateTo, _reportStatus,
+                                                         _priority, _diseaseIndicationCode1, _diseaseIndicationCode2,
+                                                         _diseaseIndicationCode3, _reasonCode1, _reasonCode2, _reasonCode3,
+                                                         _username, _surname, _labNumber, _RefKey, _NoResultStatus))
 
-            _workflowCases = self.utilities.ConvertCursorListToDict(_cursor)
+                _workflowCases = self.utilities.ConvertCursorListToDict(_cursor)
 
-            return _workflowCases
+                return _workflowCases
+            except Exception as e:
+                print(f"An error occurred: {e}")
+                _workflowCases = None
 
 
     def GetSampleIndicationReportBill(self, _LabNumber):
