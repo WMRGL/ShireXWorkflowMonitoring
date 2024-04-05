@@ -78,6 +78,7 @@
                         <th scope="col">
                             Report by
                         </th>
+                        <!--
                         <th scope="col">
                             Value 1
                         </th>
@@ -90,6 +91,7 @@
                         <th scope="col">
                             Result
                         </th>
+                    -->
                     </thead>
                     <tbody>
                         {% if indicationReportBills %}
@@ -128,6 +130,7 @@
                                     <td>
                                         {{ item.REPORT_BY }}
                                     </td>
+                                    <!--
                                     <td>
                                         {{ value1|cut:"[{'VALUE1':"|cut:"}]" }}
                                     </td>
@@ -140,6 +143,7 @@
                                     <td>
                                         {{ result }}
                                     </td>
+                                -->
                                 </tr>
                             {% endfor %}
                         {% else %}
@@ -257,10 +261,10 @@
                                         {{ item.VALUE1 }}
                                     </td>
                                     <td>
-                                        {{ value2|cut:"[{'VALUE2':"|cut:"}]" }}
+                                        {{ value2 }}
                                     </td>
                                     <td>
-                                        {{ comments|cut:"[{'COMMENT':"|cut:"}]" }}
+                                        {{ comments }}
                                     </td>
                                 </tr>
                             {% endfor %}

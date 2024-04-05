@@ -38,10 +38,6 @@ class SampleForm(TemplateView):
             _result = self.dataServices.GetResults(_labNumber)
 
 
-            # if _workflowName == 'WGS':
-            #    _backURL = _workflowName + "Search"
-            # else:
-            #    _backURL = "HaemOnc" + _workflowName + "Search"
             _backURL = "StartPage"
 
             _context = {
