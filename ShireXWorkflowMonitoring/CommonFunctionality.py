@@ -121,24 +121,28 @@ class UtilityFunctions:
             # Convert the string value to the specified data type - mW
             if _key == keyName:
                 _strVal = request.GET[_key]
+                # This try catch block is usd to prevent the "can only concatenate str(not "NoneType") to str" error - MW
+                try:
+                    if dataType == enumDataType.Datetime:
+                        return datetime.strptime(_strVal, '%Y-%m-%d')
+                        # IMPORTANT The format string is different to a template filter and is specific!
 
-                if dataType == enumDataType.Datetime:
-                    return datetime.strptime(_strVal, '%Y-%m-%d')
-                    # IMPORTANT The format string is different to a template filter and is specific!
+                    if dataType == enumDataType.Integer:
+                        return int(_strVal)
 
-                if dataType == enumDataType.Integer:
-                    return int(_strVal)
+                    if dataType == enumDataType.Float:
+                        return float(_strVal)
 
-                if dataType == enumDataType.Float:
-                    return float(_strVal)
-
-                if dataType == enumDataType.Boolean:
-                    if _strVal.upper() == "TRUE":
-                        return True
-                    if _strVal.upper() == "FALSE":
-                        return False
-                # Return the converted value - MW
-                return _strVal
+                    if dataType == enumDataType.Boolean:
+                        if _strVal.upper() == "TRUE":
+                            return True
+                        if _strVal.upper() == "FALSE":
+                            return False
+                    # Return the converted value - MW
+                    return _strVal
+                # Return the value "None" rather than a blank string - MW
+                except ValueError:
+                    return "None"
 
         # Return an empty string if the key is not found - MW
         return ""
@@ -149,23 +153,27 @@ class UtilityFunctions:
         for _key in request.POST:
             if _key == keyName:
                 _strVal = request.POST[_key]
+                try:
 
-                if dataType == enumDataType.Datetime:
-                    return datetime.strptime(_strVal, '%Y-%m-%d')
-                    # IMPORTANT The format string is different to a template filter and is specific!
+                    if dataType == enumDataType.Datetime:
+                        return datetime.strptime(_strVal, '%Y-%m-%d')
+                        # IMPORTANT The format string is different to a template filter and is specific!
 
-                if dataType == enumDataType.Integer:
-                    return int(_strVal)
+                    if dataType == enumDataType.Integer:
+                        return int(_strVal)
 
-                if dataType == enumDataType.Float:
-                    return float(_strVal)
+                    if dataType == enumDataType.Float:
+                        return float(_strVal)
 
-                if dataType == enumDataType.Boolean:
-                    if _strVal.upper() == "TRUE":
-                        return True
-                    if _strVal.upper() == "FALSE":
-                        return False
-                return _strVal
+                    if dataType == enumDataType.Boolean:
+                        if _strVal.upper() == "TRUE":
+                            return True
+                        if _strVal.upper() == "FALSE":
+                            return False
+                    return _strVal
+
+                except ValueError:
+                    return "None"
 
         return ""
 

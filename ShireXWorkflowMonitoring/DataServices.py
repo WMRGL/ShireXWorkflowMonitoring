@@ -23,7 +23,8 @@ class ShireData:
                 return _workflowCases
             except Exception as e:
                 print(f"An error occurred: {e}")
-                _workflowCases = None
+                _workflowCases = []
+                return _workflowCases
 
 
     def GetSampleIndicationReportBill(self, _LabNumber):

@@ -78,20 +78,6 @@
                         <th scope="col">
                             Report by
                         </th>
-                        <!--
-                        <th scope="col">
-                            Value 1
-                        </th>
-                        <th scope="col">
-                            Value 2
-                        </th>
-                        <th scope="col">
-                            Comment
-                        </th>
-                        <th scope="col">
-                            Result
-                        </th>
-                    -->
                     </thead>
                     <tbody>
                         {% if indicationReportBills %}
@@ -130,20 +116,6 @@
                                     <td>
                                         {{ item.REPORT_BY }}
                                     </td>
-                                    <!--
-                                    <td>
-                                        {{ value1|cut:"[{'VALUE1':"|cut:"}]" }}
-                                    </td>
-                                    <td>
-                                        {{ value2|cut:"[{'VALUE2':"|cut:"}]" }}
-                                    </td>
-                                    <td>
-                                        {{ comments|cut:"[{'COMMENT':"|cut:"}]" }}
-                                    </td>
-                                    <td>
-                                        {{ result }}
-                                    </td>
-                                -->
                                 </tr>
                             {% endfor %}
                         {% else %}
@@ -235,7 +207,7 @@
                             Value 2
                         </th>
                         <th scope="col">
-                            comments
+                            Comments
                         </th>
                     </thead>
                     <tbody>
@@ -264,10 +236,29 @@
                                         {{ value2 }}
                                     </td>
                                     <td>
-                                        {{ comments }}
+                                        {{ comment }}
                                     </td>
                                 </tr>
                             {% endfor %}
+                        <!--
+                        {% else %}
+                        {% if comments %}
+                                {% for item in comments %}
+                                    <tr>
+                                        <td>
+                                            {{ item.Comments }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                        {% else %}
+                        {% if value2 %}
+                            {% for item in value2 %}
+                                    <tr>
+                                        <td>
+                                            {{ item.value2}}
+                                        </td>
+                                    </tr>
+                            {% endfor %}-->
                         {% else %}
                             <tr>
                                 <td>
