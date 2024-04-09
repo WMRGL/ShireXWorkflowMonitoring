@@ -37,6 +37,10 @@ class SampleForm(TemplateView):
             _value1 = self.dataServices.GetValue1(_labNumber)
             _result = self.dataServices.GetResults(_labNumber)
 
+            #Convert _comment and _value2 to strings from a dictionary to make the data readable on the web page table - MW
+            _commentStr = ', '.join([str(comment['COMMENT']) for comment in _comment])
+            _value2Str = ', '.join([str(value['VALUE2']) for value in _value2])
+
 
             _backURL = "StartPage"
 
@@ -50,8 +54,8 @@ class SampleForm(TemplateView):
                 "backURL": _backURL,
                 "result": _result,
                 "value1": _value1,
-                "comments": _comment,
-                "value2": _value2,
+                "comments": _commentStr,
+                "value2": _value2Str,
             }
 
             return render(request, self.template_name, _context)

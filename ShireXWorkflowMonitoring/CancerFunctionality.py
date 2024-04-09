@@ -163,7 +163,7 @@ class SolidCancerSearch(TemplateView):
             # Handle any exceptions during processing and prepare an error message - MW
             context = {
                 "Title": self.title,
-                "errorMessage": "SCSearch.get : " + str(ex)
+                "errorMessage": "SCSearch.get : " + str(ex) if ex is not None else "Unknown error"
             }
 
             # Render the template with error information - MW
@@ -309,7 +309,7 @@ class WGSSearch(TemplateView):
         except Exception as ex:
             context = {
                 "Title": self.title,
-                "errorMessage": "WGSSearch.get : " + str(ex)
+                "errorMessage": "WGSSearch.get : " + str(ex) if ex is not None else "Unknown error"
             }
 
             return render(request, self.template_name, context)

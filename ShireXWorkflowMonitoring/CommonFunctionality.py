@@ -142,10 +142,10 @@ class UtilityFunctions:
                     return _strVal
                 # Return the value "None" rather than a blank string - MW
                 except ValueError:
-                    return "None"
+                    return None
 
         # Return an empty string if the key is not found - MW
-        return ""
+        return None
 
     # Similar function for POST requests - MW
     def PostRequestKey(self, request, keyName, dataType):
