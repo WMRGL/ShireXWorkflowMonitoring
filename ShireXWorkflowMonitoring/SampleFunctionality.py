@@ -32,7 +32,6 @@ class SampleForm(TemplateView):
 
             _worksheetResults = self.dataServices.GetSampleWorksheetResults(_labNumber, _indication)
 
-
             _backURL = "StartPage"
 
             _context = {
