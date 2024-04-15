@@ -58,8 +58,8 @@ class SolidCancerSearch(TemplateView):
             # Set default date range and pagination values for first-time page load - MW
             # Modify these values if it's a postback with user-specified filters - MW
             if not _isPostBack:
-                _dateFrom = datetime.today() - timedelta(days=60)
-                _dateTo = datetime.today() + timedelta(days=30)
+                _dateFrom = (datetime.today() - timedelta(days=60)).strftime('%Y-%m-%d')
+                _dateTo = (datetime.today() + timedelta(days=30)).strftime('%Y-%m-%d')
                 _pageNumber = 1
                 _itemsPerPage = 20
             else:
@@ -68,7 +68,11 @@ class SolidCancerSearch(TemplateView):
                 # Handle exceptions in case of invalid input or conversion errors - MW
                 try:
                     _dateFrom = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime)
+                    if _dateFrom and isinstance(_dateFrom, datetime):
+                        _dateFrom = _dateFrom.strftime('%Y-%m-%d')
                     _dateTo = self.utilities.GetRequestKey(request, "txtCriteriaDateTo", enumDataType.Datetime)
+                    if _dateTo and isinstance(_dateTo, datetime):
+                        _dateTo = _dateTo.strftime('%Y-%m-%d')
                     _pageNumber = self.utilities.GetRequestKey(request, "txtPageNumber", enumDataType.Integer)
                     _itemsPerPage = self.utilities.GetRequestKey(request, "ddlCriteriaItemsPerPage",
                                                                  enumDataType.Integer)
@@ -91,8 +95,8 @@ class SolidCancerSearch(TemplateView):
                     _noResultStatus = self.utilities.GetRequestKey(request, "ddlCriteriaNoResult", enumDataType.Integer)
                 except Exception:
                     # If any errors occur return the default criteria
-                    _dateFrom = datetime.today() - timedelta(days=60)
-                    _dateTo = datetime.today() + timedelta(days=30)
+                    _dateFrom = (datetime.today() - timedelta(days=60)).strftime('%Y-%m-%d')
+                    _dateTo = (datetime.today() + timedelta(days=30)).strftime('%Y-%m-%d')
                     _pageNumber = 1
                     _itemsPerPage = 20
 
@@ -203,14 +207,18 @@ class WGSSearch(TemplateView):
             _searchCount = 0
 
             if not _isPostBack:
-                _dateFrom = datetime.today() - timedelta(days=60)
-                _dateTo = datetime.today() + timedelta(days=90)
+                _dateFrom = (datetime.today() - timedelta(days=60)).strftime('%Y-%m-%d')
+                _dateTo = (datetime.today() + timedelta(days=30)).strftime('%Y-%m-%d')
                 _pageNumber = 1
                 _itemsPerPage = 20
             else:
                 try:
                     _dateFrom = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime)
+                    if _dateFrom and isinstance(_dateFrom, datetime):
+                        _dateFrom = _dateFrom.stftime('%Y-%m-%d')
                     _dateTo = self.utilities.GetRequestKey(request, "txtCriteriaDateTo", enumDataType.Datetime)
+                    if _dateTo and isinstance(_dateTo, datetime):
+                        _dateTo = _dateTo.strftime('%Y-%m-%d')
                     _pageNumber = self.utilities.GetRequestKey(request, "txtPageNumber", enumDataType.Integer)
                     _itemsPerPage = self.utilities.GetRequestKey(request, "ddlCriteriaItemsPerPage",
                                                                  enumDataType.Integer)
@@ -235,8 +243,8 @@ class WGSSearch(TemplateView):
 
                 except Exception:
                     # If any errors occur return the default criteria
-                    _dateFrom = datetime.today() - timedelta(days=365)
-                    _dateTo = datetime.today() + timedelta(days=30)
+                    _dateFrom = (datetime.today() - timedelta(days=60)).strftime('%Y-%m-%d')
+                    _dateTo = (datetime.today() + timedelta(days=30)).strftime('%Y-%m-%d')
                     _pageNumber = 1
                     _itemsPerPage = 20
 

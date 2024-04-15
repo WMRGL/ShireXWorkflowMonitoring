@@ -25,7 +25,7 @@
                                 <label for="txtCriteriaDateFrom" class="col-form-label">Date from:</label>
                             </div>
                             <div class="col-2">
-                                <input type="date" class="form-control" name="txtCriteriaDateFrom" id="txtCriteriaDateFrom" value="{{ criteriaDateFrom|date:'Y-m-d' }}">
+                                <input type="date" class="form-control" name="txtCriteriaDateFrom" id="txtCriteriaDateFrom" value="{{ criteriaDateFrom|date:'d-m-Y' }}">
                             </div>
                             <div class="col-2" style="text-align:right">
                                 <label for="txtCriteriaDateTo" class="col-form-label">Date to:</label>
@@ -264,6 +264,9 @@
                     <th scope="col">
                         DNA/Quant
                     </th>
+                    <th>
+                        CONC
+                    </th>
                     <th scope="col">
                         Alert
                     </th>
@@ -398,6 +401,9 @@
                             </td>
                             <td>
                                 {{ item.DNAQuantification }}
+                            </td>
+                            <td>
+                                {{ item.CONC }}
                             </td>
                            .<td>
                                 {{ item.SampleAlert }}
