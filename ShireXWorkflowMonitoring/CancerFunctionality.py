@@ -215,7 +215,7 @@ class WGSSearch(TemplateView):
                 try:
                     _dateFrom = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime)
                     if _dateFrom and isinstance(_dateFrom, datetime):
-                        _dateFrom = _dateFrom.stftime('%Y-%m-%d')
+                        _dateFrom = _dateFrom.strftime('%Y-%m-%d')
                     _dateTo = self.utilities.GetRequestKey(request, "txtCriteriaDateTo", enumDataType.Datetime)
                     if _dateTo and isinstance(_dateTo, datetime):
                         _dateTo = _dateTo.strftime('%Y-%m-%d')
