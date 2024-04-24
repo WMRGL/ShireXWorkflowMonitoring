@@ -349,6 +349,18 @@ transition: background-color 0.5s, color 0.5s;
       } else if(size === 'large') {
         body.style.fontSize = '20px';
       }
+
+      localStorage.setItem('preferredFontSize', size); // Stores the font size in local storage
       modal.style.display = "none"; // Close the modal after selection
-    }</script>
+    }
+
+    function applySavedFontSize(){
+        var savedSize = localStorage.getItem('preferredFontSize');
+        if(savedSize){
+            changeFontSize(savedSize);
+        }
+    }
+    // Call applySavedFontSize when the page loads
+    document.addEventListener('DOMContentLoaded', applySavedFontSize);
+    </script>
 </body>
