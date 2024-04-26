@@ -1,4 +1,10 @@
 <style>
+@font-face {
+    font-family: 'OpenDyslexic';
+    src: url('/home/mwhitehouse1/Downloads/OpenDyslexic 3 (Beta - Windows, MacOS, Linux TTF)/OpenDyslexic3-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
     .navbar .dropdown-menu {
 display: block;
 max-height: 0;
@@ -43,10 +49,12 @@ input[type="text"], input[type="email"], textarea {
 :root {
 --background-color: #ffffff; /* Light mode background color */
 --text-color: #000000;       /* Light mode text color */
+--font-family: Arial, sans-serif; /* Default font */
 }
 
 body {
 transition: background-color 0.5s, color 0.5s;
+font-family: var(--font-family);
 }
 
 .toggle-container {
@@ -247,15 +255,24 @@ transition: background-color 0.5s, color 0.5s;
 
                 <!-- Font Size Modal -->
                 <div id="font-size-modal" class="font-size-modal" style="display: none;">
-                <div class="font-size-content">
-                    <span class="close">&times;</span>
-                    <h2>Choose Font Size</h2>
-                    <button class="font-size-option" onclick="changeFontSize('small')">Small</button>
-                    <button class="font-size-option" onclick="changeFontSize('medium')">Medium</button>
-                    <button class="font-size-option" onclick="changeFontSize('large')">Large</button>
+                    <div class="font-size-content">
+                        <span class="close">&times;</span>
+                        <h2>Font Settings</h2>
+                        <button class="font-size-option" onclick="changeFontSize('small')">Small</button>
+                        <button class="font-size-option" onclick="changeFontSize('medium')">Medium</button>
+                        <button class="font-size-option" onclick="changeFontSize('large')">Large</button>
+                        <select id="font-style-select">
+                            <option value="Arial">Arial</option>
+                            <option value="OpenDyslexic">OpenDyslexic</option>
+                            <option value="Verdana">Verdana</option>
+                            <option value="Times New Roman">Times New Roman</option>
+                            <option value="Georgia">Georgia</option>
+                            <option value="Courier New">Courier New</option>
+                        </select>
+                        <button onclick="changeFontStyle()">Apply</button>
+                    </div>
+                
                 </div>
-                </div>
-
             </div>
         </nav>
     </div>
@@ -313,45 +330,51 @@ transition: background-color 0.5s, color 0.5s;
     });
     
     
-    // Get the modal
+    // Get the modal - MW
     var modal = document.getElementById("font-size-modal");
     
-    // Get the button that opens the modal
+    // Get the button that opens the modal - MW
     var btn = document.getElementById("settings-btn");
     
-    // Get the <span> element that closes the modal
+    // Get the <span> element that closes the modal - MW
     var span = document.getElementsByClassName("close")[0];
     
-    // When the user clicks the button, open the modal
+    // When the user clicks the button, open the modal - MW
     btn.onclick = function() {
       modal.style.display = "block";
     }
     
-    // When the user clicks on <span> (x), close the modal
+    // When the user clicks on <span> (x), close the modal - MW
     span.onclick = function() {
       modal.style.display = "none";
     }
     
-    // When the user clicks anywhere outside of the modal, close it
+    // When the user clicks anywhere outside of the modal, close it - MW
     window.onclick = function(event) {
       if (event.target == modal) {
         modal.style.display = "none";
       }
     }
     
-    // Function to change font size
+    // Function to change font size - MW
     function changeFontSize(size) {
       var body = document.body;
       if(size === 'small') {
         body.style.fontSize = '12px';
       } else if(size === 'medium') {
-        body.style.fontSize = '16px'; // This is typically the default size
+        body.style.fontSize = '16px'; // This is typically the default size - MW
       } else if(size === 'large') {
         body.style.fontSize = '20px';
       }
 
-      localStorage.setItem('preferredFontSize', size); // Stores the font size in local storage
-      modal.style.display = "none"; // Close the modal after selection
+      localStorage.setItem('preferredFontSize', size); // Stores the font size in local storage - MW
+      modal.style.display = "none"; // Close the modal after selection - MW
+    }
+
+    function changeFontStyle(){
+        var selectedFont = document.getElementById('font-style-select').value;
+        document.documentElement.style.setProperty('--font-family', selectedFont);
+        localStorage.setItem('selectedFontStyle', selectedFont);
     }
 
     function applySavedFontSize(){
@@ -360,7 +383,14 @@ transition: background-color 0.5s, color 0.5s;
             changeFontSize(savedSize);
         }
     }
-    // Call applySavedFontSize when the page loads
+    // Call applySavedFontSize when the page loads - MW
     document.addEventListener('DOMContentLoaded', applySavedFontSize);
+    document.addEventListener('DOMContentLoaded', (event) => {
+        var selectedFont = localStorage.getItem('selectedFontStyle');
+        if(selectedFont){
+            document.documentElement.style.setProperty('--font-family', selectedFont);
+            document.getElementById('font-style-select').value = selectedFont;
+        }
+    })
     </script>
 </body>

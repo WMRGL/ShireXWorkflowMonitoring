@@ -403,7 +403,7 @@
                                 {{ item.DNAQuantification }}
                             </td>
                             <td>
-                                {{ item.CONC }}
+                                {{ item.TEST|default_if_none:"Null" }}
                             </td>
                            .<td>
                                 {{ item.SampleAlert }}

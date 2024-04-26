@@ -22,7 +22,7 @@ class SolidCancerSearch(TemplateView):
     # Initialise instances of utility and data service classes - MW
     utilities = UtilityFunctions()
     dataServices = ShireData()
-    worksheetHelper = Worksheet()       # Composition, instead of inheritance
+    worksheetHelper = Worksheet()       # Composition, instead of inheritance - MW
     extractsheetHelper = ExtractSheet()
 
     # Define the GET method to handle HTTP GET requests - MW
