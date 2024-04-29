@@ -22,12 +22,15 @@ with open(os.path.join(BASE_DIR, 'ShireXWorkflowMonitoring/secrets.json')) as se
     secrets = json.load(secrets_file)
 
 
-def get_secret(setting, secrets=secrets):
+def get_secret(pSetting, pSecrets=secrets):
     """Get secret setting or fail with ImproperlyConfigured"""
+    _setting = pSetting
+    _secrets = pSecrets
+
     try:
-        return secrets[setting]
+        return secrets[_setting]
     except KeyError:
-        raise ImproperlyConfigured("Set the {} setting".format(setting))
+        raise ImproperlyConfigured("Set the {} setting".format(_setting))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
