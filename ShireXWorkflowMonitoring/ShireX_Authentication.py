@@ -6,18 +6,15 @@ from .models import STAFF
 
 
 class ShireBackend(BaseBackend):
-    def authenticate(self, pRequest, pUsername=None, pPassword=None):
-        _request = pRequest
-        _username = pUsername
-        _password = pPassword
+    def authenticate(self, request, username=None, password=None):
         _isUserPasswordValid = False
 
         # Make sure the username and password are both provided
-        if _username is None or _password is None:
+        if username is None or password is None:
             return None
 
         try:
-            userValidObj = STAFF.objects.filter(LOGON_NAME = _username, EMPLOYMENT_END_DATE__isnull=True)
+            userValidObj = STAFF.objects.filter(LOGON_NAME=username, EMPLOYMENT_END_DATE__isnull=True)
 
             if userValidObj is None:
                 return None
@@ -26,7 +23,7 @@ class ShireBackend(BaseBackend):
                 # Do the password check separate, because the SQL server comparison
                 # is not case-sensitive.  Whereas the code below is!
 
-                if item.PASSWORD == _password:
+                if item.PASSWORD == password:
                     _isUserPasswordValid = True
 
             if userValidObj.__len__() > 1:
@@ -39,7 +36,7 @@ class ShireBackend(BaseBackend):
                 raise ValueError('Multiple users')
 
         except ValueError:
-            messages.error(_request, 'There are multiple active user staff records with that username, ' +
+            messages.error(request, 'There are multiple active user staff records with that username, ' +
                            _errTxt + ' Please see the system administrator.')
             return None
 
@@ -52,10 +49,10 @@ class ShireBackend(BaseBackend):
         if _isUserPasswordValid:
             try:
                 # Try to find the user record in the auth_user table
-                user = User.objects.get(username = _username)
+                user = User.objects.get(username=username)
             except User.DoesNotExist:
                 # If not found create a new user. There's no need to set a password
-                user = User(username = _username)
+                user = User(username=username)
                 user.is_staff = True
                 user.is_superuser = True
                 user.save()
@@ -64,9 +61,8 @@ class ShireBackend(BaseBackend):
         # Otherwise
         return None
 
-    def get_user(self, pUserId):
-        _userId = pUserId
+    def get_user(self, user_id):
         try:
-            return User.objects.get(pk = _userId)
+            return User.objects.get(pk=user_id)
         except User.DoesNotExist:
             return None
