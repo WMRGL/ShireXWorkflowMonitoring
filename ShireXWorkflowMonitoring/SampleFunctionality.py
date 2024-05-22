@@ -14,13 +14,10 @@ class SampleForm(TemplateView):
     utilities = UtilityFunctions()
     dataServices = ShireData()
 
-    def get(self, pRequest, pLabNumber, pIndication):
-        _request = pRequest
-        _labNumber = pLabNumber
-        _indication = pIndication
+    def get(self, request, _labNumber, _indication):
 
         try:
-            if not _request.user.is_authenticated:
+            if not request.user.is_authenticated:
                 return HttpResponseRedirect(reverse('LoginPage'))
 
             _sample = self.dataServices.GetSample(_labNumber)
@@ -47,7 +44,7 @@ class SampleForm(TemplateView):
                 "backURL": _backURL,
             }
 
-            return render(_request, self.template_name, _context)
+            return render(request, self.template_name, _context)
 
         except Exception as ex:
             _context = {
@@ -55,5 +52,5 @@ class SampleForm(TemplateView):
                 "errorMessage": "SampleForm.get : " + str(ex)
             }
 
-            return render(_request, self.template_name, _context)
+            return render(request, self.template_name, _context)
 

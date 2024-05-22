@@ -9,24 +9,23 @@ class Worksheet:
     # Method to add worksheet test results to each workflow case page - MW
     def AddWorksheetTestResultsToWorkflowCases(self, pPageOfWorkflowCases):
         _pageOfWorkflowCases = pPageOfWorkflowCases
-
         # Loop through each row in the provided page of workflow cases - MW
         for row in _pageOfWorkflowCases:
             labNumber = row['LABNO'] # Retrieve lab number from the row - MW
             indication = row['DISEASE_CODE'] # Retrieve disease code (indication) from the row - MW
             wsResults = self.dataServices.GetSampleWorksheetResults(labNumber, indication) # Retrieve worksheet results for the current lab number and indication - MW
-            worksheetListString = self._compileWorksheetListString(wsResults) # Compile a string of worksheet results - MW
-            row['WORKSHEETS'] = worksheetListString # Assign the string to the 'WORKSHEETS' key in the row - MW
+            worksheetListString = self.CompileWorksheetListString(wsResults) # Compile a string of worksheet results - MW
+            row['WORKSHEETS'] = worksheetListString # Assign the strinSg to the 'WORKSHEETS' key in the row - MW
         return _pageOfWorkflowCases # Return the modified page of workflow cases - MW
 
     # Method to compile worksheet list string from worksheet results - MW
-    def _compileWorksheetListString(self, pWsResults):
+    def CompileWorksheetListString(self, pWsResults):
         _wsResults = pWsResults
         worksheetListString = "" # Initialize an empty string to store worksheet information - MW
         for wsRow in _wsResults:
             # Extract and process worksheet details - MW
-            worksheet, worksheetColour = self._processWorksheetDetails(wsRow)
-            test, result, highlightColour = self._processTestResultDetails(wsRow)
+            worksheet, worksheetColour = self.ProcessWorksheetDetails(wsRow)
+            test, result, highlightColour = self.ProcessTestResultDetails(wsRow)
             # Assemble the worksheet information string with HTML styling - MW
             worksheetListString += "<span style='color: " + worksheetColour + "'>" + worksheet + \
                                    " / </span><span style='color: " + highlightColour + "'>" + \
@@ -34,7 +33,7 @@ class Worksheet:
         return worksheetListString # Return the final assembled string - MW
 
     # Method to process worksheet details and determine the coloring logic - MW
-    def _processWorksheetDetails(self, pWsRow):
+    def ProcessWorksheetDetails(self, pWsRow):
         _wsRow = pWsRow
 
         worksheet = _wsRow.get('WORKSHEET', '')
@@ -44,12 +43,12 @@ class Worksheet:
         return worksheet, worksheetColour
 
     # Method to process test and result details, handling missing data - MW
-    def _processTestResultDetails(self, pWsRow):
+    def ProcessTestResultDetails(self, pWsRow):
         _wsRow = pWsRow
 
         test = _wsRow.get('TEST', 'Missing Test Data')
         result = _wsRow.get('RESULT', 'unknown result') if _wsRow.get('RESULT') else ''
-        highlightColour = _wsRow.get('HighlightColour', 'black')
+        highlightColour = _wsRow.get('HighlightColour', 'black') if _wsRow.get('HighlightColour') else ''
         return test, result, highlightColour
 
         # Method to extract a list of surnames from the given workflow cases - MW
@@ -70,18 +69,15 @@ class Worksheet:
         for row in _pageOfWorkflowCases:
             labNumber = row['LABNO']
             indication = row['DISEASE_CODE']
-            testsNoWorksheet = self.dataServices.GetSampleTestsNotAllocatedToWorksheet(labNumber,
-                                                                                       indication)  # Retrieve tests not allocated to worksheets - MW
+            testsNoWorksheet = self.dataServices.GetSampleTestsNotAllocatedToWorksheet(labNumber, indication)  # Retrieve tests not allocated to worksheets - MW
             if testsNoWorksheet:
-                noWsString = self._compileTestsNoWorksheetString(
-                    testsNoWorksheet)  # Compile a string of tests without worksheets - MW
+                noWsString = self.CompileTestsNoWorksheetString(testsNoWorksheet)  # Compile a string of tests without worksheets - MW
                 existingWsString = row.get('WORKSHEETS', '')
-                row[
-                    'WORKSHEETS'] = existingWsString + noWsString if existingWsString else noWsString  # Append or assign the string to the 'WORKSHEETS' key - MW
+                row['WORKSHEETS'] = existingWsString + noWsString if existingWsString else noWsString  # Append or assign the string to the 'WORKSHEETS' key - MW
         return _pageOfWorkflowCases  # Return the modified page of workflow cases - MW
 
     # Helper method to compile a string of tests that are not allocated to any worksheet - MW
-    def _compileTestsNoWorksheetString(self, pTestsNoWorksheet):
+    def CompileTestsNoWorksheetString(self, pTestsNoWorksheet):
         _testsNoWorksheet = pTestsNoWorksheet
 
         noWsString = "<span>Tests not allocated to w/s: "
@@ -115,16 +111,13 @@ class ExtractSheet:
 
         for row in _pageOfWorkflowCases:
             labNumber = row['LABNO']  # Retrieve lab number from the row - MW
-            extracts = self.dataServices.GetSampleExtracts(
-                labNumber)  # Retrieve extract sheet data for the lab number - MW
-            extractString = self._compileExtractString(
-                extracts)  # Compile a string representation of the extracts - MW
-            row[
-                'EXTRACTSHEETS'] = extractString  # Assign compiled string to the 'EXTRACTSHEETS' key in the row - MW
+            extracts = self.dataServices.GetSampleExtracts(labNumber)  # Retrieve extract sheet data for the lab number - MW
+            extractString = self.CompileExtractString(extracts)  # Compile a string representation of the extracts - MW
+            row['EXTRACTSHEETS'] = extractString  # Assign compiled string to the 'EXTRACTSHEETS' key in the row - MW
         return _pageOfWorkflowCases  # Return the modified page of workflow cases - MW
 
     # Helper method to compile a string representation of extract sheets from extract data - MW
-    def _compileExtractString(self, pExtracts):
+    def CompileExtractString(self, pExtracts):
         _extracts = pExtracts
 
         extractListString = ""

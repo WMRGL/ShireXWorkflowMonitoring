@@ -2,6 +2,7 @@ from ShireXWorkflowMonitoring.CommonFunctionality import UtilityFunctions
 from ShireXWorkflowMonitoring.CommonFunctionality import enumDataType
 from django.db import connection
 from django.http import JsonResponse
+import logging
 
 class ShireData:
 
@@ -10,6 +11,8 @@ class ShireData:
     def GetDNAWorkflowCases(self, pIndicationCategory1, pIndicationCategory2, pWorkFlow, pDateFrom, pDateTo, pReportStatus, pPriority,
                             pDiseaseIndicationCode1, pDiseaseIndicationCode2, pDiseaseIndicationCode3, pReasonCode1,
                             pReasonCode2, pReasonCode3, pUsername, pSurname, pLabNumber, pRefKey, pNoResultStatus):
+        logger = logging.getLogger(__name__)
+
         _indicationCategory1 = pIndicationCategory1
         _indicationCategory2 = pIndicationCategory2
         _workFlow = pWorkFlow
@@ -29,6 +32,11 @@ class ShireData:
         _refKey = pRefKey
         _noResultStatus = pNoResultStatus
 
+        logger.info("Parameters for GetDNAWorkflowCases: %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s",
+                    _indicationCategory1, _indicationCategory2, _workFlow, _dateFrom, _dateTo, _reportStatus, _priority,
+                    _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonCode1, _reasonCode2,
+                    _reasonCode3, _username, _surname, _labNumber, _refKey, _noResultStatus)
+
         with connection.cursor() as _cursor:
             try:
                 _cursor.execute("{CALL dbo.uspShireXGetDNAWorkflowCases(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, "
@@ -38,11 +46,11 @@ class ShireData:
                                                          _username, _surname, _labNumber, _refKey, _noResultStatus))
 
                 _workflowCases = self.utilities.ConvertCursorListToDict(_cursor)
-
                 return _workflowCases
             except Exception as e:
-                print(f"An error occurred: {e}")
+                logger.error("An error occurred in GetDNAWorkflowCases: %s", e)
                 _workflowCases = []
+
                 return _workflowCases
 
 

@@ -16,7 +16,7 @@ class ShireBackend(BaseBackend):
         try:
             userValidObj = STAFF.objects.filter(LOGON_NAME=username, EMPLOYMENT_END_DATE__isnull=True)
 
-            if userValidObj is None:
+            if not userValidObj.exists():
                 return None
 
             for item in userValidObj:

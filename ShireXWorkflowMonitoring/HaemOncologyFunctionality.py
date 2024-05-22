@@ -159,14 +159,14 @@ class MPNSearch(TemplateView):
     worksheetHelper = Worksheet()       # Composition, instead of inheritance
     extractsheetHelper = ExtractSheet()
 
-    def get(self, pRequest):
-        _request = pRequest
+    def get(self, request):
+
         try:
-            if not _request.user.is_authenticated:
+            if not request.user.is_authenticated:
                 return HttpResponseRedirect(reverse('LoginPage'))
 
             # If logged in determine if a postback, before extracting the search filters
-            if _request.GET.__len__() == 0:
+            if request.GET.__len__() == 0:
                 _isPostBack = False
             else:
                 _isPostBack = True
@@ -193,29 +193,29 @@ class MPNSearch(TemplateView):
                 _itemsPerPage = 20
             else:
                 try:
-                    _dateFrom = self.utilities.GetRequestKey(_request, "txtCriteriaDateFrom", enumDataType.Datetime)
-                    _dateTo = self.utilities.GetRequestKey(_request, "txtCriteriaDateTo", enumDataType.Datetime)
-                    _pageNumber = self.utilities.GetRequestKey(_request, "txtPageNumber", enumDataType.Integer)
-                    _itemsPerPage = self.utilities.GetRequestKey(_request, "ddlCriteriaItemsPerPage",
+                    _dateFrom = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime)
+                    _dateTo = self.utilities.GetRequestKey(request, "txtCriteriaDateTo", enumDataType.Datetime)
+                    _pageNumber = self.utilities.GetRequestKey(request, "txtPageNumber", enumDataType.Integer)
+                    _itemsPerPage = self.utilities.GetRequestKey(request, "ddlCriteriaItemsPerPage",
                                                                  enumDataType.Integer)
-                    _reportStatus = self.utilities.GetRequestKey(_request, "ddlCriteriaStatus", enumDataType.String)
-                    _priority = self.utilities.GetRequestKey(_request, "ddlCriteriaPriority", enumDataType.String)
-                    _diseaseIndicationCode1 = self.utilities.GetRequestKey(_request, "ddlCriteriaDiseaseIndication1",
+                    _reportStatus = self.utilities.GetRequestKey(request, "ddlCriteriaStatus", enumDataType.String)
+                    _priority = self.utilities.GetRequestKey(request, "ddlCriteriaPriority", enumDataType.String)
+                    _diseaseIndicationCode1 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication1",
                                                                            enumDataType.String)
-                    _diseaseIndicationCode2 = self.utilities.GetRequestKey(_request, "ddlCriteriaDiseaseIndication2",
+                    _diseaseIndicationCode2 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication2",
                                                                            enumDataType.String)
-                    _diseaseIndicationCode3 = self.utilities.GetRequestKey(_request, "ddlCriteriaDiseaseIndication3",
+                    _diseaseIndicationCode3 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication3",
                                                                            enumDataType.String)
                     _reasonForDiseaseIndication1 = self.utilities.GetRequestKey(
-                        _request, "ddlCriteriaReasonForDiseaseIndication1", enumDataType.String)
+                        request, "ddlCriteriaReasonForDiseaseIndication1", enumDataType.String)
                     _reasonForDiseaseIndication2 = self.utilities.GetRequestKey(
-                        _request, "ddlCriteriaReasonForDiseaseIndication2", enumDataType.String)
+                        request, "ddlCriteriaReasonForDiseaseIndication2", enumDataType.String)
                     _reasonForDiseaseIndication3 = self.utilities.GetRequestKey(
-                        _request, "ddlCriteriaReasonForDiseaseIndication3", enumDataType.String)
-                    _lastName = self.utilities.GetRequestKey(_request, "txtCriteriaLastname", enumDataType.String)
-                    _labNumber = self.utilities.GetRequestKey(_request, "txtCriteriaLabnumber", enumDataType.String)
-                    _noResultStatus = self.utilities.GetRequestKey(_request, "ddlCriteriaNoResult", enumDataType.Integer)
-                    _showAlerts = self.utilities.GetRequestKey(_request, "ddlAlertCriteria", enumDataType.Boolean)
+                        request, "ddlCriteriaReasonForDiseaseIndication3", enumDataType.String)
+                    _lastName = self.utilities.GetRequestKey(request, "txtCriteriaLastname", enumDataType.String)
+                    _labNumber = self.utilities.GetRequestKey(request, "txtCriteriaLabnumber", enumDataType.String)
+                    _noResultStatus = self.utilities.GetRequestKey(request, "ddlCriteriaNoResult", enumDataType.Integer)
+                    _showAlerts = self.utilities.GetRequestKey(request, "ddlAlertCriteria", enumDataType.Boolean)
 
                 except Exception:
                     # If any errors occur return the default criteria
@@ -227,7 +227,7 @@ class MPNSearch(TemplateView):
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
                 '2012_HAEM_ONC', '', 'MPN', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
                 _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1,
-                _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, _request.user.username, _lastName,
+                _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName,
                 _labNumber, _RefKey, _noResultStatus)
             _listOfSurnames = self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases)
             _searchCount = _totalWorkflowCases.__len__()
@@ -269,7 +269,7 @@ class MPNSearch(TemplateView):
                 "searchCount": _searchCount,
             }
 
-            return render(_request, self.template_name, _context)
+            return render(request, self.template_name, _context)
 
         except Exception as ex:
             context = {
@@ -277,7 +277,7 @@ class MPNSearch(TemplateView):
                 "errorMessage": "MPNSearch.get : " + str(ex)
             }
 
-            return render(_request, self.template_name, context)
+            return render(request, self.template_name, context)
 
 
 class DAMLSearch(TemplateView): #AML & MDS
@@ -429,15 +429,13 @@ class BreakSearch(TemplateView):
     worksheetHelper = Worksheet()  # Composition, instead of inheritance
     extractsheetHelper = ExtractSheet()
 
-    def get(self, pRequest):
-        _request = pRequest
-
+    def get(self, request):
         try:
-            if not _request.user.is_authenticated:
+            if not request.user.is_authenticated:
                 return HttpResponseRedirect(reverse('LoginPage'))
 
             # If logged in determine if a postback, before extracting the search filters
-            if _request.GET.__len__() == 0:
+            if request.GET.__len__() == 0:
                 _isPostBack = False
             else:
                 _isPostBack = True
@@ -463,28 +461,28 @@ class BreakSearch(TemplateView):
                 _itemsPerPage = 20
             else:
                 try:
-                    _dateFrom = self.utilities.GetRequestKey(_request, "txtCriteriaDateFrom", enumDataType.Datetime)
-                    _dateTo = self.utilities.GetRequestKey(_request, "txtCriteriaDateTo", enumDataType.Datetime)
-                    _pageNumber = self.utilities.GetRequestKey(_request, "txtPageNumber", enumDataType.Integer)
-                    _itemsPerPage = self.utilities.GetRequestKey(_request, "ddlCriteriaItemsPerPage",
+                    _dateFrom = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime)
+                    _dateTo = self.utilities.GetRequestKey(request, "txtCriteriaDateTo", enumDataType.Datetime)
+                    _pageNumber = self.utilities.GetRequestKey(request, "txtPageNumber", enumDataType.Integer)
+                    _itemsPerPage = self.utilities.GetRequestKey(request, "ddlCriteriaItemsPerPage",
                                                                  enumDataType.Integer)
-                    _reportStatus = self.utilities.GetRequestKey(_request, "ddlCriteriaStatus", enumDataType.String)
-                    _priority = self.utilities.GetRequestKey(_request, "ddlCriteriaPriority", enumDataType.String)
-                    _diseaseIndicationCode1 = self.utilities.GetRequestKey(_request, "ddlCriteriaDiseaseIndication1",
+                    _reportStatus = self.utilities.GetRequestKey(request, "ddlCriteriaStatus", enumDataType.String)
+                    _priority = self.utilities.GetRequestKey(request, "ddlCriteriaPriority", enumDataType.String)
+                    _diseaseIndicationCode1 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication1",
                                                                            enumDataType.String)
-                    _diseaseIndicationCode2 = self.utilities.GetRequestKey(_request, "ddlCriteriaDiseaseIndication2",
+                    _diseaseIndicationCode2 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication2",
                                                                            enumDataType.String)
-                    _diseaseIndicationCode3 = self.utilities.GetRequestKey(_request, "ddlCriteriaDiseaseIndication3",
+                    _diseaseIndicationCode3 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication3",
                                                                            enumDataType.String)
                     _reasonForDiseaseIndication1 = self.utilities.GetRequestKey(
-                        _request, "ddlCriteriaReasonForDiseaseIndication1", enumDataType.String)
+                        request, "ddlCriteriaReasonForDiseaseIndication1", enumDataType.String)
                     _reasonForDiseaseIndication2 = self.utilities.GetRequestKey(
-                        _request, "ddlCriteriaReasonForDiseaseIndication2", enumDataType.String)
+                        request, "ddlCriteriaReasonForDiseaseIndication2", enumDataType.String)
                     _reasonForDiseaseIndication3 = self.utilities.GetRequestKey(
-                        _request, "ddlCriteriaReasonForDiseaseIndication3", enumDataType.String)
-                    _lastName = self.utilities.GetRequestKey(_request, "txtCriteriaLastname", enumDataType.String)
-                    _labNumber = self.utilities.GetRequestKey(_request, "txtCriteriaLabnumber", enumDataType.String)
-                    _noResultStatus = self.utilities.GetRequestKey(_request, "ddlCriteriaNoResult", enumDataType.Integer)
+                        request, "ddlCriteriaReasonForDiseaseIndication3", enumDataType.String)
+                    _lastName = self.utilities.GetRequestKey(request, "txtCriteriaLastname", enumDataType.String)
+                    _labNumber = self.utilities.GetRequestKey(request, "txtCriteriaLabnumber", enumDataType.String)
+                    _noResultStatus = self.utilities.GetRequestKey(request, "ddlCriteriaNoResult", enumDataType.Integer)
                 except Exception:
                     # If any errors occur return the default criteria
                     _dateFrom = datetime.today() - timedelta(days=365)
@@ -495,7 +493,7 @@ class BreakSearch(TemplateView):
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
                 '2012_HAEM_ONC', '', 'BREAK', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
                 _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1,
-                _reasonForDiseaseIndication2,  _reasonForDiseaseIndication3, _request.user.username, _lastName,
+                _reasonForDiseaseIndication2,  _reasonForDiseaseIndication3, request.user.username, _lastName,
                 _labNumber,  _RefKey, _noResultStatus)
             _listOfSurnames = self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases)
 
@@ -549,7 +547,7 @@ class BreakSearch(TemplateView):
                 "criteriaNoResult": _noResultStatus,
                 "searchCount": _searchCount,
             }
-            return render(_request, self.template_name, _context)
+            return render(request, self.template_name, _context)
 
         except Exception as ex:
             context = {
@@ -557,7 +555,7 @@ class BreakSearch(TemplateView):
                 "errorMessage": "BreakSearch.get : " + str(ex)
             }
 
-            return render(_request, self.template_name, context)
+            return render(request, self.template_name, context)
 
 
 class RAMLSearch(TemplateView):
@@ -568,15 +566,13 @@ class RAMLSearch(TemplateView):
     worksheetHelper = Worksheet()  # Composition, instead of inheritance
     extractsheetHelper = ExtractSheet()
 
-    def get(self,pRequest):
-        _request = pRequest
-
+    def get(self, request):
         try:
-            if not _request.user.is_authenticated:
+            if not request.user.is_authenticated:
                 return HttpResponseRedirect(reverse('LoginPage'))
 
             # If logged in determine if a postback, before extracting the search filters
-            if _request.GET.__len__() == 0:
+            if request.GET.__len__() == 0:
                 _isPostBack = False
             else:
                 _isPostBack = True
@@ -602,28 +598,28 @@ class RAMLSearch(TemplateView):
                 _itemsPerPage = 20
             else:
                 try:
-                    _dateFrom = self.utilities.GetRequestKey(_request, "txtCriteriaDateFrom", enumDataType.Datetime)
-                    _dateTo = self.utilities.GetRequestKey(_request, "txtCriteriaDateTo", enumDataType.Datetime)
-                    _pageNumber = self.utilities.GetRequestKey(_request, "txtPageNumber", enumDataType.Integer)
-                    _itemsPerPage = self.utilities.GetRequestKey(_request, "ddlCriteriaItemsPerPage",
+                    _dateFrom = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime)
+                    _dateTo = self.utilities.GetRequestKey(request, "txtCriteriaDateTo", enumDataType.Datetime)
+                    _pageNumber = self.utilities.GetRequestKey(request, "txtPageNumber", enumDataType.Integer)
+                    _itemsPerPage = self.utilities.GetRequestKey(request, "ddlCriteriaItemsPerPage",
                                                                  enumDataType.Integer)
-                    _reportStatus = self.utilities.GetRequestKey(_request, "ddlCriteriaStatus", enumDataType.String)
-                    _priority = self.utilities.GetRequestKey(_request, "ddlCriteriaPriority", enumDataType.String)
-                    _diseaseIndicationCode1 = self.utilities.GetRequestKey(_request, "ddlCriteriaDiseaseIndication1",
+                    _reportStatus = self.utilities.GetRequestKey(request, "ddlCriteriaStatus", enumDataType.String)
+                    _priority = self.utilities.GetRequestKey(request, "ddlCriteriaPriority", enumDataType.String)
+                    _diseaseIndicationCode1 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication1",
                                                                            enumDataType.String)
-                    _diseaseIndicationCode2 = self.utilities.GetRequestKey(_request, "ddlCriteriaDiseaseIndication2",
+                    _diseaseIndicationCode2 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication2",
                                                                            enumDataType.String)
-                    _diseaseIndicationCode3 = self.utilities.GetRequestKey(_request, "ddlCriteriaDiseaseIndication3",
+                    _diseaseIndicationCode3 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication3",
                                                                            enumDataType.String)
                     _reasonForDiseaseIndication1 = self.utilities.GetRequestKey(
-                        _request, "ddlCriteriaReasonForDiseaseIndication1", enumDataType.String)
+                        request, "ddlCriteriaReasonForDiseaseIndication1", enumDataType.String)
                     _reasonForDiseaseIndication2 = self.utilities.GetRequestKey(
-                        _request, "ddlCriteriaReasonForDiseaseIndication2", enumDataType.String)
+                        request, "ddlCriteriaReasonForDiseaseIndication2", enumDataType.String)
                     _reasonForDiseaseIndication3 = self.utilities.GetRequestKey(
-                        _request, "ddlCriteriaReasonForDiseaseIndication3", enumDataType.String)
-                    _lastName = self.utilities.GetRequestKey(_request, "txtCriteriaLastname", enumDataType.String)
-                    _labNumber = self.utilities.GetRequestKey(_request, "txtCriteriaLabnumber", enumDataType.String)
-                    _noResultStatus = self.utilities.GetRequestKey(_request, "ddlCriteriaNoResult", enumDataType.Integer)
+                        request, "ddlCriteriaReasonForDiseaseIndication3", enumDataType.String)
+                    _lastName = self.utilities.GetRequestKey(request, "txtCriteriaLastname", enumDataType.String)
+                    _labNumber = self.utilities.GetRequestKey(request, "txtCriteriaLabnumber", enumDataType.String)
+                    _noResultStatus = self.utilities.GetRequestKey(request, "ddlCriteriaNoResult", enumDataType.Integer)
                 except Exception:
                     # If any errors occur return the default criteria
                     _dateFrom = datetime.today() - timedelta(days=365)
@@ -634,7 +630,7 @@ class RAMLSearch(TemplateView):
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
                 '2012_HAEM_ONC', '', 'RAML', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
                 _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1,
-                _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, _request.user.username, _lastName,
+                _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName,
                 _labNumber, _RefKey, _noResultStatus)
             _listOfSurnames = self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases)
 
@@ -687,7 +683,7 @@ class RAMLSearch(TemplateView):
                 "criteriaNoResult": _noResultStatus,
                 "searchCount": _searchCount,
             }
-            return render(_request, self.template_name, _context)
+            return render(request, self.template_name, _context)
 
         except Exception as ex:
             context = {
@@ -695,7 +691,7 @@ class RAMLSearch(TemplateView):
                 "errorMessage": "RAMLSearch.get : " + str(ex)
             }
 
-            return render(_request, self.template_name, context)
+            return render(request, self.template_name, context)
 
 
 class SNPSearch(TemplateView):
@@ -706,15 +702,13 @@ class SNPSearch(TemplateView):
     worksheetHelper = Worksheet()  # Composition, instead of inheritance
     extractsheetHelper = ExtractSheet()
 
-    def get(self, pRequest):
-        _request = pRequest
-
+    def get(self, request):
         try:
-            if not _request.user.is_authenticated:
+            if not request.user.is_authenticated:
                 return HttpResponseRedirect(reverse('LoginPage'))
 
             # If logged in determine if a postback, before extracting the search filters
-            if _request.GET.__len__() == 0:
+            if request.GET.__len__() == 0:
                 _isPostBack = False
             else:
                 _isPostBack = True
@@ -740,30 +734,30 @@ class SNPSearch(TemplateView):
                 _itemsPerPage = 20
             else:
                 try:
-                    _dateFrom = self.utilities.GetRequestKey(_request, "txtCriteriaDateFrom", enumDataType.Datetime)
-                    _dateTo = self.utilities.GetRequestKey(_request, "txtCriteriaDateTo", enumDataType.Datetime)
-                    _pageNumber = self.utilities.GetRequestKey(_request, "txtPageNumber", enumDataType.Integer)
-                    _itemsPerPage = self.utilities.GetRequestKey(_request, "ddlCriteriaItemsPerPage",
+                    _dateFrom = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime)
+                    _dateTo = self.utilities.GetRequestKey(request, "txtCriteriaDateTo", enumDataType.Datetime)
+                    _pageNumber = self.utilities.GetRequestKey(request, "txtPageNumber", enumDataType.Integer)
+                    _itemsPerPage = self.utilities.GetRequestKey(request, "ddlCriteriaItemsPerPage",
                                                                  enumDataType.Integer)
-                    _reportStatus = self.utilities.GetRequestKey(_request, "ddlCriteriaStatus", enumDataType.String)
-                    _priority = self.utilities.GetRequestKey(_request, "ddlCriteriaPriority", enumDataType.String)
-                    _diseaseIndicationCode1 = self.utilities.GetRequestKey(_request, "ddlCriteriaDiseaseIndication1",
+                    _reportStatus = self.utilities.GetRequestKey(request, "ddlCriteriaStatus", enumDataType.String)
+                    _priority = self.utilities.GetRequestKey(request, "ddlCriteriaPriority", enumDataType.String)
+                    _diseaseIndicationCode1 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication1",
                                                                            enumDataType.String)
-                    _diseaseIndicationCode2 = self.utilities.GetRequestKey(_request, "ddlCriteriaDiseaseIndication2",
+                    _diseaseIndicationCode2 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication2",
                                                                            enumDataType.String)
-                    _diseaseIndicationCode3 = self.utilities.GetRequestKey(_request, "ddlCriteriaDiseaseIndication3",
+                    _diseaseIndicationCode3 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication3",
                                                                            enumDataType.String)
                     _reasonForDiseaseIndication1 = self.utilities.GetRequestKey(
-                        _request, "ddlCriteriaReasonForDiseaseIndication1", enumDataType.String)
+                        request, "ddlCriteriaReasonForDiseaseIndication1", enumDataType.String)
                     # _reasonForDiseaseIndication2 = self.utilities.GetRequestKey(request,
                     #                                                            "ddlCriteriaReasonForDiseaseIndication2",
                     #                                                            enumDataType.String)
                     # _reasonForDiseaseIndication3 = self.utilities.GetRequestKey(request,
                     #                                                            "ddlCriteriaReasonForDiseaseIndication3",
                     #                                                            enumDataType.String)
-                    _lastName = self.utilities.GetRequestKey(_request, "txtCriteriaLastname", enumDataType.String)
-                    _labNumber = self.utilities.GetRequestKey(_request, "txtCriteriaLabnumber", enumDataType.String)
-                    _noResultStatus = self.utilities.GetRequestKey(_request, "ddlCriteriaNoResult", enumDataType.Integer)
+                    _lastName = self.utilities.GetRequestKey(request, "txtCriteriaLastname", enumDataType.String)
+                    _labNumber = self.utilities.GetRequestKey(request, "txtCriteriaLabnumber", enumDataType.String)
+                    _noResultStatus = self.utilities.GetRequestKey(request, "ddlCriteriaNoResult", enumDataType.Integer)
                 except Exception:
                     # If any errors occur return the default criteria
                     _dateFrom = datetime.today() - timedelta(days=365)
@@ -779,7 +773,7 @@ class SNPSearch(TemplateView):
                                                                         _reasonForDiseaseIndication1,
                                                                         _reasonForDiseaseIndication2,
                                                                         _reasonForDiseaseIndication3,
-                                                                        _request.user.username, _lastName, _labNumber,
+                                                                        request.user.username, _lastName, _labNumber,
                                                                         _RefKey,
                                                                         _noResultStatus)
             _listOfSurnames = self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases)
@@ -834,7 +828,7 @@ class SNPSearch(TemplateView):
                 "criteriaNoResult": _noResultStatus,
                 "searchCount": _searchCount,
             }
-            return render(_request, self.template_name, _context)
+            return render(request, self.template_name, _context)
 
         except Exception as ex:
             context = {
@@ -842,7 +836,7 @@ class SNPSearch(TemplateView):
                 "errorMessage": "SNPSearch.get : " + str(ex)
             }
 
-            return render(_request, self.template_name, context)
+            return render(request, self.template_name, context)
 
 
 class ALLSearch(TemplateView):
@@ -853,15 +847,13 @@ class ALLSearch(TemplateView):
     worksheetHelper = Worksheet()  # Composition, instead of inheritance
     extractsheetHelper = ExtractSheet()
 
-    def get(self, pRequest):
-        _request = pRequest
-
+    def get(self, request):
         try:
-            if not _request.user.is_authenticated:
+            if not request.user.is_authenticated:
                 return HttpResponseRedirect(reverse('LoginPage'))
 
             # If logged in determine if a postback, before extracting the search filters
-            if _request.GET.__len__() == 0:
+            if request.GET.__len__() == 0:
                 _isPostBack = False
             else:
                 _isPostBack = True
@@ -887,28 +879,28 @@ class ALLSearch(TemplateView):
                 _itemsPerPage = 20
             else:
                 try:
-                    _dateFrom = self.utilities.GetRequestKey(_request, "txtCriteriaDateFrom", enumDataType.Datetime)
-                    _dateTo = self.utilities.GetRequestKey(_request, "txtCriteriaDateTo", enumDataType.Datetime)
-                    _pageNumber = self.utilities.GetRequestKey(_request, "txtPageNumber", enumDataType.Integer)
-                    _itemsPerPage = self.utilities.GetRequestKey(_request, "ddlCriteriaItemsPerPage",
+                    _dateFrom = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime)
+                    _dateTo = self.utilities.GetRequestKey(request, "txtCriteriaDateTo", enumDataType.Datetime)
+                    _pageNumber = self.utilities.GetRequestKey(request, "txtPageNumber", enumDataType.Integer)
+                    _itemsPerPage = self.utilities.GetRequestKey(request, "ddlCriteriaItemsPerPage",
                                                                  enumDataType.Integer)
-                    _reportStatus = self.utilities.GetRequestKey(_request, "ddlCriteriaStatus", enumDataType.String)
-                    _priority = self.utilities.GetRequestKey(_request, "ddlCriteriaPriority", enumDataType.String)
-                    _diseaseIndicationCode1 = self.utilities.GetRequestKey(_request, "ddlCriteriaDiseaseIndication1",
+                    _reportStatus = self.utilities.GetRequestKey(request, "ddlCriteriaStatus", enumDataType.String)
+                    _priority = self.utilities.GetRequestKey(request, "ddlCriteriaPriority", enumDataType.String)
+                    _diseaseIndicationCode1 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication1",
                                                                            enumDataType.String)
-                    _diseaseIndicationCode2 = self.utilities.GetRequestKey(_request, "ddlCriteriaDiseaseIndication2",
+                    _diseaseIndicationCode2 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication2",
                                                                            enumDataType.String)
-                    _diseaseIndicationCode3 = self.utilities.GetRequestKey(_request, "ddlCriteriaDiseaseIndication3",
+                    _diseaseIndicationCode3 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication3",
                                                                            enumDataType.String)
                     _reasonForDiseaseIndication1 = self.utilities.GetRequestKey(
-                        _request, "ddlCriteriaReasonForDiseaseIndication1", enumDataType.String)
+                        request, "ddlCriteriaReasonForDiseaseIndication1", enumDataType.String)
                     _reasonForDiseaseIndication2 = self.utilities.GetRequestKey(
-                        _request, "ddlCriteriaReasonForDiseaseIndication2", enumDataType.String)
-                    _lastName = self.utilities.GetRequestKey(_request, "txtCriteriaLastname", enumDataType.String)
+                        request, "ddlCriteriaReasonForDiseaseIndication2", enumDataType.String)
+                    _lastName = self.utilities.GetRequestKey(request, "txtCriteriaLastname", enumDataType.String)
                     _reasonForDiseaseIndication3 = self.utilities.GetRequestKey(
-                        _request, "ddlCriteriaReasonForDiseaseIndication3", enumDataType.String)
-                    _labNumber = self.utilities.GetRequestKey(_request, "txtCriteriaLabnumber", enumDataType.String)
-                    _noResultStatus = self.utilities.GetRequestKey(_request, "ddlCriteriaNoResult", enumDataType.Integer)
+                        request, "ddlCriteriaReasonForDiseaseIndication3", enumDataType.String)
+                    _labNumber = self.utilities.GetRequestKey(request, "txtCriteriaLabnumber", enumDataType.String)
+                    _noResultStatus = self.utilities.GetRequestKey(request, "ddlCriteriaNoResult", enumDataType.Integer)
                 except Exception:
                     # If any errors occur return the default criteria
                     _dateFrom = datetime.today() - timedelta(days=365)
@@ -919,7 +911,7 @@ class ALLSearch(TemplateView):
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
                 '2012_HAEM_ONC', '', 'ALL', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
                 _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1,
-                _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, _request.user.username, _lastName,
+                _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName,
                 _labNumber, _RefKey, _noResultStatus)
             _listOfSurnames = self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases)
 
@@ -973,7 +965,7 @@ class ALLSearch(TemplateView):
                 "criteriaNoResult": _noResultStatus,
                 "searchCount": _searchCount,
             }
-            return render(_request, self.template_name, _context)
+            return render(request, self.template_name, _context)
 
         except Exception as ex:
             context = {
@@ -981,7 +973,7 @@ class ALLSearch(TemplateView):
                 "errorMessage": "ALLSearch.get : " + str(ex)
             }
 
-            return render(_request, self.template_name, context)
+            return render(request, self.template_name, context)
 
 
 class CLLSearch(TemplateView): #Lymphoid
@@ -992,15 +984,13 @@ class CLLSearch(TemplateView): #Lymphoid
     worksheetHelper = Worksheet()  # Composition, instead of inheritance
     extractsheetHelper = ExtractSheet()
 
-    def get(self, pRequest):
-        _request = pRequest
-
+    def get(self, request):
         try:
-            if not _request.user.is_authenticated:
+            if not request.user.is_authenticated:
                 return HttpResponseRedirect(reverse('LoginPage'))
 
             # If logged in determine if a postback, before extracting the search filters
-            if _request.GET.__len__() == 0:
+            if request.GET.__len__() == 0:
                 _isPostBack = False
             else:
                 _isPostBack = True
@@ -1026,28 +1016,28 @@ class CLLSearch(TemplateView): #Lymphoid
                 _itemsPerPage = 20
             else:
                 try:
-                    _dateFrom = self.utilities.GetRequestKey(_request, "txtCriteriaDateFrom", enumDataType.Datetime)
-                    _dateTo = self.utilities.GetRequestKey(_request, "txtCriteriaDateTo", enumDataType.Datetime)
-                    _pageNumber = self.utilities.GetRequestKey(_request, "txtPageNumber", enumDataType.Integer)
-                    _itemsPerPage = self.utilities.GetRequestKey(_request, "ddlCriteriaItemsPerPage",
+                    _dateFrom = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime)
+                    _dateTo = self.utilities.GetRequestKey(request, "txtCriteriaDateTo", enumDataType.Datetime)
+                    _pageNumber = self.utilities.GetRequestKey(request, "txtPageNumber", enumDataType.Integer)
+                    _itemsPerPage = self.utilities.GetRequestKey(request, "ddlCriteriaItemsPerPage",
                                                                  enumDataType.Integer)
-                    _reportStatus = self.utilities.GetRequestKey(_request, "ddlCriteriaStatus", enumDataType.String)
-                    _priority = self.utilities.GetRequestKey(_request, "ddlCriteriaPriority", enumDataType.String)
-                    _diseaseIndicationCode1 = self.utilities.GetRequestKey(_request, "ddlCriteriaDiseaseIndication1",
+                    _reportStatus = self.utilities.GetRequestKey(request, "ddlCriteriaStatus", enumDataType.String)
+                    _priority = self.utilities.GetRequestKey(request, "ddlCriteriaPriority", enumDataType.String)
+                    _diseaseIndicationCode1 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication1",
                                                                            enumDataType.String)
-                    _diseaseIndicationCode2 = self.utilities.GetRequestKey(_request, "ddlCriteriaDiseaseIndication2",
+                    _diseaseIndicationCode2 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication2",
                                                                            enumDataType.String)
-                    _diseaseIndicationCode3 = self.utilities.GetRequestKey(_request, "ddlCriteriaDiseaseIndication3",
+                    _diseaseIndicationCode3 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication3",
                                                                            enumDataType.String)
                     _reasonForDiseaseIndication1 = self.utilities.GetRequestKey(
-                        _request, "ddlCriteriaReasonForDiseaseIndication1", enumDataType.String)
+                        request, "ddlCriteriaReasonForDiseaseIndication1", enumDataType.String)
                     _reasonForDiseaseIndication2 = self.utilities.GetRequestKey(
-                        _request, "ddlCriteriaReasonForDiseaseIndication2", enumDataType.String)
+                        request, "ddlCriteriaReasonForDiseaseIndication2", enumDataType.String)
                     _reasonForDiseaseIndication3 = self.utilities.GetRequestKey(
-                        _request, "ddlCriteriaReasonForDiseaseIndication3", enumDataType.String)
-                    _lastName = self.utilities.GetRequestKey(_request, "txtCriteriaLastname", enumDataType.String)
-                    _labNumber = self.utilities.GetRequestKey(_request, "txtCriteriaLabnumber", enumDataType.String)
-                    _noResultStatus = self.utilities.GetRequestKey(_request, "ddlCriteriaNoResult", enumDataType.Integer)
+                        request, "ddlCriteriaReasonForDiseaseIndication3", enumDataType.String)
+                    _lastName = self.utilities.GetRequestKey(request, "txtCriteriaLastname", enumDataType.String)
+                    _labNumber = self.utilities.GetRequestKey(request, "txtCriteriaLabnumber", enumDataType.String)
+                    _noResultStatus = self.utilities.GetRequestKey(request, "ddlCriteriaNoResult", enumDataType.Integer)
                 except Exception:
                     # If any errors occur return the default criteria
                     _dateFrom = datetime.today() - timedelta(days=365)
@@ -1058,7 +1048,7 @@ class CLLSearch(TemplateView): #Lymphoid
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
                 '2012_HAEM_ONC', '', 'CLL', _dateFrom, _dateTo,  _reportStatus, _priority,  _diseaseIndicationCode1,
                 _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1,
-                _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, _request.user.username, _lastName,
+                _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName,
                 _labNumber, _RefKey, _noResultStatus)
 
             _listOfSurnames = self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases)
@@ -1113,7 +1103,7 @@ class CLLSearch(TemplateView): #Lymphoid
                 "criteriaNoResult": _noResultStatus,
                 "searchCount": _searchCount,
             }
-            return render(_request, self.template_name, _context)
+            return render(request, self.template_name, _context)
 
         except Exception as ex:
             context = {
@@ -1121,7 +1111,7 @@ class CLLSearch(TemplateView): #Lymphoid
                 "errorMessage": "CLLSearch.get : " + str(ex)
             }
 
-            return render(_request, self.template_name, context)
+            return render(request, self.template_name, context)
 
 
 class RBCRSearch(TemplateView):
@@ -1132,15 +1122,13 @@ class RBCRSearch(TemplateView):
     worksheetHelper = Worksheet()  # Composition, instead of inheritance
     extractsheetHelper = ExtractSheet()
 
-    def get(self, pRequest):
-        _request = pRequest
-
+    def get(self, request):
         try:
-            if not _request.user.is_authenticated:
+            if not request.user.is_authenticated:
                 return HttpResponseRedirect(reverse('LoginPage'))
 
             # If logged in determine if a postback, before extracting the search filters
-            if _request.GET.__len__() == 0:
+            if request.GET.__len__() == 0:
                 _isPostBack = False
             else:
                 _isPostBack = True
@@ -1166,28 +1154,28 @@ class RBCRSearch(TemplateView):
                 _itemsPerPage = 20
             else:
                 try:
-                    _dateFrom = self.utilities.GetRequestKey(_request, "txtCriteriaDateFrom", enumDataType.Datetime)
-                    _dateTo = self.utilities.GetRequestKey(_request, "txtCriteriaDateTo", enumDataType.Datetime)
-                    _pageNumber = self.utilities.GetRequestKey(_request, "txtPageNumber", enumDataType.Integer)
-                    _itemsPerPage = self.utilities.GetRequestKey(_request, "ddlCriteriaItemsPerPage",
+                    _dateFrom = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime)
+                    _dateTo = self.utilities.GetRequestKey(request, "txtCriteriaDateTo", enumDataType.Datetime)
+                    _pageNumber = self.utilities.GetRequestKey(request, "txtPageNumber", enumDataType.Integer)
+                    _itemsPerPage = self.utilities.GetRequestKey(request, "ddlCriteriaItemsPerPage",
                                                                  enumDataType.Integer)
-                    _reportStatus = self.utilities.GetRequestKey(_request, "ddlCriteriaStatus", enumDataType.String)
-                    _priority = self.utilities.GetRequestKey(_request, "ddlCriteriaPriority", enumDataType.String)
-                    _diseaseIndicationCode1 = self.utilities.GetRequestKey(_request, "ddlCriteriaDiseaseIndication1",
+                    _reportStatus = self.utilities.GetRequestKey(request, "ddlCriteriaStatus", enumDataType.String)
+                    _priority = self.utilities.GetRequestKey(request, "ddlCriteriaPriority", enumDataType.String)
+                    _diseaseIndicationCode1 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication1",
                                                                            enumDataType.String)
-                    _diseaseIndicationCode2 = self.utilities.GetRequestKey(_request, "ddlCriteriaDiseaseIndication2",
+                    _diseaseIndicationCode2 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication2",
                                                                            enumDataType.String)
-                    _diseaseIndicationCode3 = self.utilities.GetRequestKey(_request, "ddlCriteriaDiseaseIndication3",
+                    _diseaseIndicationCode3 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication3",
                                                                            enumDataType.String)
                     _reasonForDiseaseIndication1 = self.utilities.GetRequestKey(
-                        _request, "ddlCriteriaReasonForDiseaseIndication1", enumDataType.String)
+                        request, "ddlCriteriaReasonForDiseaseIndication1", enumDataType.String)
                     _reasonForDiseaseIndication2 = self.utilities.GetRequestKey(
-                        _request, "ddlCriteriaReasonForDiseaseIndication2", enumDataType.String)
+                        request, "ddlCriteriaReasonForDiseaseIndication2", enumDataType.String)
                     _reasonForDiseaseIndication3 = self.utilities.GetRequestKey(
-                        _request, "ddlCriteriaReasonForDiseaseIndication3", enumDataType.String)
-                    _lastName = self.utilities.GetRequestKey(_request, "txtCriteriaLastname", enumDataType.String)
-                    _labNumber = self.utilities.GetRequestKey(_request, "txtCriteriaLabnumber", enumDataType.String)
-                    _noResultStatus = self.utilities.GetRequestKey(_request, "ddlCriteriaNoResult", enumDataType.Integer)
+                        request, "ddlCriteriaReasonForDiseaseIndication3", enumDataType.String)
+                    _lastName = self.utilities.GetRequestKey(request, "txtCriteriaLastname", enumDataType.String)
+                    _labNumber = self.utilities.GetRequestKey(request, "txtCriteriaLabnumber", enumDataType.String)
+                    _noResultStatus = self.utilities.GetRequestKey(request, "ddlCriteriaNoResult", enumDataType.Integer)
                 except Exception:
                     # If any errors occur return the default criteria
                     _dateFrom = datetime.today() - timedelta(days=365)
@@ -1198,7 +1186,7 @@ class RBCRSearch(TemplateView):
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
                 '2012_HAEM_ONC', '', 'RBCR', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
                 _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1,
-                _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, _request.user.username, _lastName,
+                _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName,
                 _labNumber, _RefKey, _noResultStatus)
             _listOfSurnames = self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases)
 
@@ -1252,7 +1240,7 @@ class RBCRSearch(TemplateView):
                 "criteriaNoResult": _noResultStatus,
                 "searchCount": _searchCount,
             }
-            return render(_request, self.template_name, _context)
+            return render(request, self.template_name, _context)
 
         except Exception as ex:
             context = {
@@ -1260,7 +1248,7 @@ class RBCRSearch(TemplateView):
                 "errorMessage": "RBCRSearch.get : " + str(ex)
             }
 
-            return render(_request, self.template_name, context)
+            return render(request, self.template_name, context)
 
 
 class FALSearch(TemplateView): #F-AML/F-ALL
@@ -1271,14 +1259,13 @@ class FALSearch(TemplateView): #F-AML/F-ALL
     worksheetHelper = Worksheet()       # Composition, instead of inheritance
     extractsheetHelper = ExtractSheet()
 
-    def get(self, pRequest):
-        _request = pRequest
+    def get(self, request):
         try:
-            if not _request.user.is_authenticated:
+            if not request.user.is_authenticated:
                 return HttpResponseRedirect(reverse('LoginPage'))
 
             # If logged in determine if a postback, before extracting the search filters
-            if _request.GET.__len__() == 0:
+            if request.GET.__len__() == 0:
                 _isPostBack = False
             else:
                 _isPostBack = True
@@ -1304,28 +1291,28 @@ class FALSearch(TemplateView): #F-AML/F-ALL
                 _itemsPerPage = 20
             else:
                 try:
-                    _dateFrom = self.utilities.GetRequestKey(_request, "txtCriteriaDateFrom", enumDataType.Datetime)
-                    _dateTo = self.utilities.GetRequestKey(_request, "txtCriteriaDateTo", enumDataType.Datetime)
-                    _pageNumber = self.utilities.GetRequestKey(_request, "txtPageNumber", enumDataType.Integer)
-                    _itemsPerPage = self.utilities.GetRequestKey(_request, "ddlCriteriaItemsPerPage",
+                    _dateFrom = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime)
+                    _dateTo = self.utilities.GetRequestKey(request, "txtCriteriaDateTo", enumDataType.Datetime)
+                    _pageNumber = self.utilities.GetRequestKey(request, "txtPageNumber", enumDataType.Integer)
+                    _itemsPerPage = self.utilities.GetRequestKey(request, "ddlCriteriaItemsPerPage",
                                                                  enumDataType.Integer)
-                    _reportStatus = self.utilities.GetRequestKey(_request, "ddlCriteriaStatus", enumDataType.String)
-                    _priority = self.utilities.GetRequestKey(_request, "ddlCriteriaPriority", enumDataType.String)
+                    _reportStatus = self.utilities.GetRequestKey(request, "ddlCriteriaStatus", enumDataType.String)
+                    _priority = self.utilities.GetRequestKey(request, "ddlCriteriaPriority", enumDataType.String)
                     _diseaseIndicationCode1 = self.utilities.GetRequestKey(
-                        _request, "ddlCriteriaDiseaseIndication1", enumDataType.String)
+                        request, "ddlCriteriaDiseaseIndication1", enumDataType.String)
                     _diseaseIndicationCode2 = self.utilities.GetRequestKey(
-                        _request, "ddlCriteriaDiseaseIndication2", enumDataType.String)
+                        request, "ddlCriteriaDiseaseIndication2", enumDataType.String)
                     _diseaseIndicationCode3 = self.utilities.GetRequestKey(
-                        _request, "ddlCriteriaDiseaseIndication3", enumDataType.String)
+                        request, "ddlCriteriaDiseaseIndication3", enumDataType.String)
                     _reasonForDiseaseIndication1 = self.utilities.GetRequestKey(
-                        _request, "ddlCriteriaReasonForDiseaseIndication1", enumDataType.String)
+                        request, "ddlCriteriaReasonForDiseaseIndication1", enumDataType.String)
                     _reasonForDiseaseIndication2 = self.utilities.GetRequestKey(
-                        _request, "ddlCriteriaReasonForDiseaseIndication2", enumDataType.String)
+                        request, "ddlCriteriaReasonForDiseaseIndication2", enumDataType.String)
                     _reasonForDiseaseIndication3 = self.utilities.GetRequestKey(
-                        _request, "ddlCriteriaReasonForDiseaseIndication3", enumDataType.String)
-                    _lastName = self.utilities.GetRequestKey(_request, "txtCriteriaLastname", enumDataType.String)
-                    _labNumber = self.utilities.GetRequestKey(_request, "txtCriteriaLabnumber", enumDataType.String)
-                    _noResultStatus = self.utilities.GetRequestKey(_request, "ddlCriteriaNoResult", enumDataType.Integer)
+                        request, "ddlCriteriaReasonForDiseaseIndication3", enumDataType.String)
+                    _lastName = self.utilities.GetRequestKey(request, "txtCriteriaLastname", enumDataType.String)
+                    _labNumber = self.utilities.GetRequestKey(request, "txtCriteriaLabnumber", enumDataType.String)
+                    _noResultStatus = self.utilities.GetRequestKey(request, "ddlCriteriaNoResult", enumDataType.Integer)
                 except Exception:
                     # If any errors occur return the default criteria
                     _dateFrom = datetime.today() - timedelta(days=365)
@@ -1336,7 +1323,7 @@ class FALSearch(TemplateView): #F-AML/F-ALL
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
                 '2012_HAEM_ONC', '', 'FAL', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
                 _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1,
-                _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, _request.user.username, _lastName,
+                _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName,
                 _labNumber, _RefKey, _noResultStatus)
             _listOfSurnames = self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases)
 
@@ -1389,7 +1376,7 @@ class FALSearch(TemplateView): #F-AML/F-ALL
                 "criteriaNoResult": _noResultStatus,
                 "searchCount": _searchCount,
             }
-            return render(_request, self.template_name, _context)
+            return render(request, self.template_name, _context)
 
         except Exception as ex:
             context = {
@@ -1397,7 +1384,7 @@ class FALSearch(TemplateView): #F-AML/F-ALL
                 "errorMessage": "FALSearch.get : " + str(ex)
             }
 
-            return render(_request, self.template_name, context)
+            return render(request, self.template_name, context)
 
 
 class HaemOncSearch(TemplateView): #All Molecular
@@ -1408,15 +1395,13 @@ class HaemOncSearch(TemplateView): #All Molecular
     worksheetHelper = Worksheet()  # Composition, instead of inheritance
     extractsheetHelper = ExtractSheet()
 
-    def get(self, pRequest):
-        _request = pRequest
-
+    def get(self, request):
         try:
-            if not _request.user.is_authenticated:
+            if not request.user.is_authenticated:
                 return HttpResponseRedirect(reverse('LoginPage'))
 
             # If logged in determine if a postback, before extracting the search filters
-            if _request.GET.__len__() == 0:
+            if request.GET.__len__() == 0:
                 _isPostBack = False
             else:
                 _isPostBack = True
@@ -1442,28 +1427,28 @@ class HaemOncSearch(TemplateView): #All Molecular
                 _itemsPerPage = 20
             else:
                 try:
-                    _dateFrom = self.utilities.GetRequestKey(_request, "txtCriteriaDateFrom", enumDataType.Datetime)
-                    _dateTo = self.utilities.GetRequestKey(_request, "txtCriteriaDateTo", enumDataType.Datetime)
-                    _pageNumber = self.utilities.GetRequestKey(_request, "txtPageNumber", enumDataType.Integer)
-                    _itemsPerPage = self.utilities.GetRequestKey(_request, "ddlCriteriaItemsPerPage",
+                    _dateFrom = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime)
+                    _dateTo = self.utilities.GetRequestKey(request, "txtCriteriaDateTo", enumDataType.Datetime)
+                    _pageNumber = self.utilities.GetRequestKey(request, "txtPageNumber", enumDataType.Integer)
+                    _itemsPerPage = self.utilities.GetRequestKey(request, "ddlCriteriaItemsPerPage",
                                                                  enumDataType.Integer)
-                    _reportStatus = self.utilities.GetRequestKey(_request, "ddlCriteriaStatus", enumDataType.String)
-                    _priority = self.utilities.GetRequestKey(_request, "ddlCriteriaPriority", enumDataType.String)
-                    _diseaseIndicationCode1 = self.utilities.GetRequestKey(_request, "ddlCriteriaDiseaseIndication1",
+                    _reportStatus = self.utilities.GetRequestKey(request, "ddlCriteriaStatus", enumDataType.String)
+                    _priority = self.utilities.GetRequestKey(request, "ddlCriteriaPriority", enumDataType.String)
+                    _diseaseIndicationCode1 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication1",
                                                                            enumDataType.String)
-                    _diseaseIndicationCode2 = self.utilities.GetRequestKey(_request, "ddlCriteriaDiseaseIndication2",
+                    _diseaseIndicationCode2 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication2",
                                                                            enumDataType.String)
-                    _diseaseIndicationCode3 = self.utilities.GetRequestKey(_request, "ddlCriteriaDiseaseIndication3",
+                    _diseaseIndicationCode3 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication3",
                                                                            enumDataType.String)
                     _reasonForDiseaseIndication1 = self.utilities.GetRequestKey(
-                        _request, "ddlCriteriaReasonForDiseaseIndication1", enumDataType.String)
+                        request, "ddlCriteriaReasonForDiseaseIndication1", enumDataType.String)
                     _reasonForDiseaseIndication2 = self.utilities.GetRequestKey(
-                        _request, "ddlCriteriaReasonForDiseaseIndication2", enumDataType.String)
+                        request, "ddlCriteriaReasonForDiseaseIndication2", enumDataType.String)
                     _reasonForDiseaseIndication3 = self.utilities.GetRequestKey(
-                        _request, "ddlCriteriaReasonForDiseaseIndication3", enumDataType.String)
-                    _lastName = self.utilities.GetRequestKey(_request, "txtCriteriaLastname", enumDataType.String)
-                    _labNumber = self.utilities.GetRequestKey(_request, "txtCriteriaLabnumber", enumDataType.String)
-                    _noResultStatus = self.utilities.GetRequestKey(_request, "ddlCriteriaNoResult", enumDataType.Integer)
+                        request, "ddlCriteriaReasonForDiseaseIndication3", enumDataType.String)
+                    _lastName = self.utilities.GetRequestKey(request, "txtCriteriaLastname", enumDataType.String)
+                    _labNumber = self.utilities.GetRequestKey(request, "txtCriteriaLabnumber", enumDataType.String)
+                    _noResultStatus = self.utilities.GetRequestKey(request, "ddlCriteriaNoResult", enumDataType.Integer)
                 except Exception:
                     # If any errors occur return the default criteria
                     _dateFrom = datetime.today() - timedelta(days=365)
@@ -1474,7 +1459,7 @@ class HaemOncSearch(TemplateView): #All Molecular
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
                 '2012_HAEM_ONC', 'ONCOLOGY BMT', '', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
                 _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1,
-                _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, _request.user.username, _lastName,
+                _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName,
                 _labNumber, _RefKey, _noResultStatus)
             _listOfSurnames = self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases)
 
@@ -1527,7 +1512,7 @@ class HaemOncSearch(TemplateView): #All Molecular
                 "criteriaNoResult": _noResultStatus,
                 "searchCount": _searchCount,
             }
-            return render(_request, self.template_name, _context)
+            return render(request, self.template_name, _context)
 
         except Exception as ex:
             context = {
@@ -1535,7 +1520,7 @@ class HaemOncSearch(TemplateView): #All Molecular
                 "errorMessage": "EverythingSearch.get : " + str(ex)
             }
 
-            return render(_request, self.template_name, context)
+            return render(request, self.template_name, context)
 
 
 class GLHPanHaemSearch(TemplateView):
@@ -1546,15 +1531,13 @@ class GLHPanHaemSearch(TemplateView):
     worksheetHelper = Worksheet()  # Composition, instead of inheritance
     extractsheetHelper = ExtractSheet()
 
-    def get(self, pRequest):
-        _request = pRequest
-
+    def get(self, request):
         try:
-            if not _request.user.is_authenticated:
+            if not request.user.is_authenticated:
                 return HttpResponseRedirect(reverse('LoginPage'))
 
             # If logged in determine if a postback, before extracting the search filters
-            if _request.GET.__len__() == 0:
+            if request.GET.__len__() == 0:
                 _isPostBack = False
             else:
                 _isPostBack = True
@@ -1580,29 +1563,29 @@ class GLHPanHaemSearch(TemplateView):
                 _itemsPerPage = 20
             else:
                 try:
-                    _dateFrom = self.utilities.GetRequestKey(_request, "txtCriteriaDateFrom", enumDataType.Datetime)
-                    _dateTo = self.utilities.GetRequestKey(_request, "txtCriteriaDateTo", enumDataType.Datetime)
-                    _pageNumber = self.utilities.GetRequestKey(_request, "txtPageNumber", enumDataType.Integer)
-                    _itemsPerPage = self.utilities.GetRequestKey(_request, "ddlCriteriaItemsPerPage",
+                    _dateFrom = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime)
+                    _dateTo = self.utilities.GetRequestKey(request, "txtCriteriaDateTo", enumDataType.Datetime)
+                    _pageNumber = self.utilities.GetRequestKey(request, "txtPageNumber", enumDataType.Integer)
+                    _itemsPerPage = self.utilities.GetRequestKey(request, "ddlCriteriaItemsPerPage",
                                                                  enumDataType.Integer)
-                    _reportStatus = self.utilities.GetRequestKey(_request, "ddlCriteriaStatus", enumDataType.String)
-                    _priority = self.utilities.GetRequestKey(_request, "ddlCriteriaPriority", enumDataType.String)
-                    _diseaseIndicationCode1 = self.utilities.GetRequestKey(_request, "ddlCriteriaDiseaseIndication1",
+                    _reportStatus = self.utilities.GetRequestKey(request, "ddlCriteriaStatus", enumDataType.String)
+                    _priority = self.utilities.GetRequestKey(request, "ddlCriteriaPriority", enumDataType.String)
+                    _diseaseIndicationCode1 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication1",
                                                                            enumDataType.String)
-                    _diseaseIndicationCode2 = self.utilities.GetRequestKey(_request, "ddlCriteriaDiseaseIndication2",
+                    _diseaseIndicationCode2 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication2",
                                                                            enumDataType.String)
-                    _diseaseIndicationCode3 = self.utilities.GetRequestKey(_request, "ddlCriteriaDiseaseIndication3",
+                    _diseaseIndicationCode3 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication3",
                                                                            enumDataType.String)
                     _reasonForDiseaseIndication1 = self.utilities.GetRequestKey(
-                        _request, "ddlCriteriaReasonForDiseaseIndication1", enumDataType.String)
+                        request, "ddlCriteriaReasonForDiseaseIndication1", enumDataType.String)
                     _reasonForDiseaseIndication2 = self.utilities.GetRequestKey(
-                        _request, "ddlCriteriaReasonForDiseaseIndication2", enumDataType.String)
+                        request, "ddlCriteriaReasonForDiseaseIndication2", enumDataType.String)
                     _reasonForDiseaseIndication3 = self.utilities.GetRequestKey(
-                        _request, "ddlCriteriaReasonForDiseaseIndication3", enumDataType.String)
-                    _lastName = self.utilities.GetRequestKey(_request, "txtCriteriaLastname", enumDataType.String)
-                    _labNumber = self.utilities.GetRequestKey(_request, "txtCriteriaLabnumber", enumDataType.String)
-                    _refKey = self.utilities.GetRequestKey(_request, "ddlCriteriaRefKey", enumDataType.String)
-                    _noResultStatus = self.utilities.GetRequestKey(_request, "ddlCriteriaNoResult", enumDataType.Integer)
+                        request, "ddlCriteriaReasonForDiseaseIndication3", enumDataType.String)
+                    _lastName = self.utilities.GetRequestKey(request, "txtCriteriaLastname", enumDataType.String)
+                    _labNumber = self.utilities.GetRequestKey(request, "txtCriteriaLabnumber", enumDataType.String)
+                    _refKey = self.utilities.GetRequestKey(request, "ddlCriteriaRefKey", enumDataType.String)
+                    _noResultStatus = self.utilities.GetRequestKey(request, "ddlCriteriaNoResult", enumDataType.Integer)
 
                 except Exception:
                     # If any errors occur return the default criteria
@@ -1614,7 +1597,7 @@ class GLHPanHaemSearch(TemplateView):
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
                '2012_HAEM_ONC', '', 'PanHaem', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
                _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1,
-               _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, _request.user.username, _lastName,
+               _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName,
                _labNumber, _refKey, _noResultStatus)
 
             _listOfSurnames = self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases)
@@ -1674,7 +1657,7 @@ class GLHPanHaemSearch(TemplateView):
                 "criteriaNoResult": _noResultStatus,
                 "searchCount": _searchCount,
             }
-            return render(_request, self.template_name, _context)
+            return render(request, self.template_name, _context)
 
         except Exception as ex:
             context = {
@@ -1682,7 +1665,7 @@ class GLHPanHaemSearch(TemplateView):
                 "errorMessage": "WGSSearch.get : " + str(ex)
             }
 
-            return render(_request, self.template_name, context)
+            return render(request, self.template_name, context)
 
 
 class RNASearch(TemplateView):
@@ -1693,14 +1676,13 @@ class RNASearch(TemplateView):
     worksheetHelper = Worksheet()  # Composition, instead of inheritance
     extractsheetHelper = ExtractSheet()
 
-    def get(self, pRequest):
-        _request = pRequest
+    def get(self, request):
         try:
-            if not _request.user.is_authenticated:
+            if not request.user.is_authenticated:
                 return HttpResponseRedirect(reverse('LoginPage'))
 
             # If logged in determine if a postback, before extracting the search filters
-            if _request.GET.__len__() == 0:
+            if request.GET.__len__() == 0:
                 _isPostBack = False
             else:
                 _isPostBack = True
@@ -1726,28 +1708,28 @@ class RNASearch(TemplateView):
                 _itemsPerPage = 20
             else:
                 try:
-                    _dateFrom = self.utilities.GetRequestKey(_request, "txtCriteriaDateFrom", enumDataType.Datetime)
-                    _dateTo = self.utilities.GetRequestKey(_request, "txtCriteriaDateTo", enumDataType.Datetime)
+                    _dateFrom = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime)
+                    _dateTo = self.utilities.GetRequestKey(request, "txtCriteriaDateTo", enumDataType.Datetime)
                     _pageNumber = self.utilities.GetRequestKey(request, "txtPageNumber", enumDataType.Integer)
                     _itemsPerPage = self.utilities.GetRequestKey(request, "ddlCriteriaItemsPerPage",
                                                                  enumDataType.Integer)
-                    _reportStatus = self.utilities.GetRequestKey(_request, "ddlCriteriaStatus", enumDataType.String)
-                    _priority = self.utilities.GetRequestKey(_request, "ddlCriteriaPriority", enumDataType.String)
-                    _diseaseIndicationCode1 = self.utilities.GetRequestKey(_request, "ddlCriteriaDiseaseIndication1",
+                    _reportStatus = self.utilities.GetRequestKey(request, "ddlCriteriaStatus", enumDataType.String)
+                    _priority = self.utilities.GetRequestKey(request, "ddlCriteriaPriority", enumDataType.String)
+                    _diseaseIndicationCode1 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication1",
                                                                            enumDataType.String)
-                    _diseaseIndicationCode2 = self.utilities.GetRequestKey(_request, "ddlCriteriaDiseaseIndication2",
+                    _diseaseIndicationCode2 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication2",
                                                                            enumDataType.String)
-                    _diseaseIndicationCode3 = self.utilities.GetRequestKey(_request, "ddlCriteriaDiseaseIndication3",
+                    _diseaseIndicationCode3 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication3",
                                                                            enumDataType.String)
                     _reasonForDiseaseIndication1 = self.utilities.GetRequestKey(
-                        _request, "ddlCriteriaReasonForDiseaseIndication1", enumDataType.String)
+                        request, "ddlCriteriaReasonForDiseaseIndication1", enumDataType.String)
                     _reasonForDiseaseIndication2 = self.utilities.GetRequestKey(
-                        _request, "ddlCriteriaReasonForDiseaseIndication2", enumDataType.String)
+                        request, "ddlCriteriaReasonForDiseaseIndication2", enumDataType.String)
                     _reasonForDiseaseIndication3 = self.utilities.GetRequestKey(
-                        _request, "ddlCriteriaReasonForDiseaseIndication3", enumDataType.String)
-                    _lastName = self.utilities.GetRequestKey(_request, "txtCriteriaLastname", enumDataType.String)
-                    _labNumber = self.utilities.GetRequestKey(_request, "txtCriteriaLabnumber", enumDataType.String)
-                    _noResultStatus = self.utilities.GetRequestKey(_request, "ddlCriteriaNoResult", enumDataType.Integer)
+                        request, "ddlCriteriaReasonForDiseaseIndication3", enumDataType.String)
+                    _lastName = self.utilities.GetRequestKey(request, "txtCriteriaLastname", enumDataType.String)
+                    _labNumber = self.utilities.GetRequestKey(request, "txtCriteriaLabnumber", enumDataType.String)
+                    _noResultStatus = self.utilities.GetRequestKey(request, "ddlCriteriaNoResult", enumDataType.Integer)
                 except Exception:
                     # If any errors occur return the default criteria
                     _dateFrom = datetime.today() - timedelta(days=365)
@@ -1758,7 +1740,7 @@ class RNASearch(TemplateView):
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
                 '2012_HAEM_ONC', '', 'RNA', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
                 _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1,
-                _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, _request.user.username, _lastName,
+                _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName,
                 _labNumber, _RefKey, _noResultStatus)
             _listOfSurnames = self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases)
 
@@ -1811,7 +1793,7 @@ class RNASearch(TemplateView):
                 "criteriaNoResult": _noResultStatus,
                 "searchCount": _searchCount,
             }
-            return render(_request, self.template_name, _context)
+            return render(request, self.template_name, _context)
 
         except Exception as ex:
             context = {
@@ -1819,5 +1801,5 @@ class RNASearch(TemplateView):
                 "errorMessage": "RAMLSearch.get : " + str(ex)
             }
 
-            return render(_request, self.template_name, context)
+            return render(request, self.template_name, context)
 

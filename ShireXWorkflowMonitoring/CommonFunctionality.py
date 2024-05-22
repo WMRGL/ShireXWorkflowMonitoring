@@ -1,17 +1,18 @@
 # Add any classes or functions that are commonly used, but which are not
 # workflow based.
 
+from datetime import datetime
+from enum import Enum
+
 from django.contrib.auth import authenticate
 from django.contrib.auth import login
 from django.contrib.auth import logout
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-
 from django.urls import reverse
 from django.views.generic import TemplateView
+
 from ShireXWorkflowMonitoring.apps import ShireXWorkflowMonitoringConfig
-from datetime import datetime
-from enum import Enum
 
 
 # Class for handling login functionality - MW
@@ -102,6 +103,7 @@ class AllocateComplete(TemplateView):
             return render(_request, self.template_name, _context)
 
 
+
 # Class for handling user logout functionality - MW
 class Authenticate:
     def DoLogout(pRequest):
@@ -110,8 +112,6 @@ class Authenticate:
         logout(_request)
         return HttpResponseRedirect(reverse('LoginPage'))
 
-
-# Enumeration for different data types used in request processing - MW
 class enumDataType(Enum):
     String = "string",
     Integer = "integer",
@@ -121,7 +121,7 @@ class enumDataType(Enum):
 
 # Class for utility functions used across the application - MW
 class UtilityFunctions:
-    # Function to get a request parameter value from a GET request and convert it to the specified data type - MW
+# Function to get a request parameter value from a GET request and convert it to the specified data type - MW
     def GetRequestKey(self, pRequest, pKeyName, pDataType):
         _request = pRequest
         _keyName = pKeyName
