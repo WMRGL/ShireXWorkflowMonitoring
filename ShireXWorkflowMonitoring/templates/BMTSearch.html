@@ -1,351 +1,349 @@
 {% extends 'base.html' %}
 {% block content %}
-<body>
-    {% include 'StandardMenu.html' %}
-    <div class="container-fluid">
-        <div class="row mb-3">
-            <div class="col-2">
-                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSearch" aria-expanded="false" aria-controls="collapseExample">
-                Show/Hide Search
-                </button>
-            </div>
-            <div class="col-10">
-                <h2 class="text-center">
-                    BMT Workflow
-                </h2>
-            </div>
+<div class="container-fluid">
+    <div class="row mb-3">
+        <div class="col-2">
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSearch" aria-expanded="false" aria-controls="collapseExample">
+            Show/Hide Search
+            </button>
         </div>
-        <div class="collapse show" id="collapseSearch">
-            <div class="container-fluid">
-                <form action="" method="get" id="formSearch">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        <div class="row g-5 align-items-center" style="padding:1px">
-                            <div class="col-2" style="text-align:right">
-                                <label for="txtCriteriaDateFrom" class="col-form-label">Date from:</label>
-                            </div>
-                            <div class="col-2">
-                                <input type="date" class="form-control" name="txtCriteriaDateFrom" id="txtCriteriaDateFrom" value="{{ criteriaDateFrom|date:'Y-m-d' }}">
-                            </div>
-                            <div class="col-2" style="text-align:right">
-                                <label for="txtCriteriaDateTo" class="col-form-label">Date to:</label>
-                            </div>
-                            <div class="col-2">
-                                <input type="date" class="form-control" name="txtCriteriaDateTo" id="txtCriteriaDateTo" value="{{ criteriaDateTo|date:'Y-m-d' }}">
-                            </div>
-                            <div class="col-2" style="text-align:right">
-                                <label for="ddlCriteriaStatus" class="col-form-label">Status:</label>
-                            </div>
-                            <div class="col-2">
-                                <select class="form-select" name="ddlCriteriaStatus" id="ddlCriteriaStatus">
+        <div class="col-10">
+            <h2 class="text-center">
+                BMT Workflow
+            </h2>
+        </div>
+    </div>
+    <div class="collapse show" id="collapseSearch">
+        <div class="container-fluid">
+            <form action="" method="get" id="formSearch">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <div class="row g-5 align-items-center" style="padding:1px">
+                        <div class="col-2" style="text-align:right">
+                            <label for="txtCriteriaDateFrom" class="col-form-label">Date from:</label>
+                        </div>
+                        <div class="col-2">
+                            <input type="date" class="form-control" name="txtCriteriaDateFrom" id="txtCriteriaDateFrom" value="{{ criteriaDateFrom|date:'Y-m-d' }}">
+                        </div>
+                        <div class="col-2" style="text-align:right">
+                            <label for="txtCriteriaDateTo" class="col-form-label">Date to:</label>
+                        </div>
+                        <div class="col-2">
+                            <input type="date" class="form-control" name="txtCriteriaDateTo" id="txtCriteriaDateTo" value="{{ criteriaDateTo|date:'Y-m-d' }}">
+                        </div>
+                        <div class="col-2" style="text-align:right">
+                            <label for="ddlCriteriaStatus" class="col-form-label">Status:</label>
+                        </div>
+                        <div class="col-2">
+                            <select class="form-select" name="ddlCriteriaStatus" id="ddlCriteriaStatus">
 {#                                  The status of "not final" is a special criteria that is the default #}
 {#                                  search criteria i.e. all reports not finalised.  #}
-                                    <option value="NOTFINAL" {% if criteriaReportStatus == "" %} selected="selected" {% endif %}>Not Final</option>
-                                    <option value="NOTFINALORNONE" {% if criteriaReportStatus == "NOTFINALORNONE" %} selected="selected" {% endif %}>Written</option>
-                                    <option value="NONE" {% if criteriaReportStatus == "NONE" %} selected="selected" {% endif %}>None</option>
-                                    {% if criteriaReportStatuses %}
-                                        {% for item in criteriaReportStatuses %}
-                                            <option value="{{ item.REPORT_STATUS }}" {% if item.REPORT_STATUS == criteriaReportStatus %} selected="selected" {% endif %}>{{ item.REPORT_STATUS }}</option>
-                                        {% endfor %}
-                                    {% endif %}
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row g-5 align-items-center" style="padding:1px">
-                            <div class="col-2" style="text-align:right">
-                                <label for="txtCriteriaLabnumber" class="col-form-label">Lab number:</label>
-                            </div>
-                            <div class="col-2">
-                                <input type="text" class="form-control" name="txtCriteriaLabnumber" id="txtCriteriaLabnumber" {% if criteriaLabnumber != "" %} value="{{ criteriaLabnumber }}" {% endif %}>
-                            </div>
-                            <div class="col-2" style="text-align:right">
-                                <label for="txtCriteriaLastname" class="col-form-label">Surname:</label>
-                            </div>
-                            <div class="col-2">
-                                <input type="text" class="form-control" name="txtCriteriaLastname" id="txtCriteriaLastname" list="listOfSurnames" {% if criteriaSurname != "" %} value="{{ criteriaSurname }}" {% endif %}>
-                                <datalist id="listOfSurnames">
-                                    {% for item in criteriaSurnames %}
-                                        <option value="{{ item }}" />
+                                <option value="NOTFINAL" {% if criteriaReportStatus == "" %} selected="selected" {% endif %}>Not Final</option>
+                                <option value="NOTFINALORNONE" {% if criteriaReportStatus == "NOTFINALORNONE" %} selected="selected" {% endif %}>Written</option>
+                                <option value="NONE" {% if criteriaReportStatus == "NONE" %} selected="selected" {% endif %}>None</option>
+                                {% if criteriaReportStatuses %}
+                                    {% for item in criteriaReportStatuses %}
+                                        <option value="{{ item.REPORT_STATUS }}" {% if item.REPORT_STATUS == criteriaReportStatus %} selected="selected" {% endif %}>{{ item.REPORT_STATUS }}</option>
                                     {% endfor %}
-                                </datalist>
-                            </div>
-                            <div class="col-2" style="text-align:right">
-                                <label for="ddlCriteriaPriority" class="col-form-label">Priority:</label>
-                            </div>
-                            <div class="col-2">
-                                <select class="form-select" name="ddlCriteriaPriority" id="ddlCriteriaPriority">
-                                    <option value="" {% if criteriaPriority == "" %} selected="selected" {% endif %}>select...</option>
-                                    {% if criteriaPriorities %}
-                                        {% for item in criteriaPriorities %}
-                                            <option value="{{ item.PRIORITY }}" {% if item.PRIORITY == criteriaPriority %} selected="selected" {% endif %}>{{ item.PRIORITY }}</option>
-                                        {% endfor %}
-                                    {% endif %}
-                                </select>
-                            </div>
-                        </div>
-                        <div class="row g-5 align-items-center" style="padding:5px">
-                            <div class="col-2 bg-light" style="text-align:right">
-                                <label for="ddlCriteriaDiseaseIndication1" class="col-form-label">Indication(s):</label>
-                            </div>
-                            <div class="col-2 bg-light">
-                                <select class="form-select" name="ddlCriteriaDiseaseIndication1" id="ddlCriteriaDiseaseIndication1">
-                                    <option value="" {% if criteriaDiseaseIndication1 == "" %} selected="selected" {% endif %}>select...</option>
-                                    {% if criteriaDiseaseIndications %}
-                                        {% for item in criteriaDiseaseIndications %}
-                                            <option value="{{ item.DISEASE_CODE }}" {% if item.DISEASE_CODE == criteriaDiseaseIndication1 %} selected="selected" {% endif %}>{{ item.DISEASE_CODE }}</option>
-                                        {% endfor %}
-                                    {% endif %}
-                                </select>
-                            </div>
-                            <div class="col-2 bg-light">
-                                <select class="form-select" name="ddlCriteriaDiseaseIndication2" id="ddlCriteriaDiseaseIndication2">
-                                    <option value="" {% if criteriaDiseaseIndication2 == "" %} selected="selected" {% endif %}>select...</option>
-                                    {% if criteriaDiseaseIndications %}
-                                        {% for item in criteriaDiseaseIndications %}
-                                            <option value="{{ item.DISEASE_CODE }}" {% if item.DISEASE_CODE == criteriaDiseaseIndication2 %} selected="selected" {% endif %}>{{ item.DISEASE_CODE }}</option>
-                                        {% endfor %}
-                                    {% endif %}
-                                </select>
-                            </div>
-                            <div class="col-2 bg-light">
-                                <select class="form-select" name="ddlCriteriaDiseaseIndication3" id="ddlCriteriaDiseaseIndication3">
-                                    <option value="" {% if criteriaDiseaseIndication3 == "" %} selected="selected" {% endif %}>select...</option>
-                                    {% if criteriaDiseaseIndications %}
-                                        {% for item in criteriaDiseaseIndications %}
-                                            <option value="{{ item.DISEASE_CODE }}" {% if item.DISEASE_CODE == criteriaDiseaseIndication3 %} selected="selected" {% endif %}>{{ item.DISEASE_CODE }}</option>
-                                        {% endfor %}
-                                    {% endif %}
-                                </select>
-                            </div>
-                            <div class="col-2">
-                                &nbsp;
-                            </div>
-                            <div class="col-2">
-                                &nbsp;
-                            </div>
-                        </div>
-                        <div class="row g-5 align-items-center" style="padding:5px">
-                            <div class="col-2 bg-light" style="text-align:right">
-                                <label for="ddlCriteriaReasonForDiseaseIndication1" class="col-form-label">Reason(s):</label>
-                            </div>
-                            <div class="col-2 bg-light">
-                                <select class="form-select" name="ddlCriteriaReasonForDiseaseIndication1" id="ddlCriteriaReasonForDiseaseIndication1">
-                                    <option value="" {% if criteriaReasonForDiseaseIndication1 == "" %} selected="selected" {% endif %}>select...</option>
-                                    {% if criteriaReasonsForDiseaseIndications %}
-                                        {% for item in criteriaReasonsForDiseaseIndications %}
-                                            <option value="{{ item.REASON_CODE }}" {% if item.REASON_CODE == criteriaReasonForDiseaseIndication1 %} selected="selected" {% endif %}>{{ item.REASON_CODE }}</option>
-                                        {% endfor %}
-                                    {% endif %}
-                                </select>
-                            </div>
-                            <div class="col-2 bg-light">
-                                <select class="form-select" name="ddlCriteriaReasonForDiseaseIndication2" id="ddlCriteriaReasonForDiseaseIndication2">
-                                    <option value="" {% if criteriaReasonForDiseaseIndication2 == "" %} selected="selected" {% endif %}>select...</option>
-                                    {% if criteriaReasonsForDiseaseIndications %}
-                                        {% for item in criteriaReasonsForDiseaseIndications %}
-                                            <option value="{{ item.REASON_CODE }}" {% if item.REASON_CODE == criteriaReasonForDiseaseIndication2 %} selected="selected" {% endif %}>{{ item.REASON_CODE }}</option>
-                                        {% endfor %}
-                                    {% endif %}
-                                </select>
-                            </div>
-                            <div class="col-2 bg-light">
-                                <select class="form-select" name="ddlCriteriaReasonForDiseaseIndication3" id="ddlCriteriaReasonForDiseaseIndication3">
-                                    <option value="" {% if criteriaReasonForDiseaseIndication3 == "" %} selected="selected" {% endif %}>select...</option>
-                                    {% if criteriaReasonsForDiseaseIndications %}
-                                        {% for item in criteriaReasonsForDiseaseIndications %}
-                                            <option value="{{ item.REASON_CODE }}" {% if item.REASON_CODE == criteriaReasonForDiseaseIndication3 %} selected="selected" {% endif %}>{{ item.REASON_CODE }}</option>
-                                        {% endfor %}
-                                    {% endif %}
-                                </select>
-                            </div>
-                            <div class="col-2">
-                                &nbsp;
-                            </div>
-                            <div class="col-2">
-                                &nbsp;
-                            </div>
-                        </div>
-                        <div class="row g-5 align-items-center" style="padding:1px">
-                            <div class="col-2" style="text-align:right">
-                                <label for="ddlCriteriaNoResult" class="col-form-label">Workflow:</label>
-                                <input type="hidden" id="txtPageNumber" name="txtPageNumber">
-                            </div>
-                            <div class="col-2">
-                                <select class="form-select" name="ddlCriteriaNoResult" id="ddlCriteriaNoResult">
-                                    <option value="0" {% if criteriaNoResult == 0 %} selected="selected" {% endif %}>select...</option>
-                                    <option value="1" {% if criteriaNoResult == 1 %} selected="selected" {% endif %}>No test</option>
-                                    <option value="2" {% if criteriaNoResult == 2 %} selected="selected" {% endif %}>No wksheet</option>
-                                    <option value="3" {% if criteriaNoResult == 3 %} selected="selected" {% endif %}>No result</option>
-                                </select>
-                            </div>
-                            <div class="col-2">
-                                <label for="ddlCriteriaItemsPerPage" class="col-form-label">Items per page:</label>
-                            </div>
-                            <div class="col-1" style="padding-right: unset">  {# Unset to make select control wide enough #}
-                                <select class="form-select" name="ddlCriteriaItemsPerPage" id="ddlCriteriaItemsPerPage">
-                                    <option value="20" {% if itemsPerPage == 20 %} selected="selected" {% endif %}>20</option>
-                                    <option value="40" {% if itemsPerPage == 40 %} selected="selected" {% endif %}>40</option>
-                                </select>
-                            </div>
-                            <div class="col-1">
-                                <input type="submit" value="Search" name="btnSubmit" id="btnSubmit" class="btn btn-primary">
-                            </div>
-                            <div class="col-2" style="text-align:right">
-                                Cases found : {{ searchCount }}
-                            </div>
-                            <div class="col-2" style="text-align:right">
-                                Page {{ workflowCases.number }} of {{ workflowCases.paginator.num_pages }}
-                            </div>
+                                {% endif %}
+                            </select>
                         </div>
                     </div>
-                </form>
-            </div>
+                    <div class="row g-5 align-items-center" style="padding:1px">
+                        <div class="col-2" style="text-align:right">
+                            <label for="txtCriteriaLabnumber" class="col-form-label">Lab number:</label>
+                        </div>
+                        <div class="col-2">
+                            <input type="text" class="form-control" name="txtCriteriaLabnumber" id="txtCriteriaLabnumber" {% if criteriaLabnumber != "" %} value="{{ criteriaLabnumber }}" {% endif %}>
+                        </div>
+                        <div class="col-2" style="text-align:right">
+                            <label for="txtCriteriaLastname" class="col-form-label">Surname:</label>
+                        </div>
+                        <div class="col-2">
+                            <input type="text" class="form-control" name="txtCriteriaLastname" id="txtCriteriaLastname" list="listOfSurnames" {% if criteriaSurname != "" %} value="{{ criteriaSurname }}" {% endif %}>
+                            <datalist id="listOfSurnames">
+                                {% for item in criteriaSurnames %}
+                                    <option value="{{ item }}" />
+                                {% endfor %}
+                            </datalist>
+                        </div>
+                        <div class="col-2" style="text-align:right">
+                            <label for="ddlCriteriaPriority" class="col-form-label">Priority:</label>
+                        </div>
+                        <div class="col-2">
+                            <select class="form-select" name="ddlCriteriaPriority" id="ddlCriteriaPriority">
+                                <option value="" {% if criteriaPriority == "" %} selected="selected" {% endif %}>select...</option>
+                                {% if criteriaPriorities %}
+                                    {% for item in criteriaPriorities %}
+                                        <option value="{{ item.PRIORITY }}" {% if item.PRIORITY == criteriaPriority %} selected="selected" {% endif %}>{{ item.PRIORITY }}</option>
+                                    {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row g-5 align-items-center" style="padding:5px">
+                        <div class="col-2 bg-light" style="text-align:right">
+                            <label for="ddlCriteriaDiseaseIndication1" class="col-form-label">Indication(s):</label>
+                        </div>
+                        <div class="col-2 bg-light">
+                            <select class="form-select" name="ddlCriteriaDiseaseIndication1" id="ddlCriteriaDiseaseIndication1">
+                                <option value="" {% if criteriaDiseaseIndication1 == "" %} selected="selected" {% endif %}>select...</option>
+                                {% if criteriaDiseaseIndications %}
+                                    {% for item in criteriaDiseaseIndications %}
+                                        <option value="{{ item.DISEASE_CODE }}" {% if item.DISEASE_CODE == criteriaDiseaseIndication1 %} selected="selected" {% endif %}>{{ item.DISEASE_CODE }}</option>
+                                    {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>
+                        <div class="col-2 bg-light">
+                            <select class="form-select" name="ddlCriteriaDiseaseIndication2" id="ddlCriteriaDiseaseIndication2">
+                                <option value="" {% if criteriaDiseaseIndication2 == "" %} selected="selected" {% endif %}>select...</option>
+                                {% if criteriaDiseaseIndications %}
+                                    {% for item in criteriaDiseaseIndications %}
+                                        <option value="{{ item.DISEASE_CODE }}" {% if item.DISEASE_CODE == criteriaDiseaseIndication2 %} selected="selected" {% endif %}>{{ item.DISEASE_CODE }}</option>
+                                    {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>
+                        <div class="col-2 bg-light">
+                            <select class="form-select" name="ddlCriteriaDiseaseIndication3" id="ddlCriteriaDiseaseIndication3">
+                                <option value="" {% if criteriaDiseaseIndication3 == "" %} selected="selected" {% endif %}>select...</option>
+                                {% if criteriaDiseaseIndications %}
+                                    {% for item in criteriaDiseaseIndications %}
+                                        <option value="{{ item.DISEASE_CODE }}" {% if item.DISEASE_CODE == criteriaDiseaseIndication3 %} selected="selected" {% endif %}>{{ item.DISEASE_CODE }}</option>
+                                    {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>
+                        <div class="col-2">
+                            &nbsp;
+                        </div>
+                        <div class="col-2">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="row g-5 align-items-center" style="padding:5px">
+                        <div class="col-2 bg-light" style="text-align:right">
+                            <label for="ddlCriteriaReasonForDiseaseIndication1" class="col-form-label">Reason(s):</label>
+                        </div>
+                        <div class="col-2 bg-light">
+                            <select class="form-select" name="ddlCriteriaReasonForDiseaseIndication1" id="ddlCriteriaReasonForDiseaseIndication1">
+                                <option value="" {% if criteriaReasonForDiseaseIndication1 == "" %} selected="selected" {% endif %}>select...</option>
+                                {% if criteriaReasonsForDiseaseIndications %}
+                                    {% for item in criteriaReasonsForDiseaseIndications %}
+                                        <option value="{{ item.REASON_CODE }}" {% if item.REASON_CODE == criteriaReasonForDiseaseIndication1 %} selected="selected" {% endif %}>{{ item.REASON_CODE }}</option>
+                                    {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>
+                        <div class="col-2 bg-light">
+                            <select class="form-select" name="ddlCriteriaReasonForDiseaseIndication2" id="ddlCriteriaReasonForDiseaseIndication2">
+                                <option value="" {% if criteriaReasonForDiseaseIndication2 == "" %} selected="selected" {% endif %}>select...</option>
+                                {% if criteriaReasonsForDiseaseIndications %}
+                                    {% for item in criteriaReasonsForDiseaseIndications %}
+                                        <option value="{{ item.REASON_CODE }}" {% if item.REASON_CODE == criteriaReasonForDiseaseIndication2 %} selected="selected" {% endif %}>{{ item.REASON_CODE }}</option>
+                                    {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>
+                        <div class="col-2 bg-light">
+                            <select class="form-select" name="ddlCriteriaReasonForDiseaseIndication3" id="ddlCriteriaReasonForDiseaseIndication3">
+                                <option value="" {% if criteriaReasonForDiseaseIndication3 == "" %} selected="selected" {% endif %}>select...</option>
+                                {% if criteriaReasonsForDiseaseIndications %}
+                                    {% for item in criteriaReasonsForDiseaseIndications %}
+                                        <option value="{{ item.REASON_CODE }}" {% if item.REASON_CODE == criteriaReasonForDiseaseIndication3 %} selected="selected" {% endif %}>{{ item.REASON_CODE }}</option>
+                                    {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>
+                        <div class="col-2">
+                            &nbsp;
+                        </div>
+                        <div class="col-2">
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="row g-5 align-items-center" style="padding:1px">
+                        <div class="col-2" style="text-align:right">
+                            <label for="ddlCriteriaNoResult" class="col-form-label">Workflow:</label>
+                            <input type="hidden" id="txtPageNumber" name="txtPageNumber">
+                        </div>
+                        <div class="col-2">
+                            <select class="form-select" name="ddlCriteriaNoResult" id="ddlCriteriaNoResult">
+                                <option value="0" {% if criteriaNoResult == 0 %} selected="selected" {% endif %}>select...</option>
+                                <option value="1" {% if criteriaNoResult == 1 %} selected="selected" {% endif %}>No test</option>
+                                <option value="2" {% if criteriaNoResult == 2 %} selected="selected" {% endif %}>No wksheet</option>
+                                <option value="3" {% if criteriaNoResult == 3 %} selected="selected" {% endif %}>No result</option>
+                            </select>
+                        </div>
+                        <div class="col-2">
+                            <label for="ddlCriteriaItemsPerPage" class="col-form-label">Items per page:</label>
+                        </div>
+                        <div class="col-1" style="padding-right: unset">  {# Unset to make select control wide enough #}
+                            <select class="form-select" name="ddlCriteriaItemsPerPage" id="ddlCriteriaItemsPerPage">
+                                <option value="20" {% if itemsPerPage == 20 %} selected="selected" {% endif %}>20</option>
+                                <option value="40" {% if itemsPerPage == 40 %} selected="selected" {% endif %}>40</option>
+                            </select>
+                        </div>
+                        <div class="col-1">
+                            <input type="submit" value="Search" name="btnSubmit" id="btnSubmit" class="btn btn-primary">
+                        </div>
+                        <div class="col-2" style="text-align:right">
+                            Cases found : {{ searchCount }}
+                        </div>
+                        <div class="col-2" style="text-align:right">
+                            Page {{ workflowCases.number }} of {{ workflowCases.paginator.num_pages }}
+                        </div>
+                    </div>
+                </div>
+            </form>
         </div>
-        {% if errorMessage %}
-            <div class="alert alert-danger text-center mb-3" role="alert">
-                {{ errorMessage }}
-            </div>
-        {% endif %}
-        <div class="container-fluid">
-            <table class="table table-bordered" Id="ResultsTable">
-                <thead class="bg-primary" style="color:white">
-                    <th>
-                        Claim
-                    </th>
-                    {# <th scope="col" onclick="SortTable(1)"> #}
-                     <th scope="col">
-                        Patient (Date deceased)
-                    </th>
-                    <th scope="col">
-                        Lab Number
-                    </th>
-                    <th scope="col">
-                        Indication / Reason
-                    </th>
-                    <th scope="col">
-                        Sample type
-                    </th>
-                    <th scope="col">
-                        Priority
-                    </th>
-                    <th scope="col">
-                        Days left
-                    </th>
-                    <th scope="col">
-                        Alloc to
-                    </th>
-                    <th scope="col">
-                        Date received
-                    </th>
-                    <th scope="col">
-                        Date activated
-                    </th>
-                    <th scope="col">
-                        Date_due
-                    </th>
-                    <th scope="col">
-                        Status
-                    </th>
-                    <th scope="col">
-                        Report by
-                    </th>
-                    <th scope="col">
-                        Wksheet / Result
-                    </th>
-                    <th scope="col">
-                        DNA/Quant
-                    </th>
-                    <th scope="col">
-                        Alert
-                    </th>
-                </thead>
-                <tbody>
-                {% if workflowCases %}
-                    {% for item in workflowCases %}
-                        <tr>
-                            <td>
-                                {#<a class="btn btn-primary" href="{% url 'HaemOncSetAllocatedTo' _labNumber=item.LABNO _workflowName='BMT' %}">&nbsp;</a>#}
-                                <button class="btn btn-primary" id="{{item.LABNO}}" onclick="DoClaim(this.id)">&nbsp;</button>
-                            </td>
-                            {% if item.DECEASED_DATE %}
-                            <td>
-                                {{ item.LASTNAME }}, {{ item.FIRSTNAME }} ( {{ item.DECEASED_DATE|date:'d-m-Y' }} )
-                            </td>
-                            {% else %}
-                            <td>
-                                {{ item.LASTNAME }}, {{ item.FIRSTNAME }}
-                            </td>
-                            {% endif %}
-                            <td>
-                                <a href="{% url 'SampleForm' _labNumber=item.LABNO _indication=item.DISEASE_CODE %}" target="_blank">{{ item.LABNO }}</a>
-                            </td>
-                            <td>
-                                {{ item.DISEASE_CODE }} /<br>{{ item.REASON }}
-                            </td>
-                            <td>
-                                {{ item.SAMPLETYPE }}
-                            </td>
-                            {% if item.PRIORITY|upper == "URGENT" %}
-                            <td style="color:red; font-weight: bold">
+    </div>
+    {% if errorMessage %}
+        <div class="alert alert-danger text-center mb-3" role="alert">
+            {{ errorMessage }}
+        </div>
+    {% endif %}
+    <div class="container-fluid">
+        <table class="table table-bordered" Id="ResultsTable">
+            <thead class="bg-primary" style="color:white">
+                <th>
+                    Claim
+                </th>
+                {# <th scope="col" onclick="SortTable(1)"> #}
+                 <th scope="col">
+                    Patient (Date deceased)
+                </th>
+                <th scope="col">
+                    Lab Number
+                </th>
+                <th scope="col">
+                    Indication / Reason
+                </th>
+                <th scope="col">
+                    Sample type
+                </th>
+                <th scope="col">
+                    Priority
+                </th>
+                <th scope="col">
+                    Days left
+                </th>
+                <th scope="col">
+                    Alloc to
+                </th>
+                <th scope="col">
+                    Date received
+                </th>
+                <th scope="col">
+                    Date activated
+                </th>
+                <th scope="col">
+                    Date_due
+                </th>
+                <th scope="col">
+                    Status
+                </th>
+                <th scope="col">
+                    Report by
+                </th>
+                <th scope="col">
+                    Wksheet / Result
+                </th>
+                <th scope="col">
+                    DNA/Quant
+                </th>
+                <th scope="col">
+                    Alert
+                </th>
+            </thead>
+            <tbody>
+            {% if workflowCases %}
+                {% for item in workflowCases %}
+                    <tr>
+                        <td>
+                            {#<a class="btn btn-primary" href="{% url 'HaemOncSetAllocatedTo' _labNumber=item.LABNO _workflowName='BMT' %}">&nbsp;</a>#}
+                            <button class="btn btn-primary" id="{{item.LABNO}}" onclick="DoClaim(this.id)">&nbsp;</button>
+                        </td>
+                        {% if item.DECEASED_DATE %}
+                        <td>
+                            {{ item.LASTNAME }}, {{ item.FIRSTNAME }} ( {{ item.DECEASED_DATE|date:'d-m-Y' }} )
+                        </td>
+                        {% else %}
+                        <td>
+                            {{ item.LASTNAME }}, {{ item.FIRSTNAME }}
+                        </td>
+                        {% endif %}
+                        <td>
+                            <a href="{% url 'SampleForm' _labNumber=item.LABNO _indication=item.DISEASE_CODE %}" target="_blank">{{ item.LABNO }}</a>
+                        </td>
+                        <td>
+                            {{ item.DISEASE_CODE }} /<br>{{ item.REASON }}
+                        </td>
+                        <td>
+                            {{ item.SAMPLETYPE }}
+                        </td>
+                        {% if item.PRIORITY|upper == "URGENT" %}
+                        <td style="color:red; font-weight: bold">
+                            {{ item.PRIORITY }}
+                        </td>
+                        {% else %}
+                            {% if item.PRIORITY|upper == "PRIORITY" %}
+                            <td style="color:green; font-weight: bold">
                                 {{ item.PRIORITY }}
                             </td>
                             {% else %}
-                                {% if item.PRIORITY|upper == "PRIORITY" %}
-                                <td style="color:green; font-weight: bold">
-                                    {{ item.PRIORITY }}
+                            <td>
+                                {{ item.PRIORITY }}
+                            </td>
+                            {% endif %}
+                        {% endif %}
+                        {% if item.DaysRemaining == -99999 %}
+                        <td style="background-color: red; color: white">
+                            No target date
+                        </td>
+                        {% else %}
+                            {% if item.DaysRemaining < 5 and item.REPORT_STATUS|slice:":5"|upper != "FINAL"%}
+                            <td style="background-color: red; color: white">
+                                {{ item.DaysRemaining }}
+                            </td>
+                            {% else %}
+                                {% if item.REPORT_STATUS|slice:":5"|upper == "FINAL" %}
+                                <td>
+                                    0
                                 </td>
                                 {% else %}
                                 <td>
-                                    {{ item.PRIORITY }}
-                                </td>
-                                {% endif %}
-                            {% endif %}
-                            {% if item.DaysRemaining == -99999 %}
-                            <td style="background-color: red; color: white">
-                                No target date
-                            </td>
-                            {% else %}
-                                {% if item.DaysRemaining < 5 and item.REPORT_STATUS|slice:":5"|upper != "FINAL"%}
-                                <td style="background-color: red; color: white">
                                     {{ item.DaysRemaining }}
                                 </td>
-                                {% else %}
-                                    {% if item.REPORT_STATUS|slice:":5"|upper == "FINAL" %}
-                                    <td>
-                                        0
-                                    </td>
-                                    {% else %}
-                                    <td>
-                                        {{ item.DaysRemaining }}
-                                    </td>
-                                    {% endif %}
                                 {% endif %}
                             {% endif %}
-                            <td>
-                                {{ item.ALLOCATED_TO }}
-                            </td>
-                            <td>
-                                {{ item.DATE_RECEIVED|date:'d-m-Y' }}
-                            </td>
-                            <td>
-                                {{ item.DATE_ACTIVATED|date:'d-m-Y' }}
-                            </td>
-                            <td>
-                                {{ item.TARGET_DATE|date:'d-m-Y'}}
-                            </td>
-                            {% if item.REPORT_STATUS|upper == "PENDING" %}
-                            <td style="color:green; font-weight: bold">
-                                {{ item.REPORT_STATUS }}
-                            </td>
-                            {% else %}
-                            <td>
-                                {{ item.REPORT_STATUS }}
-                            </td>
-                            {% endif %}
-                            <td>
-                                {{ item.REPORT_BY }}
-                            </td>
-                            {% autoescape off%}
+                        {% endif %}
+                        <td>
+                            {{ item.ALLOCATED_TO }}
+                        </td>
+                        <td>
+                            {{ item.DATE_RECEIVED|date:'d-m-Y' }}
+                        </td>
+                        <td>
+                            {{ item.DATE_ACTIVATED|date:'d-m-Y' }}
+                        </td>
+                        <td>
+                            {{ item.TARGET_DATE|date:'d-m-Y'}}
+                        </td>
+                        {% if item.REPORT_STATUS|upper == "PENDING" %}
+                        <td style="color:green; font-weight: bold">
+                            {{ item.REPORT_STATUS }}
+                        </td>
+                        {% else %}
+                        <td>
+                            {{ item.REPORT_STATUS }}
+                        </td>
+                        {% endif %}
+                        <td>
+                            {{ item.REPORT_BY }}
+                        </td>
+                        {% autoescape off%}
 {#                            {% if item.WORKSHEET_OUTSTANDING == "yes" %}#}
 {#                                <td>#}
 {#                                    None#}
@@ -356,261 +354,53 @@
 {#                                    {{ item.WORKSHEETS }}#}
 {#                                </td>#}
 {#                                {% else %}#}
-                                <td>
-                                {{ item.WORKSHEETS }}
-                                </td>
-                                <td>
-                                {% autoescape off%}
-                                    {{ item.EXTRACTSHEETS }}
-                                {% endautoescape %}
+                            <td>
+                            {{ item.WORKSHEETS }}
                             </td>
-                                <td>
-                                {{ item.SampleAlert }}
-                                </td>
+                            <td>
+                            {% autoescape off%}
+                                {{ item.EXTRACTSHEETS }}
+                            {% endautoescape %}
+                        </td>
+                            <td>
+                            {{ item.SampleAlert }}
+                            </td>
 {#                                {% endif %}#}
 {#                            {% endif %}#}
-                            {% endautoescape %}
-                        </tr>
-                    {% endfor %}
-                {% else %}
-                    <tr>
-                        <td>
-                            No records to display
-                        </td>
-                        <td>
-                            &nbsp;
-                        </td>
-                        <td>
-                            &nbsp;
-                        </td>
+                        {% endautoescape %}
                     </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td>
+                        No records to display
+                    </td>
+                    <td>
+                        &nbsp;
+                    </td>
+                    <td>
+                        &nbsp;
+                    </td>
+                </tr>
 
-                {% endif %}
-                </tbody>
-            </table>
-        </div>
-
-        {% if workflowCases %}
-        <div class="container-fluid">
-            <nav aria-label="Pages for table">
-                <ul class="pagination justify-content-center">
-                    <li class="page-item"><input type="button" class="page-link" value="<< First" id="btnPageFirst"></li>
-                    <li class="page-item"><input type="button" class="page-link" value="< Previous" id="btnPagePrevious"></li>
-                    <li class="page-item"><span class="page-link">Page {{ workflowCases.number }} of {{ workflowCases.paginator.num_pages }}</span></li>
-                    <li class="page-item"><input type="button" class="page-link" value="Next >" id="btnPageNext"></li>
-                    <li class="page-item"><input type="button" class="page-link" value="Last >>" id="btnPageLast"></li>
-                </ul>
-            </nav>
-        </div>
-        {% endif %}
-
+            {% endif %}
+            </tbody>
+        </table>
     </div>
 
-    <script>
-        window.addEventListener('load', function() {
-            document.getElementById('txtPageNumber').value = '1';
-        })
+    {% if workflowCases %}
+    <div class="container-fluid">
+        <nav aria-label="Pages for table">
+            <ul class="pagination justify-content-center">
+                <li class="page-item"><input type="button" class="page-link" value="<< First" id="btnPageFirst"></li>
+                <li class="page-item"><input type="button" class="page-link" value="< Previous" id="btnPagePrevious"></li>
+                <li class="page-item"><span class="page-link">Page {{ workflowCases.number }} of {{ workflowCases.paginator.num_pages }}</span></li>
+                <li class="page-item"><input type="button" class="page-link" value="Next >" id="btnPageNext"></li>
+                <li class="page-item"><input type="button" class="page-link" value="Last >>" id="btnPageLast"></li>
+            </ul>
+        </nav>
+    </div>
+    {% endif %}
 
-        document.getElementById('ddlCriteriaDiseaseIndication1').addEventListener('change', function () {
-
-            if (IsFormValid()) {
-                document.getElementById('ddlCriteriaReasonForDiseaseIndication1').value = '';
-        {#        document.getElementById('ddlCriteriaReasonForDiseaseIndication2').value = '';#}
-        {#       document.getElementById('ddlCriteriaReasonForDiseaseIndication3').value = '';#}
-                DoPostBack();
-            }
-        } )
-
-        {#document.getElementById('ddlCriteriaDiseaseIndication2').addEventListener('change', function () {#}
-        {#    if (IsFormValid()) {#}
-        {#        document.getElementById('ddlCriteriaReasonForDiseaseIndication1').value = '';#}
-        {#        document.getElementById('ddlCriteriaReasonForDiseaseIndication2').value = '';#}
-        {#        document.getElementById('ddlCriteriaReasonForDiseaseIndication3').value = '';#}
-        {#        DoPostBack();#}
-        {#    }#}
-        {# } )#}
-
-        {#document.getElementById('ddlCriteriaDiseaseIndication3').addEventListener('change', function () {#}
-        {#    if (IsFormValid()) {#}
-        {#        document.getElementById('ddlCriteriaReasonForDiseaseIndication1').value = '';#}
-        {#        document.getElementById('ddlCriteriaReasonForDiseaseIndication2').value = '';#}
-        {#        document.getElementById('ddlCriteriaReasonForDiseaseIndication3').value = '';#}
-        {#        DoPostBack();#}
-        {#    }#}
-        {# } )#}
-
-        document.getElementById('btnPageFirst').addEventListener('click', function () { DoSubmitFirstPage(); } );
-        document.getElementById('btnPagePrevious').addEventListener('click', function () { DoSubmitPreviousPage(); } );
-        document.getElementById('btnPageNext').addEventListener('click', function () { DoSubmitNextPage(); } );
-        document.getElementById('btnPageLast').addEventListener('click', function () { DoSubmitLastPage(); } );
-
-        function DoPostBack() {
-            document.getElementById('formSearch').submit();
-        }
-
-        function DoSubmitFirstPage() {
-            _pageNumber = document.getElementById('txtPageNumber');
-            _pageNumber.value = '1';
-
-            document.getElementById('formSearch').submit();
-        }
-
-        function DoSubmitPreviousPage() {
-            _pageNumber = document.getElementById('txtPageNumber');
-            {% if workflowCases != None %}
-                {% if workflowCases.has_previous %}
-                    _pageNumber.value = {{ workflowCases.previous_page_number }};
-                {% else %}
-                    _pageNumber.value = '1';
-                {% endif %}
-            {% else %}
-                _pageNumber.value = '1';
-            {% endif %}
-
-            document.getElementById('formSearch').submit();
-        }
-
-        function DoSubmitNextPage() {
-            _pageNumber = document.getElementById('txtPageNumber');
-            {% if workflowCases != None %}
-                {% if workflowCases.has_next %}
-                    _pageNumber.value = {{ workflowCases.next_page_number }};
-                {% else %}
-                    _pageNumber.value = '1';
-                {% endif %}
-            {% else %}
-                _pageNumber.value = '1';
-            {% endif %}
-
-            document.getElementById('formSearch').submit();
-        }
-
-        function DoSubmitLastPage() {
-            _pageNumber = document.getElementById('txtPageNumber');
-            {% if workflowCases != None %}
-                {% if workflowCases.has_next %}
-                    _pageNumber.value = {{ workflowCases.paginator.num_pages }};
-                {% else %}
-                    _pageNumber.value = '1';
-                {% endif %}
-            {% else %}
-                _pageNumber.value = '1';
-            {% endif %}
-
-            document.getElementById('formSearch').submit();
-        }
-
-        function IsFormValid() {
-
-            let _retVal = true
-            let _errorMessage = ''
-
-            let _indicationDisease1 = Nz(document.getElementById('ddlCriteriaDiseaseIndication1').value,'');
-            let _indicationDisease2 = Nz(document.getElementById('ddlCriteriaDiseaseIndication2').value,'');
-            let _indicationDisease3 = Nz(document.getElementById('ddlCriteriaDiseaseIndication3').value,'');
-
-            let _reason1 = Nz(document.getElementById('ddlCriteriaReasonForDiseaseIndication1').value,'');
-            let _reason2 = Nz(document.getElementById('ddlCriteriaReasonForDiseaseIndication2').value,'');
-            let _reason3 = Nz(document.getElementById('ddlCriteriaReasonForDiseaseIndication3').value,'');
-
-            if (_indicationDisease2 != '' && _indicationDisease1 == '')
-            {
-                _errorMessage = _errorMessage + 'You must enter the indication search criteria in order \n';
-            }
-            else
-            {
-                if (_indicationDisease3 != '' && _indicationDisease1 == '')
-                {
-                    _errorMessage = _errorMessage + 'You must enter the indication search criteria in order \n';
-                }
-                else
-                {
-                    if (_indicationDisease3 != '' && _indicationDisease2 == '')
-                    {
-                        _errorMessage = _errorMessage + 'You must enter the indication search criteria in order \n';
-                    }
-                }
-            }
-
-            if (_reason2 != '' && _reason1 == '')
-            {
-                _errorMessage = _errorMessage + 'You must enter the reason search criteria in order \n';
-            }
-            else
-            {
-                if (_reason3 != '' && _reason1 == '')
-                {
-                    _errorMessage = _errorMessage + 'You must enter the reason search criteria in order \n';
-                }
-                else
-                {
-                    if (_reason3 != '' && _reason2 == '')
-                    {
-                        _errorMessage = _errorMessage + 'You must enter the reason search criteria in order \n';
-                    }
-                }
-            }
-
-            if (_errorMessage != '') {
-                _retVal = false;
-                window.alert(_errorMessage);
-            }
-
-            return _retVal;
-        }
-
-        function Nz (_object, _defaultValue) {
-            if (_object == null || _object == undefined)
-            {
-                _object = _defaultValue;
-            }
-            return _object
-        }
-
-        function DoClaim(labno) {
-        url="{% url 'DNASetAllocatedTo' _labNumber=0 _workflowName='BMT' %}".replace('0', labno);
-            window.open(url);
-        }
-
-        function SortTable(n){
-            {#  Doing it this way means it can only sort what's on the screen, but it'll reduce the SQL sproc calls #}
-           var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
-           table = document.getElementById("ResultsTable");
-           switching=true;
-           dir = "asc";
-           while(switching){
-               switching = false;
-               rows = table.rows;
-               for (i=1; i < rows.length-1; i++){
-                   shouldSwitch = false;
-                   x = rows[i].getElementsByTagName("TD")[n];
-                   y = rows[i+1].getElementsByTagName("TD")[n];
-                   if (dir == "asc"){
-                       if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()){
-                           shouldSwitch = true;
-                           break;
-                       }
-                   }else if (dir="desc"){
-                       if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()){
-                           shouldSwitch = true;
-                           break;
-                       }
-                   }
-               }
-               if(shouldSwitch){
-                   rows[i].parentNode.insertBefore(rows[i+1], rows[i]);
-                   switching = true;
-                   switchcount++;
-               }else{
-                   if(switchcount==0 && dir == "asc"){
-                       dir = "desc";
-                       switching = true;
-                   }
-               }
-           }
-        }
-
-    </script>
-
-</body>
+</div>
 {% endblock content %}
