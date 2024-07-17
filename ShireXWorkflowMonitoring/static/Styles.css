@@ -1,0 +1,206 @@
+
+@font-face {
+    font-family: 'OpenDyslexic';
+    /*src: url('/home/mwhitehouse1/PycharmProjects/ShireXWorkflowMonitoring/ShireXWorkflowMonitoring/static/OpenDyslexic3-Regular.ttf') format('truetype');*/
+    src: url('http://dyslexicfonts.com/fonts/OpenDyslexic-Regular.otf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+    .navbar .dropdown-menu {
+display: block;
+max-height: 0;
+overflow: hidden;
+opacity: 0;
+transition: all 0.5s ease-in-out;
+transform: translateY(-10px);
+}
+
+/* This CSS will expand the dropdown menu when the 'show' class is added  - MW*/
+.navbar .dropdown:hover .dropdown-menu {
+    opacity: 1;
+    max-height: 550px;
+    transform: translateY(0);
+}
+
+/* Apply to all buttons - MW*/
+button {
+    border-radius: 8px; /* Adjust as needed - MW*/
+}
+
+/* Apply to the navbar - MW*/
+.navbar {
+    border-radius: 8px; /* Adjust as needed - MW*/
+}
+
+/* Apply to dropdown menus - MW*/
+.dropdown-menu {
+    border-radius: 8px; /* Adjust as needed - MW*/
+}
+
+/* Apply to all divs with a specific class - MW*/
+.div-class {
+    border-radius: 8px; /* Adjust as needed - MW*/
+}
+
+/* Apply to input fields - MW*/
+input[type="text"], input[type="email"], textarea {
+    border-radius: 8px; /* Adjust as needed - MW*/
+}
+
+:root {
+--background-color: #ffffff; /* Light mode background color - MW */
+--text-color: #000000;       /* Light mode text color - MW */
+--font-family: Arial, sans-serif; /* Default font - MW */
+}
+
+body {
+transition: background-color 0.5s, color 0.5s;
+font-family: var(--font-family);
+}
+
+.toggle-container {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 15px;
+    right: 100px;
+}
+
+.toggle-checkbox {
+    display: none;
+}
+
+.toggle-label {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 30px;
+    background-color: #2196F3; /* Blue background for sun - MW */
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+.toggle-sun,
+.toggle-moon {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+}
+
+.toggle-sun {
+    left: 5px;
+    color: #FFD700; /* Yellow color for sun - MW */
+    opacity: 1;
+    transition: opacity 0.5s;
+}
+
+.toggle-moon {
+    right: 5px;
+    color: #000; /* Black color for moon - MW */
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+.toggle-checkbox:checked + .toggle-label {
+    background-color: #595352; /* Black background for moon when checked - MW */
+}
+
+.toggle-checkbox:checked + .toggle-label .toggle-sun {
+    opacity: 0;
+}
+
+.toggle-checkbox:checked + .toggle-label .toggle-moon {
+    opacity: 1;
+}
+
+/* Settings Button - MW */
+.settings-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+
+/* Font Size Modal styles - MW */
+.font-size-modal {
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+}
+
+/* The settings box - MW */
+.font-size-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+}
+
+/* The close button for the settings menu - MW */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* The arrangement of the settings box, with the font size buttons - MW */
+.font-size-option {
+  padding: 10px;
+  margin: 5px;
+}
+
+/* Creates more space between letters and words to help those with dyslexia - MW */
+.dyslexic {
+    letter-spacing: 5px;
+    word-spacing: 35px;
+}
+
+#ResulstsTable{
+    table-layout: fixed;
+    width: 100%;
+}
+
+#ResultsTable th, #ResulstsTable td{
+    resize: horizontal;
+    overflow: auto;
+    white-space: nowrap;
+}
+
+#ResulstsTable th{
+    position: relative;
+}
+
+#ResulstsTable th::after{
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 5px;
+    cursor: col-resize;
+    z-index: 1;
+}
+
+#ResulstsTable th.resize-handle{
+    position: relative;
+    display: inline-block;
+    width: 5px;
+    height: 100%;
+    cursor: col-resize;
+    z-index: 1;
+    background-color: transparent;
+}
