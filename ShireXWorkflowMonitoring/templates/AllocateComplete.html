@@ -9,10 +9,19 @@
             </div>
             <br><br>
             <div class="text-center">
-                    <button class="btn btn-primary btn-lg" id="btnClose">Close</button>
+                <button class="btn btn-primary btn-lg" id="btnClose">Close</button>
             </div>
         </div>
-
     </div>
 </div>
+
+<script>
+    function DoClose() {
+        window.history.back();
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        document.getElementById('btnClose').addEventListener('click', DoClose);
+    });
+</script>
 {% endblock content %}
