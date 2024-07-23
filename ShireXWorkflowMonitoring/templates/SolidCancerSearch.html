@@ -1,7 +1,7 @@
-{% extends 'base.html' %}
+ {% extends 'base.html' %}
 {% block content %}
     <body>
-    
+
     <div class="container-fluid">
         <div class="row mb-3">
             <div class="col-2">
@@ -347,6 +347,9 @@
                                     &nbsp;
                                 </button>
                             </td>
+                            <!--<td>
+                                <button class="btn btn-primary" id="{{ item.LABNO }}" onclick="DoClaim('{{ item.LABNO }}')">Claim</button>
+                            </td>-->
                             {% if item.DECEASED_DATE %}
                                 <td>
                                     {{ item.LASTNAME }}, {{ item.FIRSTNAME }} ( {{ item.DECEASED_DATE|date:'d-m-Y' }} )
@@ -519,5 +522,19 @@
         {% endif %}
 
     </div>
+    <script>
+        function DoClaim(labno)
+        {
+            url="{% url 'DNASetAllocatedTo' _labNumber=0 _workflowName='SC' %}".replace('0', labno);
+            window.open(url);
+        }
+
+        console.log("labno:", labno); // Log the labno to ensure it is correct
+
+        let workflowName = 'RAML'; // Replace with actual logic if needed
+        let url = /Molecular/Allocate/${labno}/${workflowName}/AllocateComplete/;
+        console.log("Navigating to URL:", url); // Debugging
+        window.location.href = url;
+    </script>
     </body>
 {% endblock content %}

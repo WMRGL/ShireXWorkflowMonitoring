@@ -111,6 +111,16 @@ class SetAllocatedToForDNA(TemplateView):
         return render(self.template_name, _context)
 
 
+class AllocateCompleteView(TemplateView):
+    template_name = 'AllocateComplete.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['labNumber'] = kwargs['labNumber']
+        context['workflowName'] = kwargs['workflowName']
+        return context
+
+
 class SetAllocatedToForCyto(TemplateView):
     template_name = "SetAllocatedToForCyto.html"
     title = ShireXWorkflowMonitoringConfig.title

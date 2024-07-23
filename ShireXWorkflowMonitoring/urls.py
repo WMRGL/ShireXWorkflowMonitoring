@@ -36,7 +36,8 @@ urlpatterns = [
     path('Molecular/Allocate/<str:_labNumber>/<str:_workflowName>/',
          AllocationFunctionality.SetAllocatedToForDNA.as_view(), name="DNASetAllocatedTo"),
     path('Sample/<str:_labNumber>/<str:_indication>', SampleFunctionality.SampleForm.as_view(), name="SampleForm"),
-    path('Molecular/Allocate/<str:_labNumber>/<str:_workflowName>/AllocateComplete/',
-         TemplateView.as_view(template_name='AllocateComplete.html'), name="AllocateComplete"),
-
+    path('Molecular/Allocate/<str:labNumber>/<str:workflowName>/AllocateComplete/', AllocationFunctionality.AllocateCompleteView.as_view(),
+         name='AllocateComplete'),
+    path('Molecular/Allocate/<str:labNumber>/<str:workflowName>/', AllocationFunctionality.SetAllocatedToForDNA.as_view(),
+         name='DNASSetAllocatedTo'),
 ]

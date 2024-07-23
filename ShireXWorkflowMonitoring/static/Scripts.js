@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function() {
             this.querySelector('.dropdown-menu').classList.remove('show');
         });
     });
-    
+
 
     const darkModeToggle = document.getElementById('dark-mode-toggle'); // Corrected method name
     if (darkModeToggle) {
@@ -278,10 +278,21 @@ window.addEventListener('load', function() {
             return _object
         }
 
+
         function DoClaim(labno) {
-            url="{% url 'DNASetAllocatedTo' _labNumber=0 _workflowName='RAML' %}".replace('0', labno);
-            window.open(url);
+        if (!labno) {
+            console.error("labno is null or undefined");
+            return;
         }
+
+        console.log("labno:", labno); // Log the labno to ensure it is correct
+
+        let workflowName = 'RAML'; // Replace with actual logic if needed
+        let url = `/Molecular/Allocate/${labno}/${workflowName}/AllocateComplete/`;
+        console.log("Navigating to URL:", url); // Debugging
+        window.location.href = url;
+    }
+
 
         function SortTable(n){
             //Doing it this way means it can only sort what's on the screen, but it'll reduce the SQL sproc calls #}
@@ -323,7 +334,7 @@ window.addEventListener('load', function() {
 
         document.addEventListener("DOMContentLoaded", function() {
         var dropdowns = document.querySelectorAll('.navbar .dropdown');
-    
+
         dropdowns.forEach(function(dropdown) {
             dropdown.addEventListener('mouseenter', function() {
                 var menu = this.querySelector('.dropdown-menu');
@@ -332,12 +343,12 @@ window.addEventListener('load', function() {
                     menu.classList.add('show');
                 }, 10);
             });
-    
+
             dropdown.addEventListener('mouseleave', function() {
                 this.querySelector('.dropdown-menu').classList.remove('show');
             });
         });
-        
+
 
         const darkModeToggle = document.getElementById('dark-mode-toggle'); // Corrected method name
         if (darkModeToggle) {
@@ -368,28 +379,28 @@ window.addEventListener('load', function() {
             }
         }
     });
-    
-    
+
+
     // Get the modal - MW
     var modal = document.getElementById("font-size-modal");
-    
+
     // Get the button that opens the modal - MW
     var btn = document.getElementById("settings-btn");
-    
+
     // Get the <span> element that closes the modal - MW
     var span = document.getElementsByClassName("close")[0];
-    
+
     // When the user clicks the button, open the modal - MW
     btn.onclick = function() {
         console.log("Settings button clicked");
       modal.style.display = "block";
     }
-    
+
     // When the user clicks on <span> (x), close the modal - MW
     span.onclick = function() {
       modal.style.display = "none";
     }
-    
+
     // When the user clicks anywhere outside of the modal, close it - MW
     window.onclick = function(event) {
         console.log("Close button clicked")
@@ -397,7 +408,7 @@ window.addEventListener('load', function() {
         modal.style.display = "none";
       }
     }
-    
+
     // Function to change font size - MW
     function changeFontSize(size) {
       var body = document.body;
@@ -414,7 +425,7 @@ window.addEventListener('load', function() {
     }
 
     function changeFontStyle(){
-        // Selects the font from the list - MW 
+        // Selects the font from the list - MW
         var selectedFont = document.getElementById('font-style-select').value;
         document.documentElement.style.setProperty('--font-family', selectedFont);
         localStorage.setItem('selectedFontStyle', selectedFont);
@@ -463,7 +474,7 @@ window.addEventListener('load', function() {
       const table = document.getElementById('ResultsTable');
       let isResizing = false;
       let lastX = 0;
-      let currentTh = null;  
+      let currentTh = null;
 
       table.querySelectorAll('th').forEach(th => {
         const div = document.createElement('div');
@@ -497,4 +508,3 @@ window.addEventListener('load', function() {
     function CloseForm() {
             window.close();
         }
-
