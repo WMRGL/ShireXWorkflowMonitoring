@@ -1,4 +1,4 @@
- {% extends 'base.html' %}
+{% extends 'base.html' %}
 {% block content %}
     <body>
 
@@ -475,7 +475,6 @@
                             <td>
                                 {{ item.TEST|default_if_none:"Null" }}
                             </td>
-                            .
                             <td>
                                 {{ item.SampleAlert }}
                             </td>
@@ -532,9 +531,36 @@
         console.log("labno:", labno); // Log the labno to ensure it is correct
 
         let workflowName = 'RAML'; // Replace with actual logic if needed
-        let url = /Molecular/Allocate/${labno}/${workflowName}/AllocateComplete/;
+        let url = `/Molecular/Allocate/${labno}/${workflowName}/AllocateComplete/`;
         console.log("Navigating to URL:", url); // Debugging
         window.location.href = url;
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Set default dates for the date fields
+            const txtCriteriaDateFrom = document.getElementById('txtCriteriaDateFrom');
+            const txtCriteriaDateTo = document.getElementById('txtCriteriaDateTo');
+            const currentDate = new Date();
+            const pastDate = new Date();
+            pastDate.setDate(currentDate.getDate() - 30); // Set past date to 30 days ago
+
+            // Format date to yyyy-mm-dd
+            const formatDate = (date) => {
+                const d = new Date(date);
+                const month = '' + (d.getMonth() + 1);
+                const day = '' + d.getDate();
+                const year = d.getFullYear();
+                return [year, month.padStart(2, '0'), day.padStart(2, '0')].join('-');
+            };
+
+            if (!txtCriteriaDateFrom.value) {
+                txtCriteriaDateFrom.value = formatDate(pastDate);
+            }
+
+            if (!txtCriteriaDateTo.value) {
+                txtCriteriaDateTo.value = formatDate(currentDate);
+            }
+        });
     </script>
     </body>
 {% endblock content %}
