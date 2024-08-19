@@ -164,7 +164,10 @@
                     <div class="row g-5 align-items-center" style="padding:1px">
                         <div class="col-2" style="text-align:right">
                             <label for="ddlCriteriaNoResult" class="col-form-label">Workflow:</label>
-                            <input type="hidden" id="txtPageNumber" name="txtPageNumber">
+                            <input type="hidden" id="txtPageNumber" name="txtPageNumber" value="{{ workflowCases.number }}">
+                            <input type="hidden" name="txtCriteriaDateFrom" value="{{ criteriaDateFrom }}">
+                            <input type="hidden" name="txtCriteriaDateTo" value="{{ criteriaDateTo }}">
+                            <input type="hidden" name="ddlCriteriaStatus" value="{{ criteriaReportStatus }}">
                         </div>
                         <div class="col-2">
                             <select class="form-select" name="ddlCriteriaNoResult" id="ddlCriteriaNoResult">
@@ -395,15 +398,33 @@
     <div class="container-fluid">
         <nav aria-label="Pages for table">
             <ul class="pagination justify-content-center">
-                <li class="page-item"><input type="button" class="page-link" value="<< First" id="btnPageFirst"></li>
-                <li class="page-item"><input type="button" class="page-link" value="< Previous" id="btnPagePrevious"></li>
-                <li class="page-item"><span class="page-link">Page {{ workflowCases.number }} of {{ workflowCases.paginator.num_pages }}</span></li>
-                <li class="page-item"><input type="button" class="page-link" value="Next >" id="btnPageNext"></li>
-                <li class="page-item"><input type="button" class="page-link" value="Last >>" id="btnPageLast"></li>
+                <li class="page-item {% if not workflowCases.has_previous %}disabled{% endif %}">
+                    <input type="button" class="page-link" value="<< First"
+                           onclick="submitPage(1)" {% if not workflowCases.has_previous %}disabled{% endif %}>
+                </li>
+                <li class="page-item {% if not workflowCases.has_previous %}disabled{% endif %}">
+                    <input type="button" class="page-link" value="< Previous"
+                           onclick="submitPage({{ workflowCases.previous_page_number }})"
+                           {% if not workflowCases.has_previous %}disabled{% endif %}>
+                </li>
+                <li class="page-item">
+                    <span class="page-link">Page {{ workflowCases.number }} of {{ workflowCases.paginator.num_pages }}</span>
+                </li>
+                <li class="page-item {% if not workflowCases.has_next %}disabled{% endif %}">
+                    <input type="button" class="page-link" value="Next >"
+                           onclick="submitPage({{ workflowCases.next_page_number }})"
+                           {% if not workflowCases.has_next %}disabled{% endif %}>
+                </li>
+                <li class="page-item {% if not workflowCases.has_next %}disabled{% endif %}">
+                    <input type="button" class="page-link" value="Last >>"
+                           onclick="submitPage({{ workflowCases.paginator.num_pages }})"
+                           {% if not workflowCases.has_next %}disabled{% endif %}>
+                </li>
             </ul>
         </nav>
     </div>
     {% endif %}
+
 </div>
 
 <script>
@@ -429,4 +450,15 @@
         document.getElementById('txtCriteriaDateTo').value = formattedToday;
     };
 </script>
+
+    <script>
+    function submitPage(pageNumber){
+        if(pageNumber < 1){
+            pageNumber = 1; // Ensures the page number doesn't go below 1
+        }
+        document.getElementById('txtPageNumber').value = pageNumber;
+        document.getElementById('formSearch').submit(); // Submit the form to the server
+    }
+</script>
+
 {% endblock content %}

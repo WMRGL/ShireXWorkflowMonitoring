@@ -1,0 +1,70 @@
+{%  extends 'base.html' %}
+{%  block content %}
+    <body>
+        <div class="container-fluid">
+            <div class="row mb-3">
+                <div class="col-2">
+                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSearch"
+                            aria-expanded="false" aria-controls="collapseExample">
+                        Show/Hide Search
+                    </button>
+                </div>
+                <div class="col-10">
+                    <h2 class="text-center">
+                        RDRG Workflow
+                    </h2>
+                </div>
+            </div>
+            <div class="collapse show" id="collapseSearch">
+                <div class="container-fluid">
+                    <form action="" method="get" id="fromSearch">
+                        {%  csrf_token %}
+                        <div class="mb-3">
+                            <div Class="row g-5 align-items-center" style="padding:1px">
+                                <div class="col-2" style="text-align:right">
+                                    <label for="txtCriteriaDateFrom" class="col-form-label">Date from:<</label>
+                                </div>
+                                <div class="col-2">
+                                    <input type="date" class="form-control" name="txtCriteriaDateFrom" id="txtCriteriaDateFrom" value="{{ criteriaDateFrom }}">
+                                </div>
+                                <div class="col-2" style="text-align:right">
+                                    <label for="txtCriteriaDateTo" class="col-form-label">Date to:</label>
+                                </div>
+                                <div class="col-2">
+                                    <input type="date" class="form-control" name="txtCriteriaDateTo" id="txtCriteriaDateTo" value="{{ criteriaDateTo }}">
+                                </div>
+                                <div class="col-2">
+                                    <select class="form-select" name="ddlCriteriaStatus" id="ddlCriteriaStatus">
+                                        <option value="NOTFINAL" {% if criteriaReportStatus == "" %} selected="selected" {% endif %}>Not Final</option>
+                                        <option value="NOTFINALORNONE" {% if criteriaReportStatus == "NOTFINALORNONE" %} select="selected" {% endif %}>Written</option>
+                                        <option value="NONE" {% if criteriaReportStatus == "NONE" %} selected="selected" {% endif %}>NONE</option>
+                                        {% if criteriaReportStatuses %}
+                                            {% for item in criteriaReportStatuses %}
+                                                <option value="{{ item.REPORT_STATUS }}"
+                                                        {% if item.REPORT_STATUS == criteriaReportStatus %}
+                                                    selected = "selected" {% endif %}>{{ item.REPORT_STATUS }}</option>
+                                            {% endfor %}
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+                        <div class="row g-5 align-items-center" style="padding:1px">
+                            <div class="col-2" style="text-align:right">
+                                <label for="txtCriteriaLabNumber" class="col=form-label">Lab Number:</label>
+                            </div>
+                            <div class="col-2">
+                                <input type="text" class="form-control" name="txtCriteriaLabNumber"
+                                       id="txtCriteriaLabNumber" {% if criteriaLabNumber != "" %}
+                                       value="{{ criteriaLabNumber }}" {% endif %}>
+                            </div>
+                        <div class="col-2" style="text-align:right">
+                            <label for="txtCriteriaLastName" class="col-form-label">Surname:</label>
+                        </div>
+                        </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+{% endblock content %}

@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-
+    // Handle Dark Mode Toggle
     const darkModeToggle = document.getElementById('dark-mode-toggle'); // Corrected method name
     if (darkModeToggle) {
         darkModeToggle.addEventListener('change', function() {
@@ -34,13 +34,6 @@ document.addEventListener("DOMContentLoaded", function() {
         applyDarkModeStyles(isDarkMode);
     }
 
-    document.getElementById('btnClose').addEventListener('click', function () { DoClose(); } );
-
-        function DoClose() {
-            window.close()
-        }
-
-    // Function to apply dark or light mode styles
     function applyDarkModeStyles(isDarkMode) {
         if (isDarkMode) {
             document.body.style.backgroundColor = '#595352';
@@ -50,71 +43,71 @@ document.addEventListener("DOMContentLoaded", function() {
             document.body.style.color = '#000';
         }
     }
+
+    // Modal logic inside DOMContentLoaded
+    var modal = document.getElementById("font-size-modal");
+    var btn = document.getElementById("settings-btn");
+    var span = document.getElementsByClassName("close")[0];
+
+    // Open the modal when the settings button is clicked
+    btn.onclick = function() {
+        console.log("Settings button clicked");
+        modal.style.display = "block";
+    };
+
+    // Close the modal when the 'x' is clicked
+    span.onclick = function() {
+        modal.style.display = "none";
+    };
+
+    // Close the modal if clicked outside
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    };
+
+    // Function to change font size - MW
+    function changeFontSize(size) {
+        var body = document.body;
+        if(size === 'small') {
+            body.style.fontSize = '12px';
+        } else if(size === 'medium') {
+            body.style.fontSize = '16px'; // This is typically the default size - MW
+        } else if(size === 'large') {
+            body.style.fontSize = '20px';
+        }
+
+        localStorage.setItem('preferredFontSize', size); // Stores the font size in local storage - MW
+        modal.style.display = "none"; // Close the modal after selection - MW
+    }
+
+    // Function to change font style - MW
+    function changeFontStyle(){
+        var selectedFont = document.getElementById('font-style-select').value;
+        document.documentElement.style.setProperty('--font-family', selectedFont);
+        localStorage.setItem('selectedFontStyle', selectedFont);
+    }
+
+    // Apply saved font size on page load - MW
+    function applySavedFontSize(){
+        var savedSize = localStorage.getItem('preferredFontSize');
+        if(savedSize){
+            changeFontSize(savedSize);
+        }
+    }
+    applySavedFontSize();
+
+    // Apply saved font style on page load - MW
+    document.addEventListener('DOMContentLoaded', (event) => {
+        var selectedFont = localStorage.getItem('selectedFontStyle');
+        if(selectedFont){
+            document.documentElement.style.setProperty('--font-family', selectedFont);
+            document.getElementById('font-style-select').value = selectedFont;
+        }
+    });
 });
 
-
-// Get the modal - MW
-var modal = document.getElementById("font-size-modal");
-
-// Get the button that opens the modal - MW
-var btn = document.getElementById("settings-btn");
-
-// Get the <span> element that closes the modal - MW
-var span = document.getElementsByClassName("close")[0];
-
-// When the user clicks the button, open the modal - MW
-btn.onclick = function() {
-  modal.style.display = "block";
-}
-
-// When the user clicks on <span> (x), close the modal - MW
-span.onclick = function() {
-  modal.style.display = "none";
-}
-
-// When the user clicks anywhere outside of the modal, close it - MW
-window.onclick = function(event) {
-  if (event.target == modal) {
-    modal.style.display = "none";
-  }
-}
-
-// Function to change font size - MW
-function changeFontSize(size) {
-  var body = document.body;
-  if(size === 'small') {
-    body.style.fontSize = '12px';
-  } else if(size === 'medium') {
-    body.style.fontSize = '16px'; // This is typically the default size - MW
-  } else if(size === 'large') {
-    body.style.fontSize = '20px';
-  }
-
-  localStorage.setItem('preferredFontSize', size); // Stores the font size in local storage - MW
-  modal.style.display = "none"; // Close the modal after selection - MW
-}
-
-function changeFontStyle(){
-    var selectedFont = document.getElementById('font-style-select').value;
-    document.documentElement.style.setProperty('--font-family', selectedFont);
-    localStorage.setItem('selectedFontStyle', selectedFont);
-}
-
-function applySavedFontSize(){
-    var savedSize = localStorage.getItem('preferredFontSize');
-    if(savedSize){
-        changeFontSize(savedSize);
-    }
-}
-// Call applySavedFontSize when the page loads - MW
-document.addEventListener('DOMContentLoaded', applySavedFontSize);
-document.addEventListener('DOMContentLoaded', (event) => {
-    var selectedFont = localStorage.getItem('selectedFontStyle');
-    if(selectedFont){
-        document.documentElement.style.setProperty('--font-family', selectedFont);
-        document.getElementById('font-style-select').value = selectedFont;
-    }
-})
 
 
 window.addEventListener('load', function() {
@@ -169,31 +162,34 @@ window.addEventListener('load', function() {
             var _pageNumber = document.getElementById('txtPageNumber');
             if (workflowCases != null) {
                 if (workflowCases.has_previous) {
-                    _pageNumber.value = workflowCases.previous_page_number;
+                    _pageNumber.value = workflowCases - 1;
                 } else {
                     _pageNumber.value = '1';
+                    print("Is not Null prev")
                 }
             } else {
                 _pageNumber.value = '1';
+                print("Is Null prev")
             }
             document.getElementById('formSearch').submit();
         }
 
 
-        function DoSubmitNextPage()
-        {
+        function DoSubmitNextPage() {
             var _pageNumber = document.getElementById('txtPageNumber');
-            if (workflowCases != null) {
-                if (workflowCases.has_next) {
-                    _pageNumber.value = workflowCases.next_page_number;
-                } else {
-                    _pageNumber.value = '1';
-                }
+            console.log('Current Page:', _pageNumber.value);
+            console.log('workflowCases:', workflowCases);
+
+            if (workflowCases != null && workflowCases.has_next) {
+                _pageNumber.value = parseInt(_pageNumber.value) + 1;
+                console.log('Going to Next Page:', _pageNumber.value);
             } else {
                 _pageNumber.value = '1';
+                console.log('No Next Page, Resetting to 1');
             }
             document.getElementById('formSearch').submit();
         }
+
 
 
         function DoSubmitLastPage() {

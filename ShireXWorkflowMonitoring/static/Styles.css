@@ -204,3 +204,30 @@ font-family: var(--font-family);
     z-index: 1;
     background-color: transparent;
 }
+
+table.dataTable {
+    border-collapse: collapse; /* Ensures borders don't overlap */
+}
+
+table.dataTable tr {
+    border-bottom: 1px solid #ddd; /* Add a border under each row */
+}
+
+table.dataTable th,
+table.dataTable td {
+    border-right: 1px solid #ddd; /* Add borders between table columns */
+    padding: 8px; /* Optional: Add some padding */
+}
+
+table.dataTable th {
+    background-color: #f2f2f2; /* Optional: Add background color to header */
+}
+
+table.dataTable td {
+    background-color: white; /* Ensures the background color is white */
+}
+
+table.dataTable th:last-child,
+table.dataTable td:last-child {
+    border-right: none; /* Removes the right border from the last column */
+}

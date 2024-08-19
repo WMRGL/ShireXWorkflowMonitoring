@@ -223,7 +223,7 @@
                         <div class="row g-5 align-items-center" style="padding:1px">
                             <div class="col-2" style="text-align:right">
                                 <label for="ddlCriteriaNoResult" class="col-form-label">Workflow:</label>
-                                <input type="hidden" id="txtPageNumber" name="txtPageNumber">
+                                <input type="hidden" id="txtPageNumber" name="txtPageNumber" value="{{ workflowCases.number|default:1 }}">
                             </div>
                             <div class="col-2">
                                 <select class="form-select" name="ddlCriteriaNoResult" id="ddlCriteriaNoResult">
@@ -475,9 +475,9 @@
                                 {{ item.CONC }}
                             </td>
 
-                            <td>
+                            <!--<td>
                                 {{ item.TEST|default_if_none:"Null" }}
-                            </td>
+                            </td>-->
                             <td>
                                 {{ item.SampleAlert }}
                             </td>
@@ -507,18 +507,34 @@
             <div class="container-fluid">
                 <nav aria-label="Pages for table">
                     <ul class="pagination justify-content-center">
-                        <li class="page-item"><input type="button" class="page-link" value="<< First" id="btnPageFirst">
+                        <li class="page-item {% if not workflowCases.has_previous %}disabled{% endif %}">
+                            <input type="button" class="page-link" value="<< First" id="btnPageFirst" onclick="submitPage(1)">
                         </li>
-                        <li class="page-item"><input type="button" class="page-link" value="< Previous"
-                                                     id="btnPagePrevious"></li>
-                        <li class="page-item"><span
-                                class="page-link">Page {{ workflowCases.number }} of {{ workflowCases.paginator.num_pages }}</span>
+                        <li class="page-item {% if not workflowCases.has_previous %}disabled{% endif %}">
+                            <input type="button" class="page-link" value="< Previous" id="btnPagePrevious"
+                                   {% if workflowCases.has_previous %}
+                                        onclick="submitPage({{ workflowCases.previous_page_number }})"
+                                   {% else %}
+                                        disabled
+                                   {% endif %}>
                         </li>
-                        <li class="page-item"><input type="button" class="page-link" value="Next >" id="btnPageNext">
+                        <li class="page-item">
+                            <span class="page-link">Page {{ workflowCases.number }} of {{ workflowCases.paginator.num_pages }}</span>
                         </li>
-                        <li class="page-item"><input type="button" class="page-link" value="Last >>" id="btnPageLast">
+                        <li class="page-item {% if not workflowCases.has_next %}disabled{% endif %}">
+                            <input type="button" class="page-link" value="Next >"
+                                   {% if workflowCases.has_next %}
+                                        onclick="submitPage({{ workflowCases.next_page_number }})"
+                                   {% else %}
+                                        disabled
+                                   {% endif %}>
+                        </li>
+                        <li class="page-item {% if not workflowCases.has_next %}disabled{% endif %}">
+                            <input type="button" class="page-link" value="Last >>" id="btnPageLast"
+                                   onclick="submitPage({{ workflowCases.paginator.num_pages }})">
                         </li>
                     </ul>
+
                 </nav>
             </div>
         {% endif %}
@@ -538,6 +554,18 @@
         console.log("Navigating to URL:", url); // Debugging
         window.location.href = url;
     </script>
+
+    <script>
+        function submitPage(pageNumber){
+            if(pageNumber < 1){
+                pageNumber = 1; // Ensures the page number doesn't go below 1
+            }
+            document.getElementById('txtPageNumber').value = pageNumber;
+            document.getElementById('formSearch').submit();
+        }
+    </script>
+
+
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             // Set default dates for the date fields
