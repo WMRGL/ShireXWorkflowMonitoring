@@ -291,7 +291,7 @@ window.addEventListener('load', function() {
 
 
         function SortTable(n){
-            //Doing it this way means it can only sort what's on the screen, but it'll reduce the SQL sproc calls #}
+            //Doing it this way means it can only sort what's on the screen, but it'll reduce the SQL sproc calls #
            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
            table = document.getElementById("ResultsTable");
            switching=true;
@@ -397,7 +397,7 @@ window.addEventListener('load', function() {
       modal.style.display = "none";
     }
 
-    // When the user clicks anywhere outside of the modal, close it - MW
+    // When the user clicks anywhere outside the modal, close it - MW
     window.onclick = function(event) {
         console.log("Close button clicked")
       if (event.target == modal) {
@@ -501,6 +501,68 @@ window.addEventListener('load', function() {
       });
     });
 
-    function CloseForm() {
+
+
+    function CloseForm()
+    {
             window.close();
+    }
+
+
+    function submitPage(pageNumber){
+        if(pageNumber < 1){
+            pageNumber = 1; // Ensures the page number doesn't go below 1
         }
+        document.getElementById('txtPageNumber').value = pageNumber;
+        document.getElementById('formSearch').submit(); // Submit the form to the server
+    }
+
+
+    // Get the number of columns in the <thead>
+    var columnCount = document.querySelectorAll('#ResultsTable thead th').length;
+    console.log('Number of columns in <thead>: ', columnCount);
+
+    // Get all rows in the <tbody>
+    var rows = document.querySelectorAll('#ResultsTable tbody tr');
+
+    // Check each row's column count
+    rows.forEach(function(row, index) {
+        var cellCount = row.querySelectorAll('td').length;
+        console.log('Row ' + (index + 1) + ' column count: ', cellCount);
+
+        if (cellCount !== columnCount) {
+            console.warn('Row ' + (index + 1) + ' has a mismatch! Expected: ' + columnCount + ', Found: ' + cellCount);
+        }
+    });
+
+    $(document).ready(function() {
+        $('#ResultsTable').DataTable({
+            "autoWidth": false,
+            "language": {
+                "emptyTable": "No records to display" // This will handle empty tables
+            }
+        });
+    });
+
+
+    window.onload = function() {
+        // Get today's date
+        var today = new Date();
+
+        // Calculate the date 2 weeks ago
+        var twoWeeksAgo = new Date();
+        twoWeeksAgo.setDate(today.getDate() - 14);
+
+        // Format the dates as YYYY-MM-DD
+        var day = ("0" + today.getDate()).slice(-2);
+        var month = ("0" + (today.getMonth() + 1)).slice(-2);
+        var formattedToday = today.getFullYear() + "-" + month + "-" + day;
+
+        var dayTwoWeeksAgo = ("0" + twoWeeksAgo.getDate()).slice(-2);
+        var monthTwoWeeksAgo = ("0" + (twoWeeksAgo.getMonth() + 1)).slice(-2);
+        var formattedTwoWeeksAgo = twoWeeksAgo.getFullYear() + "-" + monthTwoWeeksAgo + "-" + dayTwoWeeksAgo;
+
+        // Set the value of the date input fields
+        document.getElementById('txtCriteriaDateFrom').value = formattedTwoWeeksAgo;
+        document.getElementById('txtCriteriaDateTo').value = formattedToday;
+    };

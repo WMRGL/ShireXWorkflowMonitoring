@@ -49,7 +49,7 @@
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Cancer
+                           Solid Cancer
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                             {#<li class="small text-muted">Cancer</li>#}
@@ -104,3 +104,33 @@
     </nav>
 </div>
 <script src="{% static 'Scripts.js' %}"></script>
+<script>
+
+    $(document).ready(function(){
+        // Initialize DataTables
+        $('#ResultsTable').DataTable({
+            "paging": true,
+            "searching": true,
+            "ordering": true,
+            "pageLength": 20,
+            "lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "ALL"]],
+            "language": {
+                "paginate": {
+                    "previous": "&lt;",
+                    "next": "&gt;"
+                }
+            },
+            "initComplete": function(settings, json) {
+                // Force custom header color after DataTables has rendered
+                $('#ResultsTable thead th').css({
+                    'background-color': '#007bff', // Force blue
+                    'color': 'white',              // Force white text
+                    'border-bottom': '2px solid black' // Force black border
+                });
+            }
+        });
+    });
+
+
+
+</script>

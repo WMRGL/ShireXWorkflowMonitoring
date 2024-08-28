@@ -247,10 +247,11 @@
                             <div class="col-1" style="padding-right: unset">
                                 {# Unset to make select control wide enough #}
                                 <select class="form-select" name="ddlCriteriaItemsPerPage" id="ddlCriteriaItemsPerPage">
-                                    <option value="20" {% if itemsPerPage == 20 %} selected="selected" {% endif %}>20
-                                    </option>
-                                    <option value="40" {% if itemsPerPage == 40 %} selected="selected" {% endif %}>40
-                                    </option>
+                                    <option value="20" {% if itemsPerPage == 20 %} selected="selected" {% endif %}>20</option>
+                                    <option value="40" {% if itemsPerPage == 40 %} selected="selected" {% endif %}>40</option>
+                                    <option value="50" {% if itemsPerPage == 50 %} selected="selected" {% endif %}>50</option>
+                                    <option value="100" {% if itemsPerPage == 100 %} selected="selected" {% endif %}>100</option>
+                                    <option value="-1" {% if itemsPerPage == -1 %} selected="selected" {% endif %}>ALL</option>
                                 </select>
                             </div>
                             <div class="col-1">
@@ -343,9 +344,7 @@
                         <tr>
                             <td>
                                 {#<a class="btn btn-primary" href="{% url 'HaemOncSetAllocatedTo' _labNumber=item.LABNO _workflowName='WGS' %}">&nbsp;</a>#}
-                                <button class="btn btn-primary" id="{{ item.LABNO }}" onclick="DoClaim(this.id)">
-                                    &nbsp;
-                                </button>
+                                <button class="btn btn-primary" id="{{ item.LABNO }}" onclick="DoClaim(this.id)">&nbsp;</button>
                             </td>
                             <!--<td>
                                 <button class="btn btn-primary" id="{{ item.LABNO }}" onclick="DoClaim('{{ item.LABNO }}')">Claim</button>
@@ -503,95 +502,6 @@
             </table>
         </div>
 
-        {% if workflowCases %}
-            <div class="container-fluid">
-                <nav aria-label="Pages for table">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item {% if not workflowCases.has_previous %}disabled{% endif %}">
-                            <input type="button" class="page-link" value="<< First" id="btnPageFirst" onclick="submitPage(1)">
-                        </li>
-                        <li class="page-item {% if not workflowCases.has_previous %}disabled{% endif %}">
-                            <input type="button" class="page-link" value="< Previous" id="btnPagePrevious"
-                                   {% if workflowCases.has_previous %}
-                                        onclick="submitPage({{ workflowCases.previous_page_number }})"
-                                   {% else %}
-                                        disabled
-                                   {% endif %}>
-                        </li>
-                        <li class="page-item">
-                            <span class="page-link">Page {{ workflowCases.number }} of {{ workflowCases.paginator.num_pages }}</span>
-                        </li>
-                        <li class="page-item {% if not workflowCases.has_next %}disabled{% endif %}">
-                            <input type="button" class="page-link" value="Next >"
-                                   {% if workflowCases.has_next %}
-                                        onclick="submitPage({{ workflowCases.next_page_number }})"
-                                   {% else %}
-                                        disabled
-                                   {% endif %}>
-                        </li>
-                        <li class="page-item {% if not workflowCases.has_next %}disabled{% endif %}">
-                            <input type="button" class="page-link" value="Last >>" id="btnPageLast"
-                                   onclick="submitPage({{ workflowCases.paginator.num_pages }})">
-                        </li>
-                    </ul>
-
-                </nav>
-            </div>
-        {% endif %}
-
     </div>
-    <script>
-        function DoClaim(labno)
-        {
-            url="{% url 'DNASetAllocatedTo' _labNumber=0 _workflowName='SC' %}".replace('0', labno);
-            window.open(url);
-        }
-
-        console.log("labno:", labno); // Log the labno to ensure it is correct
-
-        let workflowName = 'RAML'; // Replace with actual logic if needed
-        let url = `/Molecular/Allocate/${labno}/${workflowName}/AllocateComplete/`;
-        console.log("Navigating to URL:", url); // Debugging
-        window.location.href = url;
-    </script>
-
-    <script>
-        function submitPage(pageNumber){
-            if(pageNumber < 1){
-                pageNumber = 1; // Ensures the page number doesn't go below 1
-            }
-            document.getElementById('txtPageNumber').value = pageNumber;
-            document.getElementById('formSearch').submit();
-        }
-    </script>
-
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Set default dates for the date fields
-            const txtCriteriaDateFrom = document.getElementById('txtCriteriaDateFrom');
-            const txtCriteriaDateTo = document.getElementById('txtCriteriaDateTo');
-            const currentDate = new Date();
-            const pastDate = new Date();
-            pastDate.setDate(currentDate.getDate() - 30); // Set past date to 30 days ago
-
-            // Format date to yyyy-mm-dd
-            const formatDate = (date) => {
-                const d = new Date(date);
-                const month = '' + (d.getMonth() + 1);
-                const day = '' + d.getDate();
-                const year = d.getFullYear();
-                return [year, month.padStart(2, '0'), day.padStart(2, '0')].join('-');
-            };
-
-            if (!txtCriteriaDateFrom.value) {
-                txtCriteriaDateFrom.value = formatDate(pastDate);
-            }
-
-            if (!txtCriteriaDateTo.value) {
-                txtCriteriaDateTo.value = formatDate(currentDate);
-            }
-        });
-    </script>
     </body>
 {% endblock content %}

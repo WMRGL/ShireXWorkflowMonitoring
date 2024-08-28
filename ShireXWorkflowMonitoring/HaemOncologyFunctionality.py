@@ -53,7 +53,7 @@ class BMTSearch(TemplateView):
                 _dateFrom = datetime.today() - timedelta(days=60)
                 _dateTo = datetime.today() + timedelta(days=30)
                 _pageNumber = 1
-                _itemsPerPage = 20
+                _itemsPerPage = -1
             else:
                 try:
                     _dateFrom = self.utilities.GetRequestKey(_request, "txtCriteriaDateFrom", enumDataType.Datetime)
@@ -83,7 +83,7 @@ class BMTSearch(TemplateView):
                     _dateFrom = datetime.today() - timedelta(days=60)
                     _dateTo = datetime.today() + timedelta(days=30)
                     _pageNumber = 1
-                    _itemsPerPage = 20
+                    _itemsPerPage = -1
 
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
                 'ONCOLOGY BMT', '', 'BMT', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
@@ -190,7 +190,7 @@ class MPNSearch(TemplateView):
                 _dateFrom = datetime.today() - timedelta(days=60)
                 _dateTo = datetime.today() + timedelta(days=30)
                 _pageNumber = 1
-                _itemsPerPage = 20
+                _itemsPerPage = -1
             else:
                 try:
                     _dateFrom = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime)
@@ -222,7 +222,7 @@ class MPNSearch(TemplateView):
                     _dateFrom = datetime.today() - timedelta(days=365)
                     _dateTo = datetime.today() + timedelta(days=30)
                     _pageNumber = 1
-                    _itemsPerPage = 20
+                    _itemsPerPage = -1
 
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
                 '2012_HAEM_ONC', '', 'MPN', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
@@ -320,7 +320,7 @@ class DAMLSearch(TemplateView): #AML & MDS
                 _dateFrom = datetime.today() - timedelta(days=60)
                 _dateTo = datetime.today() + timedelta(days=30)
                 _pageNumber = 1
-                _itemsPerPage = 20
+                _itemsPerPage = -1
             else:
                 try:
                     _dateFrom = self.utilities.GetRequestKey(_request, "txtCriteriaDateFrom", enumDataType.Datetime)
@@ -351,7 +351,7 @@ class DAMLSearch(TemplateView): #AML & MDS
                     _dateFrom = datetime.today() - timedelta(days=365)
                     _dateTo = datetime.today() + timedelta(days=30)
                     _pageNumber = 1
-                    _itemsPerPage = 20
+                    _itemsPerPage = -1
 
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
                 '2012_HAEM_ONC', '', 'DAML', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
@@ -458,7 +458,7 @@ class BreakSearch(TemplateView):
                 _dateFrom = datetime.today() - timedelta(days=60)
                 _dateTo = datetime.today() + timedelta(days=30)
                 _pageNumber = 1
-                _itemsPerPage = 20
+                _itemsPerPage = -1
             else:
                 try:
                     _dateFrom = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime)
@@ -488,7 +488,7 @@ class BreakSearch(TemplateView):
                     _dateFrom = datetime.today() - timedelta(days=365)
                     _dateTo = datetime.today() + timedelta(days=30)
                     _pageNumber = 1
-                    _itemsPerPage = 20
+                    _itemsPerPage = -1
 
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
                 '2012_HAEM_ONC', '', 'BREAK', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
@@ -595,7 +595,7 @@ class RAMLSearch(TemplateView):
                 _dateFrom = datetime.today() - timedelta(days=60)
                 _dateTo = datetime.today() + timedelta(days=30)
                 _pageNumber = 1
-                _itemsPerPage = 20
+                _itemsPerPage = -1
             else:
                 try:
                     _dateFrom = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime)
@@ -625,7 +625,7 @@ class RAMLSearch(TemplateView):
                     _dateFrom = datetime.today() - timedelta(days=365)
                     _dateTo = datetime.today() + timedelta(days=30)
                     _pageNumber = 1
-                    _itemsPerPage = 20
+                    _itemsPerPage = -1
 
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
                 '2012_HAEM_ONC', '', 'RAML', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
@@ -731,7 +731,7 @@ class SNPSearch(TemplateView):
                 _dateFrom = datetime.today() - timedelta(days=60)
                 _dateTo = datetime.today() + timedelta(days=30)
                 _pageNumber = 1
-                _itemsPerPage = 20
+                _itemsPerPage = -1
             else:
                 try:
                     _dateFrom = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime)
@@ -763,7 +763,7 @@ class SNPSearch(TemplateView):
                     _dateFrom = datetime.today() - timedelta(days=365)
                     _dateTo = datetime.today() + timedelta(days=30)
                     _pageNumber = 1
-                    _itemsPerPage = 20
+                    _itemsPerPage = -1
 
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases('2012_HAEM_ONC', '', 'SNP', _dateFrom, _dateTo,
                                                                         _reportStatus, _priority,
@@ -852,12 +852,10 @@ class ALLSearch(TemplateView):
             if not request.user.is_authenticated:
                 return HttpResponseRedirect(reverse('LoginPage'))
 
-            # If logged in determine if a postback, before extracting the search filters
-            if request.GET.__len__() == 0:
-                _isPostBack = False
-            else:
-                _isPostBack = True
+            # Determine if a postback or fresh load
+            _isPostBack = request.GET.__len__() != 0
 
+            # Default values
             _reportStatus = "NOTFINAL"
             _priority = ""
             _diseaseIndicationCode1 = ""
@@ -876,90 +874,79 @@ class ALLSearch(TemplateView):
                 _dateFrom = datetime.today() - timedelta(days=60)
                 _dateTo = datetime.today() + timedelta(days=30)
                 _pageNumber = 1
-                _itemsPerPage = 20
+                _itemsPerPage = 20  # Set a valid default value
             else:
                 try:
                     _dateFrom = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime)
                     _dateTo = self.utilities.GetRequestKey(request, "txtCriteriaDateTo", enumDataType.Datetime)
                     _pageNumber = self.utilities.GetRequestKey(request, "txtPageNumber", enumDataType.Integer)
-                    _itemsPerPage = self.utilities.GetRequestKey(request, "ddlCriteriaItemsPerPage",
-                                                                 enumDataType.Integer)
+                    if _pageNumber < 1:
+                        _pageNumber = 1
+                    _itemsPerPage = self.utilities.GetRequestKey(request, "ddlCriteriaItemsPerPage", enumDataType.Integer)
+                    if _itemsPerPage < 1:
+                        _itemsPerPage = 20  # Ensure it's always valid
+
+                    # Other criteria
                     _reportStatus = self.utilities.GetRequestKey(request, "ddlCriteriaStatus", enumDataType.String)
                     _priority = self.utilities.GetRequestKey(request, "ddlCriteriaPriority", enumDataType.String)
-                    _diseaseIndicationCode1 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication1",
-                                                                           enumDataType.String)
-                    _diseaseIndicationCode2 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication2",
-                                                                           enumDataType.String)
-                    _diseaseIndicationCode3 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication3",
-                                                                           enumDataType.String)
-                    _reasonForDiseaseIndication1 = self.utilities.GetRequestKey(
-                        request, "ddlCriteriaReasonForDiseaseIndication1", enumDataType.String)
-                    _reasonForDiseaseIndication2 = self.utilities.GetRequestKey(
-                        request, "ddlCriteriaReasonForDiseaseIndication2", enumDataType.String)
+                    _diseaseIndicationCode1 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication1", enumDataType.String)
+                    _diseaseIndicationCode2 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication2", enumDataType.String)
+                    _diseaseIndicationCode3 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication3", enumDataType.String)
+                    _reasonForDiseaseIndication1 = self.utilities.GetRequestKey(request, "ddlCriteriaReasonForDiseaseIndication1", enumDataType.String)
+                    _reasonForDiseaseIndication2 = self.utilities.GetRequestKey(request, "ddlCriteriaReasonForDiseaseIndication2", enumDataType.String)
                     _lastName = self.utilities.GetRequestKey(request, "txtCriteriaLastname", enumDataType.String)
-                    _reasonForDiseaseIndication3 = self.utilities.GetRequestKey(
-                        request, "ddlCriteriaReasonForDiseaseIndication3", enumDataType.String)
+                    _reasonForDiseaseIndication3 = self.utilities.GetRequestKey(request, "ddlCriteriaReasonForDiseaseIndication3", enumDataType.String)
                     _labNumber = self.utilities.GetRequestKey(request, "txtCriteriaLabnumber", enumDataType.String)
                     _noResultStatus = self.utilities.GetRequestKey(request, "ddlCriteriaNoResult", enumDataType.Integer)
                 except Exception:
-                    # If any errors occur return the default criteria
                     _dateFrom = datetime.today() - timedelta(days=365)
                     _dateTo = datetime.today() + timedelta(days=30)
                     _pageNumber = 1
-                    _itemsPerPage = 20
+                    _itemsPerPage = 20  # Default to 20
 
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
-                '2012_HAEM_ONC', '', 'ALL', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
-                _diseaseIndicationCode2, _diseaseIndicationCode3, _reasonForDiseaseIndication1,
-                _reasonForDiseaseIndication2, _reasonForDiseaseIndication3, request.user.username, _lastName,
-                _labNumber, _RefKey, _noResultStatus)
-            _listOfSurnames = self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases)
+                '2012_HAEM_ONC', '', 'ALL', _dateFrom, _dateTo, _reportStatus, _priority,
+                _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3,
+                _reasonForDiseaseIndication1, _reasonForDiseaseIndication2, _reasonForDiseaseIndication3,
+                request.user.username, _lastName, _labNumber, _RefKey, _noResultStatus
+            )
 
-            _searchCount = _totalWorkflowCases.__len__()
+            _searchCount = len(_totalWorkflowCases)
 
-            _workflowCases = Paginator(_totalWorkflowCases, _itemsPerPage)
+            if _searchCount > 0:
+                _workflowCases = Paginator(_totalWorkflowCases, _itemsPerPage)
+                _pageOfWorkflowCases = _workflowCases.page(_pageNumber)
+            else:
+                _pageOfWorkflowCases = []
 
-            _pageOfWorkflowCases = _workflowCases.page(_pageNumber)
+            # Add extra worksheet and extract sheet data
+            if _pageOfWorkflowCases:
+                _pageOfWorkflowCases = self.worksheetHelper.AddWorksheetTestResultsToWorkflowCases(_pageOfWorkflowCases)
+                _pageOfWorkflowCases = self.worksheetHelper.AddTestsWithNoWorksheetsToWorkflowCases(_pageOfWorkflowCases)
+                _pageOfWorkflowCases = self.worksheetHelper.ConvertWorksheetsColumnEmptyStringToNone(_pageOfWorkflowCases)
+                _pageOfWorkflowCases = self.extractsheetHelper.AddExtractsToWorkflowCases(_pageOfWorkflowCases)
 
-            # For each Lab No/Reason/Bill line extract the worksheet summary for that Lab No
-            _pageOfWorkflowCases = self.worksheetHelper.AddWorksheetTestResultsToWorkflowCases(_pageOfWorkflowCases)
-
-            _pageOfWorkflowCases = self.worksheetHelper.AddTestsWithNoWorksheetsToWorkflowCases(_pageOfWorkflowCases)
-
-            _pageOfWorkflowCases = self.worksheetHelper.ConvertWorksheetsColumnEmptyStringToNone(_pageOfWorkflowCases)
-
-            _pageOfWorkflowCases = self.extractsheetHelper.AddExtractsToWorkflowCases(_pageOfWorkflowCases)
-
-            # Codes for the search criteria
-            _reportStatuses = self.dataServices.GetReportStatus()
-
-            _priorities = self.dataServices.GetDNAPriority()
-
-            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', '', 'ALL')
-
-            _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(_diseaseIndicationCode1,
-                                                                                               _diseaseIndicationCode2,
-                                                                                               _diseaseIndicationCode3)
-
+            # Context for rendering
             _context = {
                 "criteriaDateFrom": _dateFrom,
                 "criteriaDateTo": _dateTo,
                 "Title": self.title,
                 "workflowCases": _pageOfWorkflowCases,
                 "itemsPerPage": _itemsPerPage,
-                "criteriaReportStatuses": _reportStatuses,
+                "criteriaReportStatuses": self.dataServices.GetReportStatus(),
                 "criteriaReportStatus": _reportStatus,
-                "criteriaPriorities": _priorities,
+                "criteriaPriorities": self.dataServices.GetDNAPriority(),
                 "criteriaPriority": _priority,
-                "criteriaDiseaseIndications": _diseaseIndications,
+                "criteriaDiseaseIndications": self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', '', 'ALL'),
                 "criteriaDiseaseIndication1": _diseaseIndicationCode1,
                 "criteriaDiseaseIndication2": _diseaseIndicationCode2,
                 "criteriaDiseaseIndication3": _diseaseIndicationCode3,
-                "criteriaReasonsForDiseaseIndications": _reasonsForDiseaseIndications,
+                "criteriaReasonsForDiseaseIndications": self.dataServices.GetDNAReasonForDiseaseIndication(
+                    _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3),
                 "criteriaReasonForDiseaseIndication1": _reasonForDiseaseIndication1,
                 "criteriaReasonForDiseaseIndication2": _reasonForDiseaseIndication2,
                 "criteriaReasonForDiseaseIndication3": _reasonForDiseaseIndication3,
-                "criteriaSurnames": _listOfSurnames,
+                "criteriaSurnames": self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases),
                 "criteriaSurname": _lastName,
                 "criteriaLabnumber": _labNumber,
                 "criteriaNoResult": _noResultStatus,
@@ -972,8 +959,8 @@ class ALLSearch(TemplateView):
                 "Title": self.title,
                 "errorMessage": "ALLSearch.get : " + str(ex)
             }
-
             return render(request, self.template_name, context)
+
 
 
 class CLLSearch(TemplateView): #Lymphoid
@@ -1013,7 +1000,7 @@ class CLLSearch(TemplateView): #Lymphoid
                 _dateFrom = datetime.today() - timedelta(days=60)
                 _dateTo = datetime.today() + timedelta(days=30)
                 _pageNumber = 1
-                _itemsPerPage = 20
+                _itemsPerPage = -1
             else:
                 try:
                     _dateFrom = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime)
@@ -1043,7 +1030,7 @@ class CLLSearch(TemplateView): #Lymphoid
                     _dateFrom = datetime.today() - timedelta(days=365)
                     _dateTo = datetime.today() + timedelta(days=30)
                     _pageNumber = 1
-                    _itemsPerPage = 20
+                    _itemsPerPage = -1
 
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
                 '2012_HAEM_ONC', '', 'CLL', _dateFrom, _dateTo,  _reportStatus, _priority,  _diseaseIndicationCode1,
@@ -1151,7 +1138,7 @@ class RBCRSearch(TemplateView):
                 _dateFrom = datetime.today() - timedelta(days=60)
                 _dateTo = datetime.today() + timedelta(days=30)
                 _pageNumber = 1
-                _itemsPerPage = 20
+                _itemsPerPage = -1
             else:
                 try:
                     _dateFrom = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime)
@@ -1181,7 +1168,7 @@ class RBCRSearch(TemplateView):
                     _dateFrom = datetime.today() - timedelta(days=365)
                     _dateTo = datetime.today() + timedelta(days=30)
                     _pageNumber = 1
-                    _itemsPerPage = 20
+                    _itemsPerPage = -1
 
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
                 '2012_HAEM_ONC', '', 'RBCR', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
@@ -1288,7 +1275,7 @@ class FALSearch(TemplateView): #F-AML/F-ALL
                 _dateFrom = datetime.today() - timedelta(days=60)
                 _dateTo = datetime.today() + timedelta(days=30)
                 _pageNumber = 1
-                _itemsPerPage = 20
+                _itemsPerPage = -1
             else:
                 try:
                     _dateFrom = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime)
@@ -1318,7 +1305,7 @@ class FALSearch(TemplateView): #F-AML/F-ALL
                     _dateFrom = datetime.today() - timedelta(days=365)
                     _dateTo = datetime.today() + timedelta(days=30)
                     _pageNumber = 1
-                    _itemsPerPage = 20
+                    _itemsPerPage = -1
 
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
                 '2012_HAEM_ONC', '', 'FAL', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
@@ -1424,7 +1411,7 @@ class HaemOncSearch(TemplateView): #All Molecular
                 _dateFrom = datetime.today() - timedelta(days=60)
                 _dateTo = datetime.today() + timedelta(days=30)
                 _pageNumber = 1
-                _itemsPerPage = 20
+                _itemsPerPage = -1
             else:
                 try:
                     _dateFrom = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime)
@@ -1454,7 +1441,7 @@ class HaemOncSearch(TemplateView): #All Molecular
                     _dateFrom = datetime.today() - timedelta(days=365)
                     _dateTo = datetime.today() + timedelta(days=30)
                     _pageNumber = 1
-                    _itemsPerPage = 20
+                    _itemsPerPage = -1
 
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
                 '2012_HAEM_ONC', 'ONCOLOGY BMT', '', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
@@ -1560,7 +1547,7 @@ class GLHPanHaemSearch(TemplateView):
                 _dateFrom = datetime.today() - timedelta(days=60)
                 _dateTo = datetime.today() + timedelta(days=90)
                 _pageNumber = 1
-                _itemsPerPage = 20
+                _itemsPerPage = -1
             else:
                 try:
                     _dateFrom = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime)
@@ -1592,7 +1579,7 @@ class GLHPanHaemSearch(TemplateView):
                     _dateFrom = datetime.today() - timedelta(days=365)
                     _dateTo = datetime.today() + timedelta(days=30)
                     _pageNumber = 1
-                    _itemsPerPage = 20
+                    _itemsPerPage = -1
 
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
                '2012_HAEM_ONC', '', 'PanHaem', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,
@@ -1705,7 +1692,7 @@ class RNASearch(TemplateView):
                 _dateFrom = datetime.today() - timedelta(days=60)
                 _dateTo = datetime.today() + timedelta(days=30)
                 _pageNumber = 1
-                _itemsPerPage = 20
+                _itemsPerPage = -1
             else:
                 try:
                     _dateFrom = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime)
@@ -1735,7 +1722,7 @@ class RNASearch(TemplateView):
                     _dateFrom = datetime.today() - timedelta(days=365)
                     _dateTo = datetime.today() + timedelta(days=30)
                     _pageNumber = 1
-                    _itemsPerPage = 20
+                    _itemsPerPage = -1
 
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
                 '2012_HAEM_ONC', '', 'RNA', _dateFrom, _dateTo, _reportStatus, _priority, _diseaseIndicationCode1,

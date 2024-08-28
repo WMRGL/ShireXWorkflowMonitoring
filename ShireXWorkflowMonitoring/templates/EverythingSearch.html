@@ -18,7 +18,7 @@
             <form action="" method="get" id="formSearch">
                 {% csrf_token %}
                 <div class="mb-3">
-                    <div class="row g-5 align-items-center" style="padding:1px">
+                    <div class="row g-2 align-items-center" style="padding:1px">
                         <div class="col-2" style="text-align:right">
                             <label for="txtCriteriaDateFrom" class="col-form-label">Date from:</label>
                         </div>
@@ -118,10 +118,6 @@
                         <div class="col-2">
                             &nbsp;
                         </div>
-                        <div class="col-2">
-                            &nbsp;
-                        </div>
-                    </div>
                     <div class="row g-5 align-items-center" style="padding:5px">
                         <div class="col-2 bg-light" style="text-align:right">
                             <label for="ddlCriteriaReasonForDiseaseIndication1" class="col-form-label">Reason(s):</label>
@@ -183,6 +179,9 @@
                             <select class="form-select" name="ddlCriteriaItemsPerPage" id="ddlCriteriaItemsPerPage">
                                 <option value="20" {% if itemsPerPage == 20 %} selected="selected" {% endif %}>20</option>
                                 <option value="40" {% if itemsPerPage == 40 %} selected="selected" {% endif %}>40</option>
+                                <option value="50" {% if itemsPerPage == 50 %} selected="selected" {% endif %}>50</option>
+                                <option value="100" {% if itemsPerPage == 100 %} selected="selected" {% endif %}>100</option>
+                                <option value="-1" {% if itemsPerPage == -1 %} selected="selected" {% endif %}>ALL</option>
                             </select>
                         </div>
                         <div class="col-1">
@@ -207,8 +206,8 @@
     <div class="container-fluid">
         <table class="table table-bordered"  Id="ResultsTable">
             <thead class="bg-primary" style="color:white">
-                <th>
-
+                <th scope="col">
+                    Claim
                 </th>
                 {# <th scope="col" onclick="SortTable(1)"> #}
                 <th scope="col">
@@ -261,163 +260,91 @@
                 </th>
             </thead>
             <tbody>
-            {% if workflowCases %}
-                {% for item in workflowCases %}
-                    <tr>
-                        <td>
-                            {#<a class="btn btn-primary" href="{% url 'HaemOncSetAllocatedTo' _labNumber=item.LABNO _workflowName=item.Wkflw %}">&nbsp;</a>#}
-                            {#<button class="btn btn-primary" id="{{item.LABNO}}" name="" onclick="DoClaim(this.id, this.name)">&nbsp;</button>#}
-                        </td>
-                        {% if item.DECEASED_DATE %}
-                        <td>
-                            {{ item.LASTNAME }}, {{ item.FIRSTNAME }} ( {{ item.DECEASED_DATE|date:'d-m-Y' }} )
-                        </td>
-                        {% else %}
-                        <td>
-                            {{ item.LASTNAME }}, {{ item.FIRSTNAME }}
-                        </td>
-                        {% endif %}
-                        <td>
-                            <a href="{% url 'SampleForm'  _labNumber=item.LABNO _indication=item.DISEASE_CODE %}" target="_blank">{{ item.LABNO }}</a>
-                        </td>
-                        <td>
-                            {{ item.DISEASE_CODE }} /<br>{{ item.REASON }}
-                        </td>
-                        <td>
-                            {{ item.SAMPLETYPE }}
-                        </td>
-                        {% if item.PRIORITY|upper == "URGENT" %}
-                        <td style="color:red; font-weight: bold">
-                            {{ item.PRIORITY }}
-                        </td>
-                        {% else %}
-                            {% if item.PRIORITY|upper == "PRIORITY" %}
-                            <td style="color:green; font-weight: bold">
-                                {{ item.PRIORITY }}
-                            </td>
-                            {% else %}
+                {% if workflowCases %}
+                    {% for item in workflowCases %}
+                        <tr>
+                            <!-- Claim Column -->
                             <td>
-                                {{ item.PRIORITY }}
+                                <button class="btn btn-primary" id="{{item.LABNO}}" name="" onclick="DoClaim(this.id, this.name)">&nbsp;</button>
                             </td>
-                            {% endif %}
-                        {% endif %}
-                        {% if item.DaysRemaining == -99999 %}
-                        <td style="background-color: red; color: white">
-                            No target date
-                        </td>
-                        {% else %}
-                            {% if item.DaysRemaining <= -100 and item.REPORT_STATUS|slice:":5"|upper != "FINAL"%}
-                            <td style="background-color: red; color: white">
-                                {{ item.DaysRemaining }}
-                            </td>
-                            {% else %}
-                                {% if item.DaysRemaining <= 0 and item.REPORT_STATUS|slice:":5"|upper != "FINAL" %}
-                                <td style="color: red; font-weight: bold">
-                                    {{ item.DaysRemaining }}
-                                </td>
+
+                            <!-- Patient Column -->
+                            <td>
+                                {% if item.DECEASED_DATE %}
+                                    {{ item.LASTNAME }}, {{ item.FIRSTNAME }} ({{ item.DECEASED_DATE|date:'d-m-Y' }})
                                 {% else %}
-                                    {% if item.DaysRemaining <= 5 and item.REPORT_STATUS|slice:":5"|upper != "FINAL" %}
-                                    <td style="color: orange; font-weight: bold">
-                                        {{ item.DaysRemaining }}
-                                    </td>
-                                    {% else %}
-                                        {% if item.REPORT_STATUS|slice:":5"|upper == "FINAL" %}
-                                        <td>
-                                            0
-                                        </td>
-                                        {% else %}
-                                        <td>
-                                            {{ item.DaysRemaining }}
-                                        </td>
-                                        {% endif %}
-                                    {% endif %}
+                                    {{ item.LASTNAME }}, {{ item.FIRSTNAME }}
                                 {% endif %}
-                            {% endif %}
-                        {% endif %}
-                        <td>
-                            {{ item.ALLOCATED_TO }}
-                        </td>
-                        <td>
-                            {{ item.REF }}
-                        </td>
-                        <td>
-                            {{ item.DATE_RECEIVED|date:'d-m-Y' }}
-                        </td>
-                        <td>
-                            {{ item.DATE_ACTIVATED|date:'d-m-Y' }}
-                        </td>
-                        <td>
-                            {{ item.TARGET_DATE|date:'d-m-Y'}}
-                        </td>
-                        {% if item.REPORT_STATUS|upper == "PENDING" %}
-                        <td style="color:green; font-weight: bold">
-                            {{ item.REPORT_STATUS }}
-                        </td>
-                        {% else %}
-                        <td>
-                            {{ item.REPORT_STATUS }}
-                        </td>
-                        {% endif %}
-                        <td>
-                            {{ item.REPORT_BY }}
-                        </td>
-                        {% autoescape off%}
-{#                            {% if item.WORKSHEET_OUTSTANDING == "yes" %}#}
-{#                                <td>#}
-{#                                    None#}
-{#                                </td>#}
-{#                            {% else %}#}
-{#                                {% if item.RESULTS_OUTSTANDING == "yes" %}#}
-{#                                <td>#}
-{#                                    {{ item.WORKSHEETS }}#}
-{#                                </td>#}
-{#                                {% else %}#}
-                            <td>
-                            {{ item.WORKSHEETS }}
                             </td>
-{#                                {% endif %}#}
-{#                            {% endif %}#}
-                        {% endautoescape %}
-                        <td>
-                            {% autoescape off%}
-                                {{ item.EXTRACTSHEETS }}
-                            {% endautoescape %}
-                        </td>
-                        <td>
-                            {{ item.SampleAlert }}
-                        </td>
+
+                            <!-- Lab Number -->
+                            <td>
+                                <a href="{% url 'SampleForm' _labNumber=item.LABNO _indication=item.DISEASE_CODE %}" target="_blank">{{ item.LABNO }}</a>
+                            </td>
+
+                            <!-- Indication / Reason -->
+                            <td>{{ item.DISEASE_CODE }} /<br>{{ item.REASON }}</td>
+
+                            <!-- Sample Type -->
+                            <td>{{ item.SAMPLETYPE }}</td>
+
+                            <!-- Priority -->
+                            <td>
+                                {% if item.PRIORITY|upper == "URGENT" %}
+                                    <span style="color:red; font-weight: bold">{{ item.PRIORITY }}</span>
+                                {% else %}
+                                    <span>{{ item.PRIORITY }}</span>
+                                {% endif %}
+                            </td>
+
+                            <!-- Days Left -->
+                            <td>
+                                {% if item.DaysRemaining == -99999 %}
+                                    <span style="background-color: red; color: white">No target date</span>
+                                {% else %}
+                                    <span>{{ item.DaysRemaining }}</span>
+                                {% endif %}
+                            </td>
+
+                            <!-- Allocated To -->
+                            <td>{{ item.ALLOCATED_TO }}</td>
+
+                            <!-- Key -->
+                            <td>{{ item.REF }}</td>
+
+                            <!-- Date Received -->
+                            <td>{{ item.DATE_RECEIVED|date:'d-m-Y' }}</td>
+
+                            <!-- Date Activated -->
+                            <td>{{ item.DATE_ACTIVATED|date:'d-m-Y' }}</td>
+
+                            <!-- Date Due -->
+                            <td>{{ item.TARGET_DATE|date:'d-m-Y' }}</td>
+
+                            <!-- Status -->
+                            <td>{{ item.REPORT_STATUS }}</td>
+
+                            <!-- Report By -->
+                            <td>{{ item.REPORT_BY }}</td>
+
+                            <!-- Worksheet / Result -->
+                            <td>{{ item.WORKSHEETS|safe }}</td>
+
+                            <!-- DNA/Quant -->
+                            <td>{{ item.EXTRACTSHEETS|safe }}</td>
+
+                            <!-- Alert -->
+                            <td>{{ item.SampleAlert }}</td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="17">No records to display</td>
                     </tr>
-                {% endfor %}
-            {% else %}
-                <tr>
-                    <td>
-                        No records to display
-                    </td>
-                    <td>
-                        &nbsp;
-                    </td>
-                    <td>
-                        &nbsp;
-                    </td>
-                </tr>
-            {% endif %}
+                {% endif %}
             </tbody>
+
         </table>
     </div>
-
-    {% if workflowCases %}
-    <div class="container-fluid">
-        <nav aria-label="Pages for table">
-            <ul class="pagination justify-content-center">
-                <li class="page-item"><input type="button" class="page-link" value="<< First" id="btnPageFirst"></li>
-                <li class="page-item"><input type="button" class="page-link" value="< Previous" id="btnPagePrevious"></li>
-                <li class="page-item"><span class="page-link">Page {{ workflowCases.number }} of {{ workflowCases.paginator.num_pages }}</span></li>
-                <li class="page-item"><input type="button" class="page-link" value="Next >" id="btnPageNext"></li>
-                <li class="page-item"><input type="button" class="page-link" value="Last >>" id="btnPageLast"></li>
-            </ul>
-        </nav>
-    </div>
-    {% endif %}
-
 </div>
 {% endblock content %}

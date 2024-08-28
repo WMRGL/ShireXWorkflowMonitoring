@@ -58,7 +58,7 @@ class SolidCancerSearch(TemplateView):
                 _dateFrom = datetime.today() - timedelta(days=60)
                 _dateTo = datetime.today() + timedelta(days=30)
                 _pageNumber = 1
-                _itemsPerPage = 20
+                _itemsPerPage = -1
 
             else:
 
@@ -66,7 +66,7 @@ class SolidCancerSearch(TemplateView):
                     _dateFrom = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime)
                     _dateTo = self.utilities.GetRequestKey(request, "txtCriteriaDateTo", enumDataType.Datetime)
                     _pageNumber = self.utilities.GetRequestKey(request, "txtPageNumber", enumDataType.Integer) or 1
-                    _itemsPerPage = self.utilities.GetRequestKey(request, "ddlCriteriaItemsPerPage", enumDataType.Integer) or 20
+                    _itemsPerPage = self.utilities.GetRequestKey(request, "ddlCriteriaItemsPerPage", enumDataType.Integer) or -1
                     _reportStatus = self.utilities.GetRequestKey(request, "ddlCriteriaStatus", enumDataType.String) or "NOTFINAL"
                     _priority = self.utilities.GetRequestKey(request, "ddlCriteriaPriority", enumDataType.String) or ""
                     _diseaseIndicationCode1 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication1", enumDataType.String) or ""
@@ -84,7 +84,7 @@ class SolidCancerSearch(TemplateView):
                     _dateFrom = datetime.today() - timedelta(days=60)
                     _dateTo = datetime.today() + timedelta(days=30)
                     _pageNumber = 1
-                    _itemsPerPage = 20
+                    _itemsPerPage = -1
                     logger.error("Exception during postback processing: %s", ex)
 
             logger.info("Before fetching workflow cases")
@@ -187,13 +187,13 @@ class WGSSearch(TemplateView):
                 _dateTo = datetime.today() + timedelta(days=30)
                 print(_dateTo)
                 _pageNumber = 1
-                _itemsPerPage = 20
+                _itemsPerPage = -1
             else:
                 try:
                     _dateFrom = self.utilities.GetRequestKey(_request, "txtCriteriaDateFrom", enumDataType.Datetime)
                     _dateTo = self.utilities.GetRequestKey(_request, "txtCriteriaDateTo", enumDataType.Datetime)
                     _pageNumber = self.utilities.GetRequestKey(_request, "txtPageNumber", enumDataType.Integer) or 1
-                    _itemsPerPage = self.utilities.GetRequestKey(_request, "ddlCriteriaItemsPerPage", enumDataType.Integer) or 20
+                    _itemsPerPage = self.utilities.GetRequestKey(_request, "ddlCriteriaItemsPerPage", enumDataType.Integer) or -1
                     _reportStatus = self.utilities.GetRequestKey(_request, "ddlCriteriaStatus", enumDataType.String) or "NOTFINAL"
                     _priority = self.utilities.GetRequestKey(_request, "ddlCriteriaPriority", enumDataType.String) or ""
                     _diseaseIndicationCode1 = self.utilities.GetRequestKey(_request, "ddlCriteriaDiseaseIndication1", enumDataType.String) or ""
@@ -210,7 +210,7 @@ class WGSSearch(TemplateView):
                     _dateFrom = datetime.today() - timedelta(days=60)
                     _dateTo = datetime.today() + timedelta(days=30)
                     _pageNumber = 1
-                    _itemsPerPage = 20
+                    _itemsPerPage = -1
 
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
                 '2012_SOLID_CANCER', '2012_OTHER', 'WGS', _dateFrom, _dateTo, _reportStatus, _priority,

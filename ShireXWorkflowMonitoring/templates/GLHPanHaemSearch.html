@@ -176,6 +176,9 @@
                             <select class="form-select" name="ddlCriteriaItemsPerPage" id="ddlCriteriaItemsPerPage">
                                 <option value="20" {% if itemsPerPage == 20 %} selected="selected" {% endif %}>20</option>
                                 <option value="40" {% if itemsPerPage == 40 %} selected="selected" {% endif %}>40</option>
+                                <option value="50" {% if itemsPerPage == 50 %} selected="selected" {% endif %}>50</option>
+                                <option value="100" {% if itemsPerPage == 100 %} selected="selected" {% endif %}>100</option>
+                                <option value="-1" {% if itemsPerPage == -1 %} selected="selected" {% endif %}>ALL</option>
                             </select>
                         </div>
                         <div class="col-1">
@@ -361,21 +364,9 @@
                             {{ item.REPORT_BY }}
                         </td>
                         {% autoescape off%}
-{#                            {% if item.WORKSHEET_OUTSTANDING == "yes" %}#}
-{#                                <td>#}
-{#                                    None#}
-{#                                </td>#}
-{#                            {% else %}#}
-{#                                {% if item.RESULTS_OUTSTANDING == "yes" %}#}
-{#                                <td>#}
-{#                                    {{ item.WORKSHEETS }}#}
-{#                                </td>#}
-{#                                {% else %}#}
                             <td>
                             {{ item.WORKSHEETS }}
                             </td>
-{#                                {% endif %}#}
-{#                            {% endif %}#}
                         {% endautoescape %}
                         <td>
                             {% autoescape off%}
@@ -403,20 +394,5 @@
             </tbody>
         </table>
     </div>
-
-    {% if workflowCases %}
-    <div class="container-fluid">
-        <nav aria-label="Pages for table">
-            <ul class="pagination justify-content-center">
-                <li class="page-item"><input type="button" class="page-link" value="<< First" id="btnPageFirst"></li>
-                <li class="page-item"><input type="button" class="page-link" value="< Previous" id="btnPagePrevious"></li>
-                <li class="page-item"><span class="page-link">Page {{ workflowCases.number }} of {{ workflowCases.paginator.num_pages }}</span></li>
-                <li class="page-item"><input type="button" class="page-link" value="Next >" id="btnPageNext"></li>
-                <li class="page-item"><input type="button" class="page-link" value="Last >>" id="btnPageLast"></li>
-            </ul>
-        </nav>
-    </div>
-    {% endif %}
-
 </div>
 {% endblock content %}
