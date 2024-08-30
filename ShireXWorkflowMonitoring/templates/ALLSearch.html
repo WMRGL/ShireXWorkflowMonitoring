@@ -20,21 +20,17 @@
                 <div class="mb-3">
                     <div class="row g-5 align-items-center" style="padding:1px">
                         <div class="col-2" style="text-align:right">
-                                <label for="txtCriteriaDateFrom" class="col-form-label">Date from:</label>
-                            </div>
-                            <div class="col-2">
-                                <input type="date" class="form-control" name="txtCriteriaDateFrom"
-                                       id="txtCriteriaDateFrom" value="{{ criteriaDateFrom }}">
-                            </div>
-                            <div class="col-2" style="text-align:right">
-                                <label for="txtCriteriaDateTo" class="col-form-label">Date to:</label>
-                            </div>
-                            <div class="col-2">
-                                <!--<p>date {{ criteriaDateTo }}</p>-->
-                                <input type="date" class="form-control" name="txtCriteriaDateTo" id="txtCriteriaDateTo"
-                                       value="{{ criteriaDateTo}}">
-
-                            </div>
+                            <label for="txtCriteriaDateFrom" class="col-form-label">Date from:</label>
+                        </div>
+                        <div class="col-2">
+                            <input type="date" class="form-control" name="txtCriteriaDateFrom" id="txtCriteriaDateFrom" value="{{ criteriaDateFrom|date:'Y-m-d' }}">
+                        </div>
+                        <div class="col-2" style="text-align:right">
+                            <label for="txtCriteriaDateTo" class="col-form-label">Date to:</label>
+                        </div>
+                        <div class="col-2">
+                            <input type="date" class="form-control" name="txtCriteriaDateTo" id="txtCriteriaDateTo" value="{{ criteriaDateTo|date:'Y-m-d' }}">
+                        </div>
                         <div class="col-2" style="text-align:right">
                             <label for="ddlCriteriaStatus" class="col-form-label">Status:</label>
                         </div>
@@ -168,10 +164,7 @@
                     <div class="row g-5 align-items-center" style="padding:1px">
                         <div class="col-2" style="text-align:right">
                             <label for="ddlCriteriaNoResult" class="col-form-label">Workflow:</label>
-                            <input type="hidden" id="txtPageNumber" name="txtPageNumber" value="{{ workflowCases.number }}">
-                            <input type="hidden" name="txtCriteriaDateFrom" value="{{ criteriaDateFrom }}">
-                            <input type="hidden" name="txtCriteriaDateTo" value="{{ criteriaDateTo }}">
-                            <input type="hidden" name="ddlCriteriaStatus" value="{{ criteriaReportStatus }}">
+                            <input type="hidden" id="txtPageNumber" name="txtPageNumber">
                         </div>
                         <div class="col-2">
                             <select class="form-select" name="ddlCriteriaNoResult" id="ddlCriteriaNoResult">
@@ -186,8 +179,11 @@
                         </div>
                         <div class="col-1" style="padding-right: unset">  {# Unset to make select control wide enough #}
                             <select class="form-select" name="ddlCriteriaItemsPerPage" id="ddlCriteriaItemsPerPage">
+                                <option value="-1" {% if itemsPerPage == -1%} selected="selected" {% endif %}>ALL</option>
                                 <option value="20" {% if itemsPerPage == 20 %} selected="selected" {% endif %}>20</option>
                                 <option value="40" {% if itemsPerPage == 40 %} selected="selected" {% endif %}>40</option>
+                                <option value="50" {% if itemsPerPage == 50 %} selected="selected" {% endif %}>50</option>
+                                <option value="100" {% if itemsPerPage == 100 %} selected="selected" {% endif %}>100</option>
                             </select>
                         </div>
                         <div class="col-1">
@@ -210,128 +206,188 @@
         </div>
     {% endif %}
     <div class="container-fluid">
-        <table class="table table-bordered" id="ResultsTable">
+        <table class="table table-bordered"  Id="ResultsTable">
             <thead class="bg-primary" style="color:white">
-                <tr>
-                    <th>Claim</th>
-                    <th>Patient (Date deceased)</th>
-                    <th>Lab Number</th>
-                    <th>Indication / Reason</th>
-                    <th>Sample type</th>
-                    <th>Priority</th>
-                    <th>Days left</th>
-                    <th>Alloc to</th>
-                    <th>Key</th>
-                    <th>Date received</th>
-                    <th>Date activated</th>
-                    <th>Date due</th>
-                    <th>Status</th>
-                    <th>Report by</th>
-                    <th>Worksheet / Result</th>
-                    <th>DNA/Quant</th>
-                    <th>Alert</th>
-                </tr>
+                <th>
+                    Claim
+                </th>
+                {#  <th scope="col" onclick="SortTable(1)"> #}
+                <th scope="col">
+                    Patient (Date deceased)
+                </th>
+                <th scope="col">
+                    Lab Number
+                </th>
+                <th scope="col">
+                    Indication / Reason
+                </th>
+                <th scope="col">
+                    Sample type
+                </th>
+                <th scope="col">
+                    Priority
+                </th>
+                <th scope="col">
+                    Days left
+                </th>
+                <th scope="col">
+                    Alloc to
+                </th>
+                <th scope="col">
+                    Key
+                </th>
+                <th scope="col">
+                    Date received
+                </th>
+                <th scope="col">
+                    Date activated
+                </th>
+                <th scope="col">
+                    Date_due
+                </th>
+                <th scope="col">
+                    Status
+                </th>
+                <th scope="col">
+                    Report by
+                </th>
+                <th scope="col">
+                    Wksheet / Result
+                </th>
+                <th scope="col">
+                    DNA/Quant
+                </th>
+                <th scope="col">
+                    Alert
+                </th>
             </thead>
             <tbody>
             {% if workflowCases %}
                 {% for item in workflowCases %}
                     <tr>
-                        <!-- Column 1: Claim button -->
                         <td>
-                            <button class="btn btn-primary" id="{{ item.LABNO|default:'' }}" onclick="DoClaim(this.id)">&nbsp;</button>
+                            {# <a class="btn btn-primary" href="{% url 'HaemOncSetAllocatedTo' _labNumber=item.LABNO _workflowName='ALL' %}">&nbsp;</a> #}
+                            <button class="btn btn-primary" id="{{item.LABNO}}" onclick="DoClaim(this.id)">&nbsp;</button>
                         </td>
-
-                        <!-- Column 2: Patient name and (optional) deceased date -->
-                       <td>
-                            {{ item.LASTNAME|default:'Unknown' }}, {{ item.FIRSTNAME|default:'Unknown' }}
-                            {% if item.DECEASED_DATE %}
-                                ({{ item.DECEASED_DATE|date:'d-m-Y' }})
+                        {% if item.DECEASED_DATE %}
+                        <td>
+                            {{ item.LASTNAME }}, {{ item.FIRSTNAME }} ( {{ item.DECEASED_DATE|date:'d-m-Y' }} )
+                        </td>
+                        {% else %}
+                        <td>
+                            {{ item.LASTNAME }}, {{ item.FIRSTNAME }}
+                        </td>
+                        {% endif %}
+                        <td>
+                            <a href="{% url 'SampleForm'  _labNumber=item.LABNO _indication=item.DISEASE_CODE %}" target="_blank">{{ item.LABNO }}</a>
+                        </td>
+                        <td>
+                            {{ item.DISEASE_CODE }} /<br>{{ item.REASON }}
+                        </td>
+                        <td>
+                            {{ item.SAMPLETYPE }}
+                        </td>
+                        {% if item.PRIORITY|upper == "URGENT" %}
+                        <td style="color:red; font-weight: bold">
+                            {{ item.PRIORITY }}
+                        </td>
+                        {% else %}
+                            {% if item.PRIORITY|upper == "PRIORITY" %}
+                            <td style="color:green; font-weight: bold">
+                                {{ item.PRIORITY }}
+                            </td>
+                            {% else %}
+                            <td>
+                                {{ item.PRIORITY }}
+                            </td>
                             {% endif %}
+                        {% endif %}
+                        {% if item.DaysRemaining == -99999 %}
+                        <td style="background-color: red; color: white">
+                            No target date
                         </td>
-
-                        <!-- Column 3: Lab number with link -->
-                        <td>
-                            <a href="{% url 'SampleForm' _labNumber=item.LABNO _indication=item.DISEASE_CODE %}" target="_blank">{{ item.LABNO|default:'N/A' }}</a>
-                        </td>
-
-                        <!-- Column 4: Indication / Reason -->
-                        <td>
-                            {{ item.DISEASE_CODE|default:'N/A' }} /<br>{{ item.REASON|default:'No reason provided' }}
-                        </td>
-
-                        <!-- Column 5: Sample type -->
-                        <td>{{ item.SAMPLETYPE|default:'Unknown' }}</td>
-
-                        <!-- Column 6: Priority (with color based on value) -->
-                        <td>
-                            {% if item.PRIORITY %}
-                                {% if item.PRIORITY|upper == "URGENT" %}
-                                    <span style="color:red; font-weight:bold">{{ item.PRIORITY }}</span>
-                                {% elif item.PRIORITY|upper == "PRIORITY" %}
-                                    <span style="color:green; font-weight:bold">{{ item.PRIORITY }}</span>
+                        {% else %}
+                            {% if item.DaysRemaining <= -100 and item.REPORT_STATUS|slice:":5"|upper != "FINAL"%}
+                            <td style="background-color: red; color: white">
+                                {{ item.DaysRemaining }}
+                            </td>
+                            {% else %}
+                                {% if item.DaysRemaining <= 0 and item.REPORT_STATUS|slice:":5"|upper != "FINAL" %}
+                                <td style="color: red; font-weight: bold">
+                                    {{ item.DaysRemaining }}
+                                </td>
                                 {% else %}
-                                    {{ item.PRIORITY }}
+                                    {% if item.DaysRemaining <= 5 and item.REPORT_STATUS|slice:":5"|upper != "FINAL" %}
+                                    <td style="color: orange; font-weight: bold">
+                                        {{ item.DaysRemaining }}
+                                    </td>
+                                    {% else %}
+                                        {% if item.REPORT_STATUS|slice:":5"|upper == "FINAL" %}
+                                        <td>
+                                            0
+                                        </td>
+                                        {% else %}
+                                        <td>
+                                            {{ item.DaysRemaining }}
+                                        </td>
+                                        {% endif %}
+                                    {% endif %}
                                 {% endif %}
-                            {% else %}
-                                <span>None</span> <!-- Placeholder for missing priority -->
                             {% endif %}
-                        </td>
-
-                        <!-- Column 7: Days remaining with conditions -->
+                        {% endif %}
                         <td>
-                            {% if item.DaysRemaining == -99999 %}
-                                <span style="background-color:red; color:white">No target date</span>
-                            {% elif item.DaysRemaining <= -100 and item.REPORT_STATUS|slice:":5"|upper != "FINAL" %}
-                                <span style="background-color:red; color:white">{{ item.DaysRemaining|default:'N/A' }}</span>
-                            {% elif item.DaysRemaining <= 0 and item.REPORT_STATUS|slice:":5"|upper != "FINAL" %}
-                                <span style="color:red; font-weight:bold">{{ item.DaysRemaining|default:'N/A' }}</span>
-                            {% elif item.DaysRemaining <= 5 and item.REPORT_STATUS|slice:":5"|upper != "FINAL" %}
-                                <span style="color:orange; font-weight:bold">{{ item.DaysRemaining|default:'N/A' }}</span>
-                            {% else %}
-                                {{ item.DaysRemaining|default:'N/A' }}
-                            {% endif %}
+                            {{ item.ALLOCATED_TO }}
                         </td>
-
-                        <!-- Column 8: Allocated to -->
-                        <td>{{ item.ALLOCATED_TO|default:'Not allocated' }}</td>
-
-                        <!-- Column 9: Key -->
-                        <td>{{ item.REF|default:'No reference' }}</td>
-
-                        <!-- Column 10: Date received -->
-                        <td>{{ item.DATE_RECEIVED|date:'d-m-Y'|default:'N/A' }}</td>
-
-                        <!-- Column 11: Date activated -->
-                        <td>{{ item.DATE_ACTIVATED|date:'d-m-Y'|default:'N/A' }}</td>
-
-                        <!-- Column 12: Date due -->
-                        <td>{{ item.TARGET_DATE|date:'d-m-Y'|default:'N/A' }}</td>
-
-                        <!-- Column 13: Status -->
                         <td>
-                            {% if item.REPORT_STATUS|upper == "PENDING" %}
-                                <span style="color:green; font-weight:bold">{{ item.REPORT_STATUS|default:'N/A' }}</span>
-                            {% else %}
-                                {{ item.REPORT_STATUS|default:'Unknown' }}
-                            {% endif %}
+                            {{ item.REF }}
                         </td>
-
-                        <!-- Column 14: Report by -->
-                        <td>{{ item.REPORT_BY|default:'No report' }}</td>
-
-                        <!-- Column 15: Worksheet / Result -->
-                        <td>{% autoescape off %}{{ item.WORKSHEETS|default:'No worksheets' }}{% endautoescape %}</td>
-
-                        <!-- Column 16: DNA/Quant -->
-                        <td>{% autoescape off %}{{ item.EXTRACTSHEETS|default:'No extractsheets' }}{% endautoescape %}</td>
-
-                        <!-- Column 17: Alert -->
-                        <td>{{ item.SampleAlert|default:'No alert' }}</td>
+                        <td>
+                            {{ item.DATE_RECEIVED|date:'d-m-Y' }}
+                        </td>
+                        <td>
+                            {{ item.DATE_ACTIVATED|date:'d-m-Y' }}
+                        </td>
+                        <td>
+                            {{ item.TARGET_DATE|date:'d-m-Y'}}
+                        </td>
+                        {% if item.REPORT_STATUS|upper == "PENDING" %}
+                        <td style="color:green; font-weight: bold">
+                            {{ item.REPORT_STATUS }}
+                        </td>
+                        {% else %}
+                        <td>
+                            {{ item.REPORT_STATUS }}
+                        </td>
+                        {% endif %}
+                        <td>
+                            {{ item.REPORT_BY }}
+                        </td>
+                        {% autoescape off%}
+                            <td>
+                            {{ item.WORKSHEETS }}
+                            </td>
+                        {% endautoescape %}
+                        <td>
+                            {% autoescape off%}
+                                {{ item.EXTRACTSHEETS }}
+                            {% endautoescape %}
+                        </td>
+                        <td>
+                            {{ item.SampleAlert }}
+                        </td>
                     </tr>
                 {% endfor %}
             {% else %}
                 <tr>
-                    <td colspan="17" class="text-center">No records to display</td>
+                    <td>
+                        No records to display
+                    </td>
+                    <td>
+                        &nbsp;
+                    </td>
+                    <td>
+                        &nbsp;
+                    </td>
                 </tr>
             {% endif %}
             </tbody>
@@ -339,43 +395,41 @@
     </div>
 
     {% if workflowCases %}
-    <nav aria-label="Pages for table">
-        <ul class="pagination justify-content-center">
-            <li class="page-item {% if not workflowCases.has_previous %}disabled{% endif %}">
-                <input type="button" class="page-link" value="<< First" onclick="submitPage(1)">
-            </li>
-            <li class="page-item {% if not workflowCases.has_previous %}disabled{% endif %}">
-                <input type="button" class="page-link" value="< Previous" onclick="submitPage({{ workflowCases.previous_page_number }})">
-            </li>
-            <li class="page-item">
-                <span class="page-link">Page {{ workflowCases.number }} of {{ workflowCases.paginator.num_pages }}</span>
-            </li>
-            <li class="page-item {% if not workflowCases.has_next %}disabled{% endif %}">
-                <input type="button" class="page-link" value="Next >" onclick="submitPage({{ workflowCases.next_page_number }})">
-            </li>
-            <li class="page-item {% if not workflowCases.has_next %}disabled{% endif %}">
-                <input type="button" class="page-link" value="Last >>" onclick="submitPage({{ workflowCases.paginator.num_pages }})">
-            </li>
-        </ul>
-    </nav>
+    <!--<div class="container-fluid">
+        <nav aria-label="Pages for table">
+            <ul class="pagination justify-content-center">
+                <li class="page-item"><input type="button" class="page-link" value="<< First" id="btnPageFirst"></li>
+                <li class="page-item"><input type="button" class="page-link" value="< Previous" id="btnPagePrevious"></li>
+                <li class="page-item"><span class="page-link">Page {{ workflowCases.number }} of {{ workflowCases.paginator.num_pages }}</span></li>
+                <li class="page-item"><input type="button" class="page-link" value="Next >" id="btnPageNext"></li>
+                <li class="page-item"><input type="button" class="page-link" value="Last >>" id="btnPageLast"></li>
+            </ul>
+        </nav>
+    </div>-->
     {% endif %}
-
-
-
 </div>
 
 <script>
-    // Select all rows in the table body
-    const tableRows = document.querySelectorAll('#ResultsTable tbody tr');
+    window.onload = function() {
+        // Get today's date
+        var today = new Date();
 
-    // Loop through each row
-    tableRows.forEach(function(row) {
-        // Get the number of columns (cells) in the row
-        const cellCount = row.querySelectorAll('td').length;
+        // Calculate the date 2 weeks ago
+        var twoWeeksAgo = new Date();
+        twoWeeksAgo.setDate(today.getDate() - 14);
 
-        // Log the row's ID and the cell count
-        console.log('Row ID: ' + (row.id || 'No ID') + ', Column count: ' + cellCount);
+        // Format the dates as YYYY-MM-DD
+        var day = ("0" + today.getDate()).slice(-2);
+        var month = ("0" + (today.getMonth() + 1)).slice(-2);
+        var formattedToday = today.getFullYear() + "-" + month + "-" + day;
+
+        var dayTwoWeeksAgo = ("0" + twoWeeksAgo.getDate()).slice(-2);
+        var monthTwoWeeksAgo = ("0" + (twoWeeksAgo.getMonth() + 1)).slice(-2);
+        var formattedTwoWeeksAgo = twoWeeksAgo.getFullYear() + "-" + monthTwoWeeksAgo + "-" + dayTwoWeeksAgo;
+
+        // Set the value of the date input fields
+        document.getElementById('txtCriteriaDateFrom').value = formattedTwoWeeksAgo;
+        document.getElementById('txtCriteriaDateTo').value = formattedToday;
+    };
 </script>
-
-
 {% endblock content %}

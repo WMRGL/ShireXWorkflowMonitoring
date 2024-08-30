@@ -874,7 +874,7 @@ class ALLSearch(TemplateView):
                 _dateFrom = datetime.today() - timedelta(days=60)
                 _dateTo = datetime.today() + timedelta(days=30)
                 _pageNumber = 1
-                _itemsPerPage = 20  # Set a valid default value
+                _itemsPerPage = -1  # Set a valid default value
             else:
                 try:
                     _dateFrom = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime)
@@ -902,7 +902,7 @@ class ALLSearch(TemplateView):
                     _dateFrom = datetime.today() - timedelta(days=365)
                     _dateTo = datetime.today() + timedelta(days=30)
                     _pageNumber = 1
-                    _itemsPerPage = 20  # Default to 20
+                    _itemsPerPage = -1  # Default to all
 
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
                 '2012_HAEM_ONC', '', 'ALL', _dateFrom, _dateTo, _reportStatus, _priority,
@@ -1048,11 +1048,8 @@ class CLLSearch(TemplateView): #Lymphoid
 
             # For each Lab No/Reason/Bill line extract the worksheet summary for that Lab No
             _pageOfWorkflowCases = self.worksheetHelper.AddWorksheetTestResultsToWorkflowCases(_pageOfWorkflowCases)
-
             _pageOfWorkflowCases = self.worksheetHelper.AddTestsWithNoWorksheetsToWorkflowCases(_pageOfWorkflowCases)
-
             _pageOfWorkflowCases = self.worksheetHelper.ConvertWorksheetsColumnEmptyStringToNone(_pageOfWorkflowCases)
-
             _pageOfWorkflowCases = self.extractsheetHelper.AddExtractsToWorkflowCases(_pageOfWorkflowCases)
 
             # Codes for the search criteria
