@@ -305,39 +305,18 @@
                                 </td>
                                 {% endif %}
                             {% endif %}
-                            {% if item.DaysRemaining == -99999 %}
-                            <td style="background-color: red; color: white">
-                                No target date
-                            </td>
-                            {% else %}
-                                {% if item.DaysRemaining <= -100 and item.REPORT_STATUS|slice:":5"|upper != "FINAL"%}
-                                <td style="background-color: red; color: white">
-                                    {{ item.DaysRemaining }}
-                                </td>
+                            <!-- Days Left -->
+                            <td style="
+                                {% if item.DaysRemaining >= 15 %}
+                                    background-color: lightgreen; color: black;
+                                {% elif item.DaysRemaining >= 8 and item.DaysRemaining <= 14 %}
+                                    background-color: yellow; color: black;
                                 {% else %}
-                                    {% if item.DaysRemaining <= 0 and item.REPORT_STATUS|slice:":5"|upper != "FINAL" %}
-                                    <td style="color: red; font-weight: bold">
-                                        {{ item.DaysRemaining }}
-                                    </td>
-                                    {% else %}
-                                        {% if item.DaysRemaining <= 5 and item.REPORT_STATUS|slice:":5"|upper != "FINAL" %}
-                                        <td style="color: orange; font-weight: bold">
-                                            {{ item.DaysRemaining }}
-                                        </td>
-                                        {% else %}
-                                            {% if item.REPORT_STATUS|slice:":5"|upper == "FINAL" %}
-                                            <td>
-                                                0
-                                            </td>
-                                            {% else %}
-                                            <td>
-                                                {{ item.DaysRemaining }}
-                                            </td>
-                                            {% endif %}
-                                        {% endif %}
-                                    {% endif %}
+                                    background-color: red; color: white;
                                 {% endif %}
-                            {% endif %}
+                            ">
+                                {{ item.DaysRemaining }}
+                            </td>
                             <td>
                                 {{ item.ALLOCATED_TO }}
                             </td>

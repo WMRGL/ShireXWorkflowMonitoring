@@ -298,13 +298,18 @@
                             </td>
 
                             <!-- Days Left -->
-                            <td>
-                                {% if item.DaysRemaining == -99999 %}
-                                    <span style="background-color: red; color: white">No target date</span>
+                            <td style="
+                                {% if item.DaysRemaining >= 15 %}
+                                    background-color: lightgreen; color: black;
+                                {% elif item.DaysRemaining >= 8 and item.DaysRemaining <= 14 %}
+                                    background-color: yellow; color: black;
                                 {% else %}
-                                    <span>{{ item.DaysRemaining }}</span>
+                                    background-color: red; color: white;
                                 {% endif %}
+                            ">
+                                {{ item.DaysRemaining }}
                             </td>
+
 
                             <!-- Allocated To -->
                             <td>{{ item.ALLOCATED_TO }}</td>
