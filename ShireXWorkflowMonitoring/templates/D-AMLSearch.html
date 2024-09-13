@@ -36,8 +36,6 @@
                         </div>
                         <div class="col-2">
                             <select class="form-select" name="ddlCriteriaStatus" id="ddlCriteriaStatus">
-{#                                  The status of "not final" is a special criteria that is the default #}
-{#                                  search criteria i.e. all reports not finalised.  #}
                                 <option value="NOTFINAL" {% if criteriaReportStatus == "" %} selected="selected" {% endif %}>Not Final</option>
                                 <option value="NOTFINALORNONE" {% if criteriaReportStatus == "NOTFINALORNONE" %} selected="selected" {% endif %}>Written</option>
                                 <option value="NONE" {% if criteriaReportStatus == "NONE" %} selected="selected" {% endif %}>None</option>
@@ -115,11 +113,15 @@
                                 {% endif %}
                             </select>
                         </div>
-                        <div class="col-2">
-                            &nbsp;
-                        </div>
-                        <div class="col-2">
-                            &nbsp;
+                        <div class="col-2 bg-light">
+                            <select class="form-select" name="ddlCriteriaDiseaseIndication4" id="ddlCriteriaDiseaseIndication4">
+                                <option value="" {% if criteriaDiseaseIndication4 == "" %} selected="selected" {% endif %}>select...</option>
+                                {% if criteriaDiseaseIndications %}
+                                    {% for item in criteriaDiseaseIndications %}
+                                        <option value="{{ item.DISEASE_CODE }}" {% if item.DISEASE_CODE == criteriaDiseaseIndication4 %} selected="selected" {% endif %}>{{ item.DISEASE_CODE }}</option>
+                                    {% endfor %}
+                                {% endif %}
+                            </select>
                         </div>
                     </div>
                     <div class="row g-5 align-items-center" style="padding:5px">
@@ -156,11 +158,15 @@
                                 {% endif %}
                             </select>
                         </div>
-                        <div class="col-2">
-                            &nbsp;
-                        </div>
-                        <div class="col-2">
-                            &nbsp;
+                        <div class="col-2 bg-light">
+                            <select class="form-select" name="ddlCriteriaReasonForDiseaseIndication4" id="ddlCriteriaReasonForDiseaseIndication4">
+                                <option value="" {% if criteriaReasonForDiseaseIndication4 == "" %} selected="selected" {% endif %}>select...</option>
+                                {% if criteriaReasonsForDiseaseIndications %}
+                                    {% for item in criteriaReasonsForDiseaseIndications %}
+                                        <option value="{{ item.REASON_CODE }}" {% if item.REASON_CODE == criteriaReasonForDiseaseIndication4 %} selected="selected" {% endif %}>{{ item.REASON_CODE }}</option>
+                                    {% endfor %}
+                                {% endif %}
+                            </select>
                         </div>
                     </div>
                     <div class="row g-5 align-items-center" style="padding:1px">
@@ -179,7 +185,7 @@
                         <div class="col-2">
                             <label for="ddlCriteriaItemsPerPage" class="col-form-label">Items per page:</label>
                         </div>
-                        <div class="col-1" style="padding-right: unset">  {# Unset to make select control wide enough #}
+                        <div class="col-1" style="padding-right: unset">
                             <select class="form-select" name="ddlCriteriaItemsPerPage" id="ddlCriteriaItemsPerPage">
                                 <option value="20" {% if itemsPerPage == 20 %} selected="selected" {% endif %}>20</option>
                                 <option value="40" {% if itemsPerPage == 40 %} selected="selected" {% endif %}>40</option>
@@ -213,7 +219,6 @@
                 <th>
                     Claim
                 </th>
-                {# <th scope="col" onclick="SortTable(1)"> #}
                 <th scope="col">
                     Patient (Date deceased)
                 </th>
@@ -268,7 +273,6 @@
                 {% for item in workflowCases %}
                     <tr>
                         <td>
-                            {#<a class="btn btn-primary" href="{% url 'HaemOncSetAllocatedTo' _labNumber=item.LABNO _workflowName='DAML' %}" target="_blank" id="btnClaimX">&nbsp;</a>#}
                             <button class="btn btn-primary" id="{{item.LABNO}}" onclick="DoClaim(this.id)">&nbsp;</button>
                         </td>
                         {% if item.DECEASED_DATE %}
@@ -304,7 +308,6 @@
                             </td>
                             {% endif %}
                         {% endif %}
-                        <!-- Days Left -->
                         <td style="
                             {% if item.DaysRemaining >= 15 %}
                                 background-color: lightgreen; color: black;
