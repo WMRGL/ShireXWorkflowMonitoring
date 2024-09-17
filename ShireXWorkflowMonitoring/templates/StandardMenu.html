@@ -42,9 +42,6 @@
                             <li><a class="dropdown-item" href="{% url 'HaemOncSNPSearch' %}">SNP - Array analysis</a></li>
                             <li><a class="dropdown-item" href="{% url 'HaemOncPanHaemSearch' %}">GLH Pan Haem</a></li>
                             <li><a class="dropdown-item" href="{% url 'HaemOncRNASearch' %}">RNA Sequencing</a></li>
-                            <!--<li><hr class="dropdown-divider"></li>
-                            <li class="small text-muted">Cancer</li>
-                            <li><a class="dropdown-item" href="{% url 'WGSSearch' %}">WGS</a></li>-->
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
@@ -57,6 +54,20 @@
                             <li><a class="dropdown-item" href="{% url 'SCSearch' %}">Solid Cancer</a></li>
                         </ul>
                     </li>
+                    <!--<li class="nav-item dropdown">
+                        <a class="nav-link active dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            HaemOnc Cyto
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-menu">All Cyto</a></li>
+                            <li><a class="dropdown-menu">All G-Band</a></li>
+                            <li><a class="dropdown-menu">All FISH</a></li>
+                            <li><a class="dropdown-menu">Rapid G-Band</a></li>
+                            <li><a class="dropdown-menu">Myeloid</a></li>
+                            <li><a class="dropdown-menu">Lymphoid</a></li>
+                            <li><a class="dropdown-menu">Breakage</a></li>
+                        </ul>
+                    </li>-->
                 </ul>
                 <ul>
                 <!-- Button for dark mode toggle -->
@@ -100,7 +111,7 @@
         </div>
     </nav>
 </div>
-<script src="{% static 'Scripts.js' %}"></script>
+<script src="{%   static 'Scripts.js' %}"></script>
 <script>
 
     $(document).ready(function(){
