@@ -355,7 +355,7 @@
                                 {% endautoescape %}
                             </td>
                             <td>
-                                {{ item.SampleAlert }}
+                                {{ item.SampleAlert|default:"&ndsp;" }}
                             </td>
                         </tr>
                     {% endfor %}

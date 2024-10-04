@@ -339,7 +339,7 @@
                             <td>{{ item.EXTRACTSHEETS|safe }}</td>
 
                             <!-- Alert -->
-                            <td>{{ item.SampleAlert }}</td>
+                            <td>{{ item.SampleAlert|default:"&ndsp;" }}</td>
                         </tr>
                     {% endfor %}
                 {% else %}
