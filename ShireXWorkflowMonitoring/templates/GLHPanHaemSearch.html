@@ -374,4 +374,32 @@
         </table>
     </div>
 </div>
+<script>
+    window.onload = function() {
+        // Get today's date
+        var today = new Date();
+
+        // Calculate the date 5 months ago
+        var fiveMonthsAgo = new Date();
+        fiveMonthsAgo.setMonth(today.getMonth() - 5);
+
+        // Adjust for months where the date exceeds the valid range (i.e., if subtracting months causes invalid dates)
+        if (today.getDate() !== fiveMonthsAgo.getDate()) {
+            fiveMonthsAgo.setDate(0); // Set to the last day of the previous month in case of overflow
+        }
+
+        // Format the dates as YYYY-MM-DD
+        var day = ("0" + today.getDate()).slice(-2);
+        var month = ("0" + (today.getMonth() + 1)).slice(-2);
+        var formattedToday = today.getFullYear() + "-" + month + "-" + day;
+
+        var dayFiveMonthsAgo = ("0" + fiveMonthsAgo.getDate()).slice(-2);
+        var monthFiveMonthsAgo = ("0" + (fiveMonthsAgo.getMonth() + 1)).slice(-2);
+        var formattedFiveMonthsAgo = fiveMonthsAgo.getFullYear() + "-" + monthFiveMonthsAgo + "-" + dayFiveMonthsAgo;
+
+        // Set the value of the date input fields
+        document.getElementById('txtCriteriaDateFrom').value = formattedFiveMonthsAgo;
+        document.getElementById('txtCriteriaDateTo').value = formattedToday;
+    };
+</script>
 {% endblock content %}

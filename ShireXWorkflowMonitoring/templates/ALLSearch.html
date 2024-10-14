@@ -262,152 +262,121 @@
                 </th>
             </thead>
             <tbody>
-            {% if workflowCases %}
-                {% for item in workflowCases %}
+                {% if workflowCases %}
+                    {% for item in workflowCases %}
+                        <tr>
+                            <td>
+                                <button class="btn btn-primary" id="{{item.LABNO}}" onclick="DoClaim(this.id)">&nbsp;</button>
+                            </td>
+                            <td>
+                                {{ item.LASTNAME }}, {{ item.FIRSTNAME }}
+                                {% if item.DECEASED_DATE %}
+                                    ( {{ item.DECEASED_DATE|date:'d-m-Y' }} )
+                                {% endif %}
+                            </td>
+                            <td>
+                                <a href="{% url 'SampleForm' _labNumber=item.LABNO _indication=item.DISEASE_CODE %}" target="_blank">{{ item.LABNO }}</a>
+                            </td>
+                            <td>
+                                {{ item.DISEASE_CODE }} /<br>{{ item.REASON }}
+                            </td>
+                            <td>
+                                {{ item.SAMPLETYPE|default:"N/A" }}
+                            </td>
+                            <td>
+                                {% if item.PRIORITY|upper == "URGENT" %}
+                                    <span style="color:red; font-weight: bold">{{ item.PRIORITY }}</span>
+                                {% elif item.PRIORITY|upper == "PRIORITY" %}
+                                    <span style="color:green; font-weight: bold">{{ item.PRIORITY }}</span>
+                                {% else %}
+                                    {{ item.PRIORITY|default:"Standard" }}
+                                {% endif %}
+                            </td>
+                            <td style="
+                                {% if item.DaysRemaining >= 15 %}
+                                    background-color: lightgreen; color: black;
+                                {% elif item.DaysRemaining >= 8 and item.DaysRemaining <= 14 %}
+                                    background-color: yellow; color: black;
+                                {% else %}
+                                    background-color: red; color: white;
+                                {% endif %}
+                            ">
+                                {{ item.DaysRemaining|default:"N/A" }}
+                            </td>
+                            <td>
+                                {{ item.ALLOCATED_TO|default:"Unassigned" }}
+                            </td>
+                            <td>
+                                {{ item.REF|default:"-" }}
+                            </td>
+                            <td>
+                                {{ item.DATE_RECEIVED|date:'d-m-Y'|default:"N/A" }}
+                            </td>
+                            <td>
+                                {{ item.DATE_ACTIVATED|date:'d-m-Y'|default:"N/A" }}
+                            </td>
+                            <td>
+                                {{ item.TARGET_DATE|date:'d-m-Y'|default:"N/A" }}
+                            </td>
+                            <td>
+                                {% if item.REPORT_STATUS|upper == "PENDING" %}
+                                    <span style="color:green; font-weight: bold">{{ item.REPORT_STATUS }}</span>
+                                {% else %}
+                                    {{ item.REPORT_STATUS|default:"N/A" }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {{ item.REPORT_BY|default:"N/A" }}
+                            </td>
+                            <td>
+                                {% autoescape off %}
+                                    {{ item.WORKSHEETS|default:"&nbsp;" }}
+                                {% endautoescape %}
+                            </td>
+                            <td>
+                                {% autoescape off %}
+                                    {{ item.EXTRACTSHEETS|default:"&nbsp;" }}
+                                {% endautoescape %}
+                            </td>
+                            <td>
+                                {{ item.SampleAlert|default:"&nbsp;" }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
                     <tr>
-                        <td>
-                            {# <a class="btn btn-primary" href="{% url 'HaemOncSetAllocatedTo' _labNumber=item.LABNO _workflowName='ALL' %}">&nbsp;</a> #}
-                            <button class="btn btn-primary" id="{{item.LABNO}}" onclick="DoClaim(this.id)">&nbsp;</button>
-                        </td>
-                        {% if item.DECEASED_DATE %}
-                        <td>
-                            {{ item.LASTNAME }}, {{ item.FIRSTNAME }} ( {{ item.DECEASED_DATE|date:'d-m-Y' }} )
-                        </td>
-                        {% else %}
-                        <td>
-                            {{ item.LASTNAME }}, {{ item.FIRSTNAME }}
-                        </td>
-                        {% endif %}
-                        <td>
-                            <a href="{% url 'SampleForm'  _labNumber=item.LABNO _indication=item.DISEASE_CODE %}" target="_blank">{{ item.LABNO }}</a>
-                        </td>
-                        <td>
-                            {{ item.DISEASE_CODE }} /<br>{{ item.REASON }}
-                        </td>
-                        <td>
-                            {{ item.SAMPLETYPE }}
-                        </td>
-                        {% if item.PRIORITY|upper == "URGENT" %}
-                        <td style="color:red; font-weight: bold">
-                            {{ item.PRIORITY }}
-                        </td>
-                        {% else %}
-                            {% if item.PRIORITY|upper == "PRIORITY" %}
-                            <td style="color:green; font-weight: bold">
-                                {{ item.PRIORITY }}
-                            </td>
-                            {% else %}
-                            <td>
-                                {{ item.PRIORITY }}
-                            </td>
-                            {% endif %}
-                        {% endif %}
-                        <!-- Days Left -->
-                        <td style="
-                            {% if item.DaysRemaining >= 15 %}
-                                background-color: lightgreen; color: black;
-                            {% elif item.DaysRemaining >= 8 and item.DaysRemaining <= 14 %}
-                                background-color: yellow; color: black;
-                            {% else %}
-                                background-color: red; color: white;
-                            {% endif %}
-                        ">
-                            {{ item.DaysRemaining }}
-                        </td>
-                        <td>
-                            {{ item.ALLOCATED_TO }}
-                        </td>
-                        <td>
-                            {{ item.REF }}
-                        </td>
-                        <td>
-                            {{ item.DATE_RECEIVED|date:'d-m-Y' }}
-                        </td>
-                        <td>
-                            {{ item.DATE_ACTIVATED|date:'d-m-Y' }}
-                        </td>
-                        <td>
-                            {{ item.TARGET_DATE|date:'d-m-Y'}}
-                        </td>
-                        {% if item.REPORT_STATUS|upper == "PENDING" %}
-                        <td style="color:green; font-weight: bold">
-                            {{ item.REPORT_STATUS }}
-                        </td>
-                        {% else %}
-                        <td>
-                            {{ item.REPORT_STATUS }}
-                        </td>
-                        {% endif %}
-                        <td>
-                            {{ item.REPORT_BY }}
-                        </td>
-                        {% autoescape off%}
-                            <td>
-                            {{ item.WORKSHEETS }}
-                            </td>
-                        {% endautoescape %}
-                        <td>
-                            {% autoescape off%}
-                                {{ item.EXTRACTSHEETS }}
-                            {% endautoescape %}
-                        </td>
-                        <td>
-                            {{ item.SampleAlert|default:"&ndsp;" }}
-                        </td>
+                        <td colspan="17">No records to display</td>
                     </tr>
-                {% endfor %}
-            {% else %}
-                <tr>
-                    <td>
-                        No records to display
-                    </td>
-                    <td>
-                        &nbsp;
-                    </td>
-                    <td>
-                        &nbsp;
-                    </td>
-                </tr>
-            {% endif %}
+                {% endif %}
             </tbody>
         </table>
     </div>
-
-    {% if workflowCases %}
-    <!--<div class="container-fluid">
-        <nav aria-label="Pages for table">
-            <ul class="pagination justify-content-center">
-                <li class="page-item"><input type="button" class="page-link" value="<< First" id="btnPageFirst"></li>
-                <li class="page-item"><input type="button" class="page-link" value="< Previous" id="btnPagePrevious"></li>
-                <li class="page-item"><span class="page-link">Page {{ workflowCases.number }} of {{ workflowCases.paginator.num_pages }}</span></li>
-                <li class="page-item"><input type="button" class="page-link" value="Next >" id="btnPageNext"></li>
-                <li class="page-item"><input type="button" class="page-link" value="Last >>" id="btnPageLast"></li>
-            </ul>
-        </nav>
-    </div>-->
-    {% endif %}
 </div>
-
 <script>
     window.onload = function() {
         // Get today's date
         var today = new Date();
 
-        // Calculate the date 2 weeks ago
-        var twoWeeksAgo = new Date();
-        twoWeeksAgo.setDate(today.getDate() - 14);
+        // Calculate the date 5 months ago
+        var fiveMonthsAgo = new Date();
+        fiveMonthsAgo.setMonth(today.getMonth() - 5);
+
+        // Adjust for months where the date exceeds the valid range (i.e., if subtracting months causes invalid dates)
+        if (today.getDate() !== fiveMonthsAgo.getDate()) {
+            fiveMonthsAgo.setDate(0); // Set to the last day of the previous month in case of overflow
+        }
 
         // Format the dates as YYYY-MM-DD
         var day = ("0" + today.getDate()).slice(-2);
         var month = ("0" + (today.getMonth() + 1)).slice(-2);
         var formattedToday = today.getFullYear() + "-" + month + "-" + day;
 
-        var dayTwoWeeksAgo = ("0" + twoWeeksAgo.getDate()).slice(-2);
-        var monthTwoWeeksAgo = ("0" + (twoWeeksAgo.getMonth() + 1)).slice(-2);
-        var formattedTwoWeeksAgo = twoWeeksAgo.getFullYear() + "-" + monthTwoWeeksAgo + "-" + dayTwoWeeksAgo;
+        var dayFiveMonthsAgo = ("0" + fiveMonthsAgo.getDate()).slice(-2);
+        var monthFiveMonthsAgo = ("0" + (fiveMonthsAgo.getMonth() + 1)).slice(-2);
+        var formattedFiveMonthsAgo = fiveMonthsAgo.getFullYear() + "-" + monthFiveMonthsAgo + "-" + dayFiveMonthsAgo;
 
         // Set the value of the date input fields
-        document.getElementById('txtCriteriaDateFrom').value = formattedTwoWeeksAgo;
+        document.getElementById('txtCriteriaDateFrom').value = formattedFiveMonthsAgo;
         document.getElementById('txtCriteriaDateTo').value = formattedToday;
     };
 </script>

@@ -339,145 +339,107 @@
 
                 </thead>
                 <tbody>
-                {% if workflowCases %}
-                    {% for item in workflowCases %}
-                        <tr>
-                            <td>
-                                {#<a class="btn btn-primary" href="{% url 'HaemOncSetAllocatedTo' _labNumber=item.LABNO _workflowName='WGS' %}">&nbsp;</a>#}
-                                <button class="btn btn-primary" id="{{ item.LABNO }}" onclick="DoClaim(this.id)">&nbsp;</button>
-                            </td>
-                            <!--<td>
-                                <button class="btn btn-primary" id="{{ item.LABNO }}" onclick="DoClaim('{{ item.LABNO }}')">Claim</button>
-                            </td>-->
-                            {% if item.DECEASED_DATE %}
+                    {% if workflowCases %}
+                        {% for item in workflowCases %}
+                            <tr>
                                 <td>
-                                    {{ item.LASTNAME }}, {{ item.FIRSTNAME }} ( {{ item.DECEASED_DATE|date:'d-m-Y' }} )
+                                    <button class="btn btn-primary" id="{{ item.LABNO }}" onclick="DoClaim(this.id)">&nbsp;</button>
                                 </td>
-                            {% else %}
                                 <td>
-                                    {{ item.LASTNAME }}, {{ item.FIRSTNAME }}
+                                    {% if item.DECEASED_DATE %}
+                                        {{ item.LASTNAME }}, {{ item.FIRSTNAME }} ( {{ item.DECEASED_DATE|date:'d-m-Y' }} )
+                                    {% else %}
+                                        {{ item.LASTNAME }}, {{ item.FIRSTNAME }}
+                                    {% endif %}
                                 </td>
-                            {% endif %}
-                            <td id="labnoCell">
-                                <a href="{% url 'SampleForm'  _labNumber=item.LABNO _indication=item.DISEASE_CODE %}"
-                                   target="_blank">{{ item.LABNO }}</a>
-                            </td>
-                            <td>
-                                {{ item.PartID }}
-                            </td>
-                            <td>
-                                {{ item.DISEASE_CODE }} /<br>{{ item.REASON }}
-                            </td>
-                            <td>
-                                {{ item.SAMPLETYPE }}
-                            </td>
-                            {% if item.PRIORITY|upper == "URGENT" %}
-                                <td style="color:red; font-weight: bold">
-                                    {{ item.PRIORITY }}
+                                <td id="labnoCell">
+                                    <a href="{% url 'SampleForm'  _labNumber=item.LABNO _indication=item.DISEASE_CODE %}" target="_blank">{{ item.LABNO }}</a>
                                 </td>
-                            {% else %}
-                                {% if item.PRIORITY|upper == "PRIORITY" %}
+                                <td>
+                                    {{ item.PartID|default:"N/A" }}
+                                </td>
+                                <td>
+                                    {{ item.DISEASE_CODE }} /<br>{{ item.REASON }}
+                                </td>
+                                <td>
+                                    {{ item.SAMPLETYPE|default:"N/A" }}
+                                </td>
+                                {% if item.PRIORITY|upper == "URGENT" %}
+                                    <td style="color:red; font-weight: bold">
+                                        {{ item.PRIORITY }}
+                                    </td>
+                                {% elif item.PRIORITY|upper == "PRIORITY" %}
                                     <td style="color:green; font-weight: bold">
                                         {{ item.PRIORITY }}
                                     </td>
                                 {% else %}
                                     <td>
-                                        {{ item.PRIORITY }}
+                                        {{ item.PRIORITY|default:"Standard" }}
                                     </td>
                                 {% endif %}
-                            {% endif %}
-                            <!-- Days Left -->
-                            <td style="
-                                {% if item.DaysRemaining >= 15 %}
-                                    background-color: lightgreen; color: black;
-                                {% elif item.DaysRemaining >= 8 and item.DaysRemaining <= 14 %}
-                                    background-color: yellow; color: black;
+                                <td style="
+                                    {% if item.DaysRemaining >= 15 %}
+                                        background-color: lightgreen; color: black;
+                                    {% elif item.DaysRemaining >= 8 and item.DaysRemaining <= 14 %}
+                                        background-color: yellow; color: black;
+                                    {% else %}
+                                        background-color: red; color: white;
+                                    {% endif %}
+                                ">
+                                    {{ item.DaysRemaining|default:"N/A" }}
+                                </td>
+                                <td>
+                                    {{ item.ALLOCATED_TO|default:"Unassigned" }}
+                                </td>
+                                <td>
+                                    {{ item.REF|default:"-" }}
+                                </td>
+                                <td>
+                                    {{ item.DATE_RECEIVED|date:'d-m-Y'|default:"N/A" }}
+                                </td>
+                                <td>
+                                    {{ item.DATE_ACTIVATED|date:'d-m-Y'|default:"N/A" }}
+                                </td>
+                                <td>
+                                    {{ item.TARGET_DATE|date:'d-m-Y'|default:"N/A" }}
+                                </td>
+                                {% if item.REPORT_STATUS|upper == "PENDING" %}
+                                    <td style="color:green; font-weight: bold">
+                                        {{ item.REPORT_STATUS }}
+                                    </td>
                                 {% else %}
-                                    background-color: red; color: white;
+                                    <td>
+                                        {{ item.REPORT_STATUS|default:"N/A" }}
+                                    </td>
                                 {% endif %}
-                            ">
-                                {{ item.DaysRemaining }}
-                            </td>
-                            <td>
-                                {{ item.ALLOCATED_TO }}
-                            </td>
-                            <td>
-                                {{ item.REF }}
-                            </td>
-                            <td>
-                                {{ item.DATE_RECEIVED|date:'d-m-Y' }}
-                            </td>
-                            <td>
-                                {{ item.DATE_ACTIVATED|date:'d-m-Y' }}
-                            </td>
-                            <td>
-                                {{ item.TARGET_DATE|date:'d-m-Y' }}
-                            </td>
-                            {% if item.REPORT_STATUS|upper == "PENDING" %}
-                                <td style="color:green; font-weight: bold">
-                                    {{ item.REPORT_STATUS }}
-                                </td>
-                            {% else %}
                                 <td>
-                                    {{ item.REPORT_STATUS }}
+                                    {{ item.REPORT_BY|default:"N/A" }}
                                 </td>
-                            {% endif %}
-                            <td>
-                                {{ item.REPORT_BY }}
-                            </td>
-                            {% autoescape off %}
-                                {#                            {% if item.WORKSHEET_OUTSTANDING == "yes" %}#}
-                                {#                                <td>#}
-                                {#                                    None#}
-                                {#                                </td>#}
-                                {#                            {% else %}#}
-                                {#                                {% if item.RESULTS_OUTSTANDING == "yes" %}#}
-                                {#                                <td>#}
-                                {#                                    {{ item.WORKSHEETS }}#}
-                                {#                                </td>#}
-                                {#                                {% else %}#}
                                 <td>
-                                    {{ item.WORKSHEETS }}
+                                    {% autoescape off %}
+                                        {{ item.WORKSHEETS|default:"&nbsp;" }}
+                                    {% endautoescape %}
                                 </td>
-                                {#                                {% endif %}#}
-                                {#                            {% endif %}#}
-                            {% endautoescape %}
-                            <td>
-                                {% autoescape off %}
-                                    {{ item.EXTRACTSHEETS }}
-                                {% endautoescape %}
-                            </td>
-                            <td>
-                                {{ item.DNAQuantification }}
-                                <!-- add e.CONC to the stored proc in dbo.uspShireXGetDNAWorkflowCases -->
-                                {{ item.CONC }}
-                            </td>
-
-                            <!--<td>
-                                {{ item.TEST|default_if_none:"Null" }}
-                            </td>-->
-                            <td>
-                                {{ item.SampleAlert|default:"&ndsp;" }}
-                            </td>
-
+                                <td>
+                                    {% autoescape off %}
+                                        {{ item.EXTRACTSHEETS|default:"&nbsp;" }}
+                                    {% endautoescape %}
+                                </td>
+                                <td>
+                                    {{ item.DNAQuantification|default:"N/A" }}
+                                </td>
+                                <td>
+                                    {{ item.SampleAlert|default:"&nbsp;" }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% else %}
+                        <tr>
+                            <td colspan="19">No records to display</td>
                         </tr>
-                    {% endfor %}
-
-
-                {% else %}
-                    <tr>
-                        <td>
-                            No records to display
-                        </td>
-                        <td>
-                            &nbsp;
-                        </td>
-                        <td>
-                            &nbsp;
-                        </td>
-                    </tr>
-                {% endif %}
+                    {% endif %}
                 </tbody>
+
             </table>
         </div>
 

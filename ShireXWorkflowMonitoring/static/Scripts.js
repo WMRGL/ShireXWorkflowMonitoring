@@ -15,34 +15,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 
-    // Handle Dark Mode Toggle
-    const darkModeToggle = document.getElementById('dark-mode-toggle'); // Corrected method name
-    if (darkModeToggle) {
-        darkModeToggle.addEventListener('change', function() {
-            const isDarkMode = this.checked;
-            document.body.classList.toggle('dark-mode', isDarkMode);
-            localStorage.setItem('darkMode', isDarkMode ? 'true' : 'false');
-            applyDarkModeStyles(isDarkMode);
-        });
 
-        // Apply user preferences on page load
-        const isDarkMode = localStorage.getItem('darkMode') === 'true';
-        if (isDarkMode) {
-            document.body.classList.add('dark-mode');
-            darkModeToggle.checked = true;
-        }
-        applyDarkModeStyles(isDarkMode);
-    }
-
-    function applyDarkModeStyles(isDarkMode) {
-        if (isDarkMode) {
-            document.body.style.backgroundColor = '#595352';
-            document.body.style.color = '#fff';
-        } else {
-            document.body.style.backgroundColor = '#ffffff';
-            document.body.style.color = '#000';
-        }
-    }
 
     // Modal logic inside DOMContentLoaded
     var modal = document.getElementById("font-size-modal");
@@ -345,35 +318,6 @@ window.addEventListener('load', function() {
             });
         });
 
-
-        const darkModeToggle = document.getElementById('dark-mode-toggle'); // Corrected method name
-        if (darkModeToggle) {
-            darkModeToggle.addEventListener('change', function() {
-                const isDarkMode = this.checked;
-                document.body.classList.toggle('dark-mode', isDarkMode);
-                localStorage.setItem('darkMode', isDarkMode ? 'true' : 'false');
-                applyDarkModeStyles(isDarkMode);
-            });
-
-            // Apply user preferences on page load
-            const isDarkMode = localStorage.getItem('darkMode') === 'true';
-            if (isDarkMode) {
-                document.body.classList.add('dark-mode');
-                darkModeToggle.checked = true;
-            }
-            applyDarkModeStyles(isDarkMode);
-        }
-
-        // Function to apply dark or light mode styles
-        function applyDarkModeStyles(isDarkMode) {
-            if (isDarkMode) {
-                document.body.style.backgroundColor = '#595352';
-                document.body.style.color = '#fff';
-            } else {
-                document.body.style.backgroundColor = '#ffffff';
-                document.body.style.color = '#000';
-            }
-        }
     });
 
 
@@ -549,20 +493,31 @@ window.addEventListener('load', function() {
         // Get today's date
         var today = new Date();
 
-        // Calculate the date 2 weeks ago
-        var twoWeeksAgo = new Date();
-        twoWeeksAgo.setDate(today.getDate() - 14);
+        // Calculate the date 5 months ago
+        var fiveMonthsAgo = new Date();
+        fiveMonthsAgo.setMonth(today.getMonth() - 5);
+
+        // Adjust for months where the date exceeds the valid range (i.e., if subtracting months causes invalid dates)
+        if (today.getDate() !== fiveMonthsAgo.getDate()) {
+            fiveMonthsAgo.setDate(0); // Set to the last day of the previous month in case of overflow
+        }
 
         // Format the dates as YYYY-MM-DD
         var day = ("0" + today.getDate()).slice(-2);
         var month = ("0" + (today.getMonth() + 1)).slice(-2);
         var formattedToday = today.getFullYear() + "-" + month + "-" + day;
 
-        var dayTwoWeeksAgo = ("0" + twoWeeksAgo.getDate()).slice(-2);
-        var monthTwoWeeksAgo = ("0" + (twoWeeksAgo.getMonth() + 1)).slice(-2);
-        var formattedTwoWeeksAgo = twoWeeksAgo.getFullYear() + "-" + monthTwoWeeksAgo + "-" + dayTwoWeeksAgo;
+        var dayFiveMonthsAgo = ("0" + fiveMonthsAgo.getDate()).slice(-2);
+        var monthFiveMonthsAgo = ("0" + (fiveMonthsAgo.getMonth() + 1)).slice(-2);
+        var formattedFiveMonthsAgo = fiveMonthsAgo.getFullYear() + "-" + monthFiveMonthsAgo + "-" + dayFiveMonthsAgo;
 
         // Set the value of the date input fields
-        document.getElementById('txtCriteriaDateFrom').value = formattedTwoWeeksAgo;
+        document.getElementById('txtCriteriaDateFrom').value = formattedFiveMonthsAgo;
         document.getElementById('txtCriteriaDateTo').value = formattedToday;
     };
+
+    let debounceTimer;
+    function throttleSubmitPage(pageNumber) {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => submitPage(pageNumber), 200);
+    }

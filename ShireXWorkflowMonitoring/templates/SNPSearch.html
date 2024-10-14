@@ -251,38 +251,38 @@
                         <tr>
                             <td>
                                 {#<a class="btn btn-primary" href="{% url 'HaemOncSetAllocatedTo' _labNumber=item.LABNO _workflowName='SNP' %}">&nbsp;</a>#}
-                                <button class="btn btn-primary" id="{{item.LABNO}}" onclick="DoClaim(this.id)">&nbsp;</button>
+                                <button class="btn btn-primary" id="{{item.LABNO|default:"&ndsp;"}}" onclick="DoClaim(this.id)">&nbsp;</button>
                             </td>
-                            {% if item.DECEASED_DATE %}
+                            {% if item.DECEASED_DATE|default:"&ndsp;" %}
                             <td>
-                                {{ item.LASTNAME }}, {{ item.FIRSTNAME }} ( {{ item.DECEASED_DATE|date:'d-m-Y' }} )
+                                {{ item.LASTNAME|default:"&ndsp;" }}, {{ item.FIRSTNAME|default:"&ndsp;" }} ( {{ item.DECEASED_DATE|date:'d-m-Y'|default:"&ndsp;" }} )
                             </td>
                             {% else %}
                             <td>
-                                {{ item.LASTNAME }}, {{ item.FIRSTNAME }}
+                                {{ item.LASTNAME|default:"&ndsp;" }}, {{ item.FIRSTNAME|default:"&ndsp;" }}
                             </td>
                             {% endif %}
                             <td>
-                                <a href="{% url 'SampleForm'  _labNumber=item.LABNO _indication=item.DISEASE_CODE %}" target="_blank">{{ item.LABNO }}</a>
+                                <a href="{% url 'SampleForm'  _labNumber=item.LABNO _indication=item.DISEASE_CODE %}" target="_blank">{{ item.LABNO|default:"&ndsp;" }}</a>
                             </td>
                             <td>
-                                {{ item.DISEASE_CODE }} /<br>{{ item.REASON }}
+                                {{ item.DISEASE_CODE|default:"&ndsp;" }} /<br>{{ item.REASON|default:"&ndsp;" }}
                             </td>
                             <td>
-                                {{ item.SAMPLETYPE }}
+                                {{ item.SAMPLETYPE|default:"&ndsp;" }}
                             </td>
                             {% if item.PRIORITY|upper == "URGENT" %}
                             <td style="color:red; font-weight: bold">
-                                {{ item.PRIORITY }}
+                                {{ item.PRIORITY|default:"&ndsp;" }}
                             </td>
                             {% else %}
                                 {% if item.PRIORITY|upper == "PRIORITY" %}
                                 <td style="color:green; font-weight: bold">
-                                    {{ item.PRIORITY }}
+                                    {{ item.PRIORITY|default:"&ndsp;" }}
                                 </td>
                                 {% else %}
                                 <td>
-                                    {{ item.PRIORITY }}
+                                    {{ item.PRIORITY|default:"&ndsp;" }}
                                 </td>
                                 {% endif %}
                             {% endif %}
@@ -296,43 +296,43 @@
                                     background-color: red; color: white;
                                 {% endif %}
                             ">
-                                {{ item.DaysRemaining }}
+                                {{ item.DaysRemaining|default:"&ndsp;" }}
                             </td>
                             <td>
-                                {{ item.ALLOCATED_TO }}
+                                {{ item.ALLOCATED_TO|default:"&ndsp;" }}
                             </td>
                             <td>
-                                {{ item.REF }}
+                                {{ item.REF|default:"&ndsp;" }}
                             </td>
                             <td>
-                                {{ item.DATE_RECEIVED|date:'d-m-Y' }}
+                                {{ item.DATE_RECEIVED|date:'d-m-Y'|default:"&ndsp;" }}
                             </td>
                             <td>
-                                {{ item.DATE_ACTIVATED|date:'d-m-Y' }}
+                                {{ item.DATE_ACTIVATED|date:'d-m-Y'|default:"&ndsp;" }}
                             </td>
                             <td>
-                                {{ item.TARGET_DATE|date:'d-m-Y'}}
+                                {{ item.TARGET_DATE|date:'d-m-Y'|default:"&ndsp;"}}
                             </td>
                             {% if item.REPORT_STATUS|upper == "PENDING" %}
                             <td style="color:green; font-weight: bold">
-                                {{ item.REPORT_STATUS }}
+                                {{ item.REPORT_STATUS|default:"&ndsp;" }}
                             </td>
                             {% else %}
                             <td>
-                                {{ item.REPORT_STATUS }}
+                                {{ item.REPORT_STATUS|default:"&ndsp;" }}
                             </td>
                             {% endif %}
                             <td>
-                                {{ item.REPORT_CHECKED_BY }}
+                                {{ item.REPORT_CHECKED_BY|default:"&ndsp;" }}
                             </td>
                             {% autoescape off%}
                                 <td>
-                                {{ item.WORKSHEETS }}
+                                {{ item.WORKSHEETS|default:"&ndsp;" }}
                                 </td>
                             {% endautoescape %}
                             <td>
                                 {% autoescape off%}
-                                    {{ item.EXTRACTSHEETS }}
+                                    {{ item.EXTRACTSHEETS|default:"&ndsp;" }}
                                 {% endautoescape %}
                             </td>
                             <td>
@@ -358,4 +358,32 @@
         </div>
     </div>
 </body>
+<script>
+    window.onload = function() {
+        // Get today's date
+        var today = new Date();
+
+        // Calculate the date 5 months ago
+        var fiveMonthsAgo = new Date();
+        fiveMonthsAgo.setMonth(today.getMonth() - 5);
+
+        // Adjust for months where the date exceeds the valid range (i.e., if subtracting months causes invalid dates)
+        if (today.getDate() !== fiveMonthsAgo.getDate()) {
+            fiveMonthsAgo.setDate(0); // Set to the last day of the previous month in case of overflow
+        }
+
+        // Format the dates as YYYY-MM-DD
+        var day = ("0" + today.getDate()).slice(-2);
+        var month = ("0" + (today.getMonth() + 1)).slice(-2);
+        var formattedToday = today.getFullYear() + "-" + month + "-" + day;
+
+        var dayFiveMonthsAgo = ("0" + fiveMonthsAgo.getDate()).slice(-2);
+        var monthFiveMonthsAgo = ("0" + (fiveMonthsAgo.getMonth() + 1)).slice(-2);
+        var formattedFiveMonthsAgo = fiveMonthsAgo.getFullYear() + "-" + monthFiveMonthsAgo + "-" + dayFiveMonthsAgo;
+
+        // Set the value of the date input fields
+        document.getElementById('txtCriteriaDateFrom').value = formattedFiveMonthsAgo;
+        document.getElementById('txtCriteriaDateTo').value = formattedToday;
+    };
+</script>
 {% endblock content %}
