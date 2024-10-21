@@ -11,7 +11,7 @@ class ShireData:
                             pReasonCode2, pReasonCode3, pUsername, pSurname, pLabNumber, pRefKey, pNoResultStatus):
         try:
             with connection.cursor() as _cursor:
-                _cursor.execute("{CALL dbo.uspShireXGetDNAWorkflowCases(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, "
+                _cursor.execute("{CALL dbo.uspShireXGetDNAWorkflowCases_TEST(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, "
                                 "%s, %s, %s, %s, %s)}",
                                 (pIndicationCategory1, pIndicationCategory2, pWorkFlow, pDateFrom, pDateTo, pReportStatus,
                                  pPriority, pDiseaseIndicationCode1, pDiseaseIndicationCode2, pDiseaseIndicationCode3,
