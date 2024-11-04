@@ -101,8 +101,8 @@ class SolidCancerSearch(TemplateView):
             _searchCount = len(_totalWorkflowCases)
             logger.info("List of surnames: %s", _listOfSurnames)
 
-            _workflowCases = Paginator(_totalWorkflowCases, _itemsPerPage)
-            _pageOfWorkflowCases = _workflowCases.page(_pageNumber)
+            #_workflowCases = Paginator(_totalWorkflowCases, _itemsPerPage)
+            #_pageOfWorkflowCases = _workflowCases.page(_pageNumber)
             #_pageOfWorkflowCases = self.worksheetHelper.AddWorksheetTestResultsToWorkflowCases(_pageOfWorkflowCases)
             #_pageOfWorkflowCases = self.worksheetHelper.AddTestsWithNoWorksheetsToWorkflowCases(_pageOfWorkflowCases)
             #_pageOfWorkflowCases = self.worksheetHelper.ConvertWorksheetsColumnEmptyStringToNone(_pageOfWorkflowCases)
@@ -116,7 +116,7 @@ class SolidCancerSearch(TemplateView):
                 "criteriaDateFrom": _dateFrom,
                 "criteriaDateTo": _dateTo,
                 "Title": self.title,
-                "workflowCases": _pageOfWorkflowCases,
+                "workflowCases": _totalWorkflowCases, # _pageOfWorkflowCases,
                 "itemsPerPage": _itemsPerPage,
                 "criteriaReportStatuses": _reportStatuses,
                 "criteriaReportStatus": _reportStatus,

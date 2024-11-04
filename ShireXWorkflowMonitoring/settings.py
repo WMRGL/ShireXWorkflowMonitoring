@@ -14,12 +14,16 @@ from pathlib import Path
 import json
 import os
 from django.core.exceptions import ImproperlyConfigured
+import environ as environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 with open(os.path.join(BASE_DIR, 'ShireXWorkflowMonitoring/secrets.json')) as secrets_file:
     secrets = json.load(secrets_file)
+
+env = environ.Env()
+environ.Env.read_env()
 
 
 def get_secret(pSetting, pSecrets=secrets):
@@ -38,13 +42,13 @@ def get_secret(pSetting, pSecrets=secrets):
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = 'django-insecure-fa81xk74sqp8si==r-macjx*ptm8k8jy^48%501w=!5uq3bn&%'
 
-
-SECRET_KEY = get_secret("SECRET_KEY")
+SECRET_KEY = env('SECRET_KEY')
+#SECRET_KEY = get_secret("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['10.147.33.230', '127.0.0.1', '192.168.102.185']
+ALLOWED_HOSTS = ['localhost']
 # ALLOWED_HOSTS = []
 # Application definition
 
@@ -100,10 +104,10 @@ WSGI_APPLICATION = 'ShireXWorkflowMonitoring.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'mssql',
-        'NAME': get_secret("DB_NAME"),
-        'USER': get_secret("DB_USERNAME"),
-        'PASSWORD': get_secret("DB_PASSWORD"),
-        'HOST': get_secret("DB_HOST"),
+        'NAME': env("DB_NAME"),
+        'USER': env("DB_USERNAME"),
+        'PASSWORD': env("DB_PASSWORD"),
+        'HOST': env("DB_HOST"),
         'PORT': '1433',
         'OPTIONS': {'driver': 'ODBC Driver 17 for SQL Server'},
     }
