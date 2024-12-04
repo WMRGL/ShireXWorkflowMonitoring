@@ -125,7 +125,7 @@ font-family: var(--font-family);
 /* Font Size Modal styles - MW */
 .font-size-modal {
   position: fixed;
-  z-index: 1;
+  z-index: 1000;
   left: 0;
   top: 0;
   width: 100%;

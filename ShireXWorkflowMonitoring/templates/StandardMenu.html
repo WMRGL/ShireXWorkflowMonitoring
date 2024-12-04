@@ -113,32 +113,44 @@
 </div>
 <script src="{%   static 'Scripts.js' %}"></script>
 <script>
+    // Ensure this script runs after the DOM is loaded
+    document.addEventListener("DOMContentLoaded", function () {
+        const btn = document.getElementById("settings-btn");
+        const modal = document.getElementById("font-size-modal");
+        const closeBtn = document.querySelector(".close");
 
-    $(document).ready(function(){
-        // Initialize DataTables
-        $('#ResultsTable').DataTable({
-            "paging": true,
-            "searching": true,
-            "ordering": true,
-            "pageLength": 20,
-            "lengthMenu": [[10, 20, 50, -1], [10, 20, 50, "ALL"]],
-            "language": {
-                "paginate": {
-                    "previous": "&lt;",
-                    "next": "&gt;"
-                }
-            },
-            "initComplete": function(settings, json) {
-                // Force custom header color after DataTables has rendered
-                $('#ResultsTable thead th').css({
-                    'background-color': '#007bff', // Force blue
-                    'color': 'white',              // Force white text
-                    'border-bottom': '2px solid black' // Force black border
-                });
+        // Open the modal when the settings button is clicked
+        btn.addEventListener("click", function () {
+            console.log("Settings button clicked");
+            modal.style.display = "block";
+        });
+
+        // Close the modal when the close button is clicked
+        closeBtn.addEventListener("click", function () {
+            modal.style.display = "none";
+        });
+
+        // Close the modal when clicking outside of it
+        window.addEventListener("click", function (event) {
+            if (event.target === modal) {
+                modal.style.display = "none";
             }
         });
     });
 
+    function changeFontSize(size) {
+        document.body.style.fontSize = {
+            small: '12px',
+            medium: '16px',
+            large: '20px'
+        }[size];
+        localStorage.setItem('preferredFontSize', size);
+        document.getElementById("font-size-modal").style.display = "none";
+    }
 
-
+    function changeFontStyle() {
+        const selectedFont = document.getElementById('font-style-select').value;
+        document.documentElement.style.setProperty('--font-family', selectedFont);
+        localStorage.setItem('selectedFontStyle', selectedFont);
+    }
 </script>

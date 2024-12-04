@@ -81,6 +81,10 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
+console.log("Modal:", modal); // Should not be null
+console.log("Button:", btn);  // Should not be null
+console.log("Close button:", span); // Should not be null
+
 
 
 window.addEventListener('load', function() {
