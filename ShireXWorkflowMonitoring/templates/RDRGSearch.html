@@ -67,4 +67,38 @@
             </div>
         </div>
     </body>
+    <script>
+    window.onload = function() {
+        // Get today's date
+        var today = new Date();
+
+        // Calculate the date 5 months ago
+        var fiveMonthsAgo = new Date();
+        fiveMonthsAgo.setMonth(today.getMonth() - 5);
+
+        // Calculate the date 2 months from now
+        var twoMonthsFromNow = new Date();
+        twoMonthsFromNow.setMonth(today.getMonth() + 2);
+
+        // Adjust for months where the date exceeds the valid range
+        if (today.getDate() !== fiveMonthsAgo.getDate()) {
+            fiveMonthsAgo.setDate(0); // Set to the last day of the previous month in case of overflow
+        }
+        if (today.getDate() !== twoMonthsFromNow.getDate()) {
+            twoMonthsFromNow.setDate(0); // Set to the last day of the overflow month
+        }
+
+        // Format the dates as YYYY-MM-DD
+        function formatDate(date) {
+            var day = ("0" + date.getDate()).slice(-2);
+            var month = ("0" + (date.getMonth() + 1)).slice(-2);
+            return date.getFullYear() + "-" + month + "-" + day;
+        }
+
+        // Set the value of the date input fields
+        document.getElementById('txtCriteriaDateFrom').value = formatDate(fiveMonthsAgo);
+        document.getElementById('txtCriteriaDateTo').value = formatDate(twoMonthsFromNow);
+    };
+</script>
+
 {% endblock content %}

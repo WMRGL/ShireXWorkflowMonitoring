@@ -218,5 +218,3 @@ class SetAllocatedToForCyto(TemplateView):
             "errorMessage": "Failed to set the Allocated to column at the database server.",
         }
         return render(self.template_name, _context)
-
-

@@ -87,15 +87,20 @@ window.addEventListener('load', function() {
             document.getElementById('txtPageNumber').value = '1';
         })
 
-        document.getElementById('ddlCriteriaDiseaseIndication1').addEventListener('change', function () {
+        document.addEventListener("DOMContentLoaded", function () {
+            var indicationDropdown = document.getElementById('ddlCriteriaDiseaseIndication1');
 
-            if (IsFormValid()) {
-                document.getElementById('ddlCriteriaReasonForDiseaseIndication1').value = '';
-                document.getElementById('ddlCriteriaReasonForDiseaseIndication2').value = '';
-                document.getElementById('ddlCriteriaReasonForDiseaseIndication3').value = '';
-                DoPostBack();
+            if (indicationDropdown) {  // Check if the element exists
+                indicationDropdown.addEventListener('change', function () {
+                    if (IsFormValid()) {
+                        document.getElementById('ddlCriteriaReasonForDiseaseIndication1').value = '';
+                        document.getElementById('ddlCriteriaReasonForDiseaseIndication2').value = '';
+                        document.getElementById('ddlCriteriaReasonForDiseaseIndication3').value = '';
+                        DoPostBack();
+                    }
+                });
             }
-        } )
+        });
 
         document.getElementById('ddlCriteriaDiseaseIndication2').addEventListener('change', function () {
             if (IsFormValid()) {
@@ -257,7 +262,7 @@ window.addEventListener('load', function() {
         console.log("labno:", labno); // Log the labno to ensure it is correct
 
         let workflowName = 'RAML'; // Replace with actual logic if needed
-        let url = `/Molecular/Allocate/${labno}/${workflowName}/AllocateComplete/`;
+        let url = /Molecular/Allocate/${labno}/${workflowName}/AllocateComplete/;
         console.log("Navigating to URL:", url); // Debugging
         window.location.href = url;
     }
@@ -477,15 +482,6 @@ window.addEventListener('load', function() {
         if (cellCount !== columnCount) {
             console.warn('Row ' + (index + 1) + ' has a mismatch! Expected: ' + columnCount + ', Found: ' + cellCount);
         }
-    });
-
-    $(document).ready(function() {
-        $('#ResultsTable').DataTable({
-            "autoWidth": false,
-            "language": {
-                "emptyTable": "No records to display" // This will handle empty tables
-            }
-        });
     });
 
 

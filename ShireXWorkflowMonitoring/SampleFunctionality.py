@@ -53,4 +53,3 @@ class SampleForm(TemplateView):
             }
 
             return render(request, self.template_name, _context)
-

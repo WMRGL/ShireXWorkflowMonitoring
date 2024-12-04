@@ -82,37 +82,38 @@
                         </div>
                     </div>
                     <div class="row g-5 align-items-center" style="padding:5px">
-                        <div class="col-2" style="text-align:right">
-                            <label for="ddlCriteriaDiseaseIndication1" class="col-form-label">Indication:</label>
+                        <div class="col-2 bg-light" style="text-align:right">
+                            <label for="ddlCriteriaDiseaseIndication1" class="col-form-label">Indication(s):</label>
                         </div>
-                        <div class="col-2" >
+                        <div class="col-2 bg-light">
                             <select class="form-select" name="ddlCriteriaDiseaseIndication1" id="ddlCriteriaDiseaseIndication1">
                                 <option value="" {% if criteriaDiseaseIndication1 == "" %} selected="selected" {% endif %}>select...</option>
-                                {% if criteriaDiseaseIndications %}
-                                    {% for item in criteriaDiseaseIndications %}
-                                        <option value="{{ item.DISEASE_CODE }}" {% if item.DISEASE_CODE == criteriaDiseaseIndication1 %} selected="selected" {% endif %}>{{ item.DISEASE_CODE }}</option>
-                                    {% endfor %}
-                                {% endif %}
+                                {% for item in criteriaDiseaseIndications %}
+                                    <option value="{{ item.DISEASE_CODE }}" {% if item.DISEASE_CODE == criteriaDiseaseIndication1 %} selected="selected" {% endif %}>
+                                        {{ item.DISEASE_CODE }}
+                                    </option>
+                                {% endfor %}
                             </select>
                         </div>
-                        <div class="col-2" style="text-align:right">
-                            <label for="ddlCriteriaRefKey" class="col-form-label" >Key:</label>
-                        </div>
-                        <div class="col-2">
-                            <select class="form-select" name="ddlCriteriaRefKey" id="ddlCriteriaRefKey">
-                                <option value="" {% if criteriaRefKey == "" %} selected="selected" {% endif %}>select...</option>
-                                {% if criteriaRefKeys %}
-                                    {% for item in criteriaRefKeys %}
-                                        <option value="{{ item.REF }}" {% if item.REF == criteriaRefKey %} selected="selected" {% endif %}>{{ item.REF }}</option>
-                                    {% endfor %}
-                                {% endif %}
+                        <div class="col-2 bg-light">
+                            <select class="form-select" name="ddlCriteriaDiseaseIndication2" id="ddlCriteriaDiseaseIndication2">
+                                <option value="" {% if criteriaDiseaseIndication2 == "" %} selected="selected" {% endif %}>select...</option>
+                                {% for item in criteriaDiseaseIndications %}
+                                    <option value="{{ item.DISEASE_CODE }}" {% if item.DISEASE_CODE == criteriaDiseaseIndication2 %} selected="selected" {% endif %}>
+                                        {{ item.DISEASE_CODE }}
+                                    </option>
+                                {% endfor %}
                             </select>
                         </div>
-                        <div class="col-2">
-                            &nbsp;
-                        </div>
-                        <div class="col-2">
-                            &nbsp;
+                        <div class="col-2 bg-light">
+                            <select class="form-select" name="ddlCriteriaDiseaseIndication3" id="ddlCriteriaDiseaseIndication3">
+                                <option value="" {% if criteriaDiseaseIndication3 == "" %} selected="selected" {% endif %}>select...</option>
+                                {% for item in criteriaDiseaseIndications %}
+                                    <option value="{{ item.DISEASE_CODE }}" {% if item.DISEASE_CODE == criteriaDiseaseIndication3 %} selected="selected" {% endif %}>
+                                        {{ item.DISEASE_CODE }}
+                                    </option>
+                                {% endfor %}
+                            </select>
                         </div>
                     </div>
                     <div class="row g-5 align-items-center" style="padding:5px">
@@ -372,6 +373,40 @@
             {% endif %}
             </tbody>
         </table>
+        <nav>
+            <ul class="pagination justify-content-center">
+                <!-- First and Previous Page Links -->
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1&{{ base_query_string }}">First</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}&{{ base_query_string }}">Previous</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link">First</span></li>
+                    <li class="page-item disabled"><span class="page-link">Previous</span></li>
+                {% endif %}
+
+                <!-- Current Page Indicator -->
+                <li class="page-item active">
+                    <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                </li>
+
+                <!-- Next and Last Page Links -->
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}&{{ base_query_string }}">Next</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&{{ base_query_string }}">Last</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled"><span class="page-link">Next</span></li>
+                    <li class="page-item disabled"><span class="page-link">Last</span></li>
+                {% endif %}
+            </ul>
+        </nav>
     </div>
 </div>
 <script>
@@ -383,23 +418,28 @@
         var fiveMonthsAgo = new Date();
         fiveMonthsAgo.setMonth(today.getMonth() - 5);
 
-        // Adjust for months where the date exceeds the valid range (i.e., if subtracting months causes invalid dates)
+        // Calculate the date 2 months from now
+        var twoMonthsFromNow = new Date();
+        twoMonthsFromNow.setMonth(today.getMonth() + 2);
+
+        // Adjust for months where the date exceeds the valid range
         if (today.getDate() !== fiveMonthsAgo.getDate()) {
             fiveMonthsAgo.setDate(0); // Set to the last day of the previous month in case of overflow
         }
+        if (today.getDate() !== twoMonthsFromNow.getDate()) {
+            twoMonthsFromNow.setDate(0); // Set to the last day of the overflow month
+        }
 
         // Format the dates as YYYY-MM-DD
-        var day = ("0" + today.getDate()).slice(-2);
-        var month = ("0" + (today.getMonth() + 1)).slice(-2);
-        var formattedToday = today.getFullYear() + "-" + month + "-" + day;
-
-        var dayFiveMonthsAgo = ("0" + fiveMonthsAgo.getDate()).slice(-2);
-        var monthFiveMonthsAgo = ("0" + (fiveMonthsAgo.getMonth() + 1)).slice(-2);
-        var formattedFiveMonthsAgo = fiveMonthsAgo.getFullYear() + "-" + monthFiveMonthsAgo + "-" + dayFiveMonthsAgo;
+        function formatDate(date) {
+            var day = ("0" + date.getDate()).slice(-2);
+            var month = ("0" + (date.getMonth() + 1)).slice(-2);
+            return date.getFullYear() + "-" + month + "-" + day;
+        }
 
         // Set the value of the date input fields
-        document.getElementById('txtCriteriaDateFrom').value = formattedFiveMonthsAgo;
-        document.getElementById('txtCriteriaDateTo').value = formattedToday;
+        document.getElementById('txtCriteriaDateFrom').value = formatDate(fiveMonthsAgo);
+        document.getElementById('txtCriteriaDateTo').value = formatDate(twoMonthsFromNow);
     };
 </script>
 {% endblock content %}
