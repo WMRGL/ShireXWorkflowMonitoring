@@ -160,25 +160,25 @@
         <table class="table table-bordered" id="ResultsTable">
             <thead class="bg-primary text-white">
                 <tr>
-                    <th>Claim</th>
-                    <th>Patient (Date deceased)</th>
-                    <th>Lab Number</th>
-                    <th>PartID</th>
-                    <th>Indication / Reason</th>
-                    <th>Sample type</th>
-                    <th>Priority</th>
-                    <th>Days left</th>
-                    <th>Alloc to</th>
-                    <th>Key</th>
-                    <th>Date received</th>
-                    <th>Date activated</th>
-                    <th>Date due</th>
-                    <th>Status</th>
-                    <th>Report by</th>
-                    <th>Worksheet / Result</th>
-                    <th>DNA/Quant</th>
-                    <th>CONC</th>
-                    <th>Alert</th>
+                    <th onClick="sortTable(0)" style="cursor: pointer;">Claim</th>
+                    <th onClick="sortTable(1)" style="cursor: pointer;">Patient (Date deceased)</th>
+                    <th onClick="sortTable(2)" style="cursor: pointer;">Lab Number</th>
+                    <th onClick="sortTable(3)" style="cursor: pointer;">PartID</th>
+                    <th onClick="sortTable(4)" style="cursor: pointer;">Indication / Reason</th>
+                    <th onClick="sortTable(5)" style="cursor: pointer;">Sample type</th>
+                    <th onClick="sortTable(6)" style="cursor: pointer;">Priority</th>
+                    <th onClick="sortTable(7)" style="cursor: pointer;">Days left</th>
+                    <th onClick="sortTable(8)" style="cursor: pointer;">Alloc to</th>
+                    <th onClick="sortTable(9)" style="cursor: pointer;">Key</th>
+                    <th onClick="sortTable(10)" style="cursor: pointer;">Date received</th>
+                    <th onClick="sortTable(11)" style="cursor: pointer;">Date activated</th>
+                    <th onClick="sortTable(12)" style="cursor: pointer;">Date due</th>
+                    <th onClick="sortTable(13)" style="cursor: pointer;">Status</th>
+                    <th onClick="sortTable(14)" style="cursor: pointer;">Report by</th>
+                    <th onClick="sortTable(15)" style="cursor: pointer;">Worksheet / Result</th>
+                    <th onClick="sortTable(16)" style="cursor: pointer;">DNA/Quant</th>
+                    <th onClick="sortTable(17)" style="cursor: pointer;">CONC</th>
+                    <th onClick="sortTable(18)" style="cursor: pointer;">Alert</th>
                 </tr>
             </thead>
             <tbody>
@@ -287,4 +287,35 @@ document.addEventListener("DOMContentLoaded", function () {
     document.getElementById('txtCriteriaDateTo').value = formatDate(twoMonthsFromNow);
 });
 </script>
+<script>
+    function sortTable(columnIndex) {
+        const table = document.getElementById("ResultsTable");
+        const tbody = table.querySelector("tbody");
+        const rows = Array.from(tbody.querySelectorAll("tr"));
+
+        // Determine sort direction: ascending or descending
+        const isAscending = table.dataset.sortOrder !== "asc";
+        table.dataset.sortOrder = isAscending ? "asc" : "desc";
+
+        // Sort rows based on the content of the clicked column
+        rows.sort((rowA, rowB) => {
+            const cellA = rowA.cells[columnIndex].innerText.trim().toLowerCase();
+            const cellB = rowB.cells[columnIndex].innerText.trim().toLowerCase();
+
+            if (!isNaN(cellA) && !isNaN(cellB)) {
+                // Numeric sorting
+                return isAscending ? cellA - cellB : cellB - cellA;
+            } else {
+                // String sorting
+                return isAscending
+                    ? cellA.localeCompare(cellB)
+                    : cellB.localeCompare(cellA);
+            }
+        });
+
+        // Re-attach rows to the tbody in the new sorted order
+        rows.forEach(row => tbody.appendChild(row));
+    }
+</script>
+
 {% endblock content %}

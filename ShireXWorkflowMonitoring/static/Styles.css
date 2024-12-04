@@ -197,3 +197,12 @@ font-family: var(--font-family);
     border-collapse: collapse; /* Ensure borders don't overlap */
 }
 
+th.sorted-asc::after {
+    content: " ▲";
+}
+
+th.sorted-desc::after {
+    content: " ▼";
+}
+
+
