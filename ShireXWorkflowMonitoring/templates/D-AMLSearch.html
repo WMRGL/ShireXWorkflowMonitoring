@@ -206,55 +206,55 @@
     <div class="container-fluid">
         <table class="table table-bordered" Id="ResultsTable">
             <thead class="bg-primary" style="color:white">
-                <th>
+                <th onClick="sortTable(0)" style="cursor: pointer;">
                     Claim
                 </th>
-                <th scope="col">
+                <th scope="col" onClick="sortTable(1)" style="cursor: pointer;">
                     Patient (Date deceased)
                 </th>
-                <th scope="col">
+                <th scope="col" onClick="sortTable(2)" style="cursor: pointer;">
                     Lab Number
                 </th>
-                <th scope="col">
+                <th scope="col" onClick="sortTable(3)" style="cursor: pointer;">
                     Indication / Reason
                 </th>
-                <th scope="col">
+                <th scope="col" onClick="sortTable(4)" style="cursor: pointer;">
                     Sample type
                 </th>
-                <th scope="col">
+                <th scope="col" onClick="sortTable(5)" style="cursor: pointer;">
                     Priority
                 </th>
-                <th scope="col">
+                <th scope="col" onClick="sortTable(6)" style="cursor: pointer;">
                     Days left
                 </th>
-                <th scope="col">
+                <th scope="col" onClick="sortTable(7)" style="cursor: pointer;">
                     Alloc to
                 </th>
-                <th scope="col">
+                <th scope="col" onClick="sortTable(8)" style="cursor: pointer;">
                     Key
                 </th>
-                <th scope="col">
+                <th scope="col" onClick="sortTable(9)" style="cursor: pointer;">
                     Date received
                 </th>
-                <th scope="col">
+                <th scope="col" onClick="sortTable(10)" style="cursor: pointer;">
                     Date activated
                 </th>
-                <th scope="col">
+                <th scope="col" onClick="sortTable(11)" style="cursor: pointer;">
                     Date_due
                 </th>
-                <th scope="col">
+                <th scope="col" onClick="sortTable(12)" style="cursor: pointer;">
                     Status
                 </th>
-                <th scope="col">
+                <th scope="col" onClick="sortTable(13)" style="cursor: pointer;">
                     Report by
                 </th>
-                <th scope="col">
+                <th scope="col" onClick="sortTable(14)" style="cursor: pointer;">
                     Wksheet / Result
                 </th>
-                <th scope="col">
+                <th scope="col" onClick="sortTable(15)" style="cursor: pointer;">
                     DNA/Quant
                 </th>
-                <th scope="col">
+                <th scope="col" onClick="sortTable(16)" style="cursor: pointer;">
                     Alert
                 </th>
             </thead>
@@ -433,5 +433,34 @@
         document.getElementById('txtCriteriaDateTo').value = formatDate(twoMonthsFromNow);
     };
 </script>
+<script>
+    function sortTable(columnIndex) {
+        const table = document.getElementById("ResultsTable");
+        const tbody = table.querySelector("tbody");
+        const rows = Array.from(tbody.querySelectorAll("tr"));
 
+        // Determine sort direction: ascending or descending
+        const isAscending = table.dataset.sortOrder !== "asc";
+        table.dataset.sortOrder = isAscending ? "asc" : "desc";
+
+        // Sort rows based on the content of the clicked column
+        rows.sort((rowA, rowB) => {
+            const cellA = rowA.cells[columnIndex].innerText.trim().toLowerCase();
+            const cellB = rowB.cells[columnIndex].innerText.trim().toLowerCase();
+
+            if (!isNaN(cellA) && !isNaN(cellB)) {
+                // Numeric sorting
+                return isAscending ? cellA - cellB : cellB - cellA;
+            } else {
+                // String sorting
+                return isAscending
+                    ? cellA.localeCompare(cellB)
+                    : cellB.localeCompare(cellA);
+            }
+        });
+
+        // Re-attach rows to the tbody in the new sorted order
+        rows.forEach(row => tbody.appendChild(row));
+    }
+</script>
 {% endblock content %}

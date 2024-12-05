@@ -100,5 +100,34 @@
         document.getElementById('txtCriteriaDateTo').value = formatDate(twoMonthsFromNow);
     };
 </script>
+<script>
+    function sortTable(columnIndex) {
+        const table = document.getElementById("ResultsTable");
+        const tbody = table.querySelector("tbody");
+        const rows = Array.from(tbody.querySelectorAll("tr"));
 
+        // Determine sort direction: ascending or descending
+        const isAscending = table.dataset.sortOrder !== "asc";
+        table.dataset.sortOrder = isAscending ? "asc" : "desc";
+
+        // Sort rows based on the content of the clicked column
+        rows.sort((rowA, rowB) => {
+            const cellA = rowA.cells[columnIndex].innerText.trim().toLowerCase();
+            const cellB = rowB.cells[columnIndex].innerText.trim().toLowerCase();
+
+            if (!isNaN(cellA) && !isNaN(cellB)) {
+                // Numeric sorting
+                return isAscending ? cellA - cellB : cellB - cellA;
+            } else {
+                // String sorting
+                return isAscending
+                    ? cellA.localeCompare(cellB)
+                    : cellB.localeCompare(cellA);
+            }
+        });
+
+        // Re-attach rows to the tbody in the new sorted order
+        rows.forEach(row => tbody.appendChild(row));
+    }
+</script>
 {% endblock content %}
