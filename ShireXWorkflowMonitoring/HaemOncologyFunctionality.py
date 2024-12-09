@@ -314,6 +314,7 @@ class DAMLSearch(TemplateView):  # AML & MDS
             _priority = self.utilities.GetRequestKey(request, "ddlCriteriaPriority", enumDataType.String) or _priority
             _diseaseIndicationCode1 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication1", enumDataType.String) or _diseaseIndicationCode1
             _diseaseIndicationCode2 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication2", enumDataType.String) or _diseaseIndicationCode2
+            _diseaseIndicationCode3 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication3", enumDataType.String) or _diseaseIndicationCode3
             _diseaseIndicationCode4 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication4", enumDataType.String) or _diseaseIndicationCode4
             _reasonForDiseaseIndication1 = self.utilities.GetRequestKey(request, "ddlCriteriaReasonForDiseaseIndication1", enumDataType.String) or _reasonForDiseaseIndication1
             _lastName = self.utilities.GetRequestKey(request, "txtCriteriaLastname", enumDataType.String) or _lastName
@@ -329,7 +330,6 @@ class DAMLSearch(TemplateView):  # AML & MDS
                 request.user.username, _lastName, _labNumber, _RefKey, _noResultStatus
             )
 
-            print(f"Total workflow cases retrieved: {len(_totalWorkflowCases)}")
 
             # Paginate results
             paginator = Paginator(_totalWorkflowCases, _itemsPerPage)
@@ -339,8 +339,6 @@ class DAMLSearch(TemplateView):  # AML & MDS
                 paginated_cases = paginator.page(1)
             except EmptyPage:
                 paginated_cases = paginator.page(paginator.num_pages)
-
-            print(f"Page {page} contains: {list(paginated_cases)}")
 
             # Add additional data to cases
             paginated_cases = self.worksheetHelper.AddWorksheetTestResultsToWorkflowCases(paginated_cases)
@@ -367,6 +365,7 @@ class DAMLSearch(TemplateView):  # AML & MDS
                 "criteriaDiseaseIndications": self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', '', 'DAML'),
                 "criteriaDiseaseIndication1": _diseaseIndicationCode1,
                 "criteriaDiseaseIndication2": _diseaseIndicationCode2,
+                "criteriaDiseaseIndication3": _diseaseIndicationCode3,
                 "criteriaDiseaseIndication4": _diseaseIndicationCode4,
                 "criteriaReasonsForDiseaseIndications": self.dataServices.GetDNAReasonForDiseaseIndication(
                     _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3),
