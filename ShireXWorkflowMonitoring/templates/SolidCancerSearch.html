@@ -266,26 +266,26 @@
 </div>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    var today = new Date();
-    var fiveMonthsAgo = new Date();
-    var twoMonthsFromNow = new Date();
-    fiveMonthsAgo.setMonth(today.getMonth() - 5);
-    twoMonthsFromNow.setMonth(today.getMonth() + 2);
+    window.onload = function() {
+    var txtCriteriaDateFrom = document.getElementById('txtCriteriaDateFrom');
+    var txtCriteriaDateTo = document.getElementById('txtCriteriaDateTo');
 
-    if (today.getDate() !== fiveMonthsAgo.getDate()) {
-        fiveMonthsAgo.setDate(0);
+    if (!txtCriteriaDateFrom.value) {
+        var today = new Date();
+        var fiveMonthsAgo = new Date();
+        fiveMonthsAgo.setMonth(today.getMonth() - 5);
+        if (today.getDate() !== fiveMonthsAgo.getDate()) {
+            fiveMonthsAgo.setDate(0);
+        }
+        txtCriteriaDateFrom.value = fiveMonthsAgo.toISOString().split('T')[0];
     }
 
-    function formatDate(date) {
-        var day = ("0" + date.getDate()).slice(-2);
-        var month = ("0" + (date.getMonth() + 1)).slice(-2);
-        return date.getFullYear() + "-" + month + "-" + day;
+    if (!txtCriteriaDateTo.value) {
+        var twoMonthsFromNow = new Date();
+        twoMonthsFromNow.setMonth(new Date().getMonth() + 2);
+        txtCriteriaDateTo.value = twoMonthsFromNow.toISOString().split('T')[0];
     }
-
-    document.getElementById('txtCriteriaDateFrom').value = formatDate(fiveMonthsAgo);
-    document.getElementById('txtCriteriaDateTo').value = formatDate(twoMonthsFromNow);
-});
+};
 </script>
 <script>
     function sortTable(columnIndex) {

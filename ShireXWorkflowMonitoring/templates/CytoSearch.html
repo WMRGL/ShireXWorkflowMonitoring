@@ -4,12 +4,12 @@
     <div class="row mb-3">
         <div class="col-2">
             <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSearch" aria-expanded="false" aria-controls="collapseExample">
-            Show/Hide Search
+                Show/Hide Search
             </button>
         </div>
         <div class="col-10">
             <h2 class="text-center">
-                AML & MDS Workflow
+                Cyto Workflow
             </h2>
         </div>
     </div>
@@ -240,20 +240,14 @@
                 <th scope="col" onClick="sortTable(7)" style="cursor: pointer;">
                     Alloc to
                 </th>
-                <th scope="col" onClick="sortTable(8)" style="cursor: pointer;">
-                    Key
-                </th>
                 <th scope="col" onClick="sortTable(9)" style="cursor: pointer;">
                     Date received
                 </th>
                 <th scope="col" onClick="sortTable(10)" style="cursor: pointer;">
-                    Date activated
+                    FISH status
                 </th>
                 <th scope="col" onClick="sortTable(11)" style="cursor: pointer;">
-                    Date_due
-                </th>
-                <th scope="col" onClick="sortTable(12)" style="cursor: pointer;">
-                    Status
+                    Report status
                 </th>
                 <th scope="col" onClick="sortTable(13)" style="cursor: pointer;">
                     Report by
@@ -411,7 +405,7 @@
     </div>
 </div>
 <script>
-        window.onload = function() {
+    window.onload = function() {
     var txtCriteriaDateFrom = document.getElementById('txtCriteriaDateFrom');
     var txtCriteriaDateTo = document.getElementById('txtCriteriaDateTo');
 

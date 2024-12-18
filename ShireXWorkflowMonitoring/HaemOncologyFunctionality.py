@@ -75,8 +75,6 @@ class BMTSearch(TemplateView):
             _lastName = self.utilities.GetRequestKey(request, "txtCriteriaLastname", enumDataType.String) or _lastName
             _labNumber = self.utilities.GetRequestKey(request, "txtCriteriaLabnumber", enumDataType.String) or _labNumber
 
-            print(f"Filters applied: {_dateFrom}, {_dateTo}, {_itemsPerPage}, page={page}")
-
             # Retrieve data
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
                 'ONCOLOGY BMT', '', 'BMT', _dateFrom, _dateTo, _reportStatus, _priority,
@@ -84,13 +82,22 @@ class BMTSearch(TemplateView):
                 "", "", request.user.username, _lastName, _labNumber, _RefKey, _noResultStatus
             )
 
-            print(f"Total cases retrieved: {len(_totalWorkflowCases)}")
-
             # Apply data transformations
             _totalWorkflowCases = self.worksheetHelper.AddWorksheetTestResultsToWorkflowCases(_totalWorkflowCases)
             _totalWorkflowCases = self.worksheetHelper.AddTestsWithNoWorksheetsToWorkflowCases(_totalWorkflowCases)
             _totalWorkflowCases = self.worksheetHelper.ConvertWorksheetsColumnEmptyStringToNone(_totalWorkflowCases)
             _totalWorkflowCases = self.extractsheetHelper.AddExtractsToWorkflowCases(_totalWorkflowCases)
+
+            # Fetch reasons for dropdowns
+            _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(
+                _diseaseIndicationCode1, _diseaseIndicationCode2, ""
+            ) or []
+
+            # Add descriptions if missing
+            _reasonsForDiseaseIndications = [
+                {"REASON_CODE": reason.get("REASON_CODE", ""), "REASON_DESCRIPTION": reason.get("REASON_DESCRIPTION", reason.get("REASON_CODE", ""))}
+                for reason in _reasonsForDiseaseIndications
+            ]
 
             # Paginate results
             paginator = Paginator(_totalWorkflowCases, _itemsPerPage)
@@ -100,13 +107,6 @@ class BMTSearch(TemplateView):
                 paginated_cases = paginator.page(1)
             except EmptyPage:
                 paginated_cases = paginator.page(paginator.num_pages)
-
-            print(f"Page {page} contains: {list(paginated_cases)}")
-
-            # Prepare query parameters for pagination
-            query_params = request.GET.copy()
-            query_params.pop("page", None)
-            base_query_string = urlencode(query_params)
 
             # Context for rendering
             context = {
@@ -123,17 +123,16 @@ class BMTSearch(TemplateView):
                 "criteriaDiseaseIndication1": _diseaseIndicationCode1,
                 "criteriaDiseaseIndication2": _diseaseIndicationCode2,
                 "criteriaReasonForDiseaseIndication1": _reasonForDiseaseIndication1,
+                "criteriaReasonsForDiseaseIndications": _reasonsForDiseaseIndications,
                 "criteriaSurnames": self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases),
                 "criteriaSurname": _lastName,
                 "criteriaLabnumber": _labNumber,
                 "searchCount": len(_totalWorkflowCases),
                 "page_obj": paginated_cases,
-                "base_query_string": base_query_string,
             }
             return render(request, self.template_name, context)
 
         except Exception as ex:
-            print(f"Error in BMTSearch.get: {ex}")
             context = {
                 "Title": self.title,
                 "errorMessage": f"BMTSearch.get : {ex}"
@@ -194,17 +193,30 @@ class MPNSearch(TemplateView):
             _lastName = self.utilities.GetRequestKey(request, "txtCriteriaLastname", enumDataType.String) or _lastName
             _labNumber = self.utilities.GetRequestKey(request, "txtCriteriaLabnumber", enumDataType.String) or _labNumber
 
-            print(f"Filters applied: _dateFrom={_dateFrom}, _dateTo={_dateTo}, _itemsPerPage={_itemsPerPage}, page={page}")
-
             # Retrieve workflow cases
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
                 '2012_HAEM_ONC', '', 'MPN', _dateFrom, _dateTo, _reportStatus, _priority,
                 _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3,
-                _reasonForDiseaseIndication1, _reasonForDiseaseIndication2, _reasonForDiseaseIndication3,
+                _reasonForDiseaseIndication1, "", "",
                 request.user.username, _lastName, _labNumber, _RefKey, _noResultStatus
             )
 
-            print(f"Total workflow cases retrieved: {len(_totalWorkflowCases)}")
+            # Apply data transformations
+            _totalWorkflowCases = self.worksheetHelper.AddWorksheetTestResultsToWorkflowCases(_totalWorkflowCases)
+            _totalWorkflowCases = self.worksheetHelper.AddTestsWithNoWorksheetsToWorkflowCases(_totalWorkflowCases)
+            _totalWorkflowCases = self.worksheetHelper.ConvertWorksheetsColumnEmptyStringToNone(_totalWorkflowCases)
+            _totalWorkflowCases = self.extractsheetHelper.AddExtractsToWorkflowCases(_totalWorkflowCases)
+
+            # Fetch reasons for dropdowns
+            _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(
+                _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3
+            ) or []
+
+            # Add descriptions if missing
+            _reasonsForDiseaseIndications = [
+                {"REASON_CODE": reason.get("REASON_CODE", ""), "REASON_DESCRIPTION": reason.get("REASON_DESCRIPTION", reason.get("REASON_CODE", ""))}
+                for reason in _reasonsForDiseaseIndications
+            ]
 
             # Paginate results
             paginator = Paginator(_totalWorkflowCases, _itemsPerPage)
@@ -214,14 +226,6 @@ class MPNSearch(TemplateView):
                 paginated_cases = paginator.page(1)
             except EmptyPage:
                 paginated_cases = paginator.page(paginator.num_pages)
-
-            print(f"Page {page} contains: {list(paginated_cases)}")
-
-            # Add additional data to cases
-            paginated_cases = self.worksheetHelper.AddWorksheetTestResultsToWorkflowCases(paginated_cases)
-            paginated_cases = self.worksheetHelper.AddTestsWithNoWorksheetsToWorkflowCases(paginated_cases)
-            paginated_cases = self.worksheetHelper.ConvertWorksheetsColumnEmptyStringToNone(paginated_cases)
-            paginated_cases = self.extractsheetHelper.AddExtractsToWorkflowCases(paginated_cases)
 
             # Prepare query parameters for pagination links
             query_params = request.GET.copy()
@@ -242,8 +246,7 @@ class MPNSearch(TemplateView):
                 "criteriaDiseaseIndications": self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', '', 'MPN'),
                 "criteriaDiseaseIndication1": _diseaseIndicationCode1,
                 "criteriaDiseaseIndication2": _diseaseIndicationCode2,
-                "criteriaReasonsForDiseaseIndications": self.dataServices.GetDNAReasonForDiseaseIndication(
-                    _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3),
+                "criteriaReasonsForDiseaseIndications": _reasonsForDiseaseIndications,
                 "criteriaReasonForDiseaseIndication1": _reasonForDiseaseIndication1,
                 "criteriaReasonForDiseaseIndication2": _reasonForDiseaseIndication2,
                 "criteriaSurnames": self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases),
@@ -264,8 +267,6 @@ class MPNSearch(TemplateView):
                 "errorMessage": f"MPNSearch.get : {ex}"
             }
             return render(request, self.template_name, context)
-
-
 
 class DAMLSearch(TemplateView):  # AML & MDS
     template_name = "D-AMLSearch.html"
@@ -325,6 +326,138 @@ class DAMLSearch(TemplateView):  # AML & MDS
             # Retrieve filtered workflow cases
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
                 '2012_HAEM_ONC', '', 'DAML', _dateFrom, _dateTo, _reportStatus, _priority,
+                _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3,
+                _reasonForDiseaseIndication1, _reasonForDiseaseIndication2, _reasonForDiseaseIndication3,
+                request.user.username, _lastName, _labNumber, _RefKey, _noResultStatus
+            )
+
+            # Apply data transformations
+            _totalWorkflowCases = self.worksheetHelper.AddWorksheetTestResultsToWorkflowCases(_totalWorkflowCases)
+            _totalWorkflowCases = self.worksheetHelper.AddTestsWithNoWorksheetsToWorkflowCases(_totalWorkflowCases)
+            _totalWorkflowCases = self.worksheetHelper.ConvertWorksheetsColumnEmptyStringToNone(_totalWorkflowCases)
+            _totalWorkflowCases = self.extractsheetHelper.AddExtractsToWorkflowCases(_totalWorkflowCases)
+
+            # Fetch reasons for dropdowns
+            _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(
+                _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3
+            ) or []
+
+            # Add descriptions if missing
+            _reasonsForDiseaseIndications = [
+                {"REASON_CODE": reason.get("REASON_CODE", ""), "REASON_DESCRIPTION": reason.get("REASON_DESCRIPTION", reason.get("REASON_CODE", ""))}
+                for reason in _reasonsForDiseaseIndications
+            ]
+
+            # Paginate results
+            paginator = Paginator(_totalWorkflowCases, _itemsPerPage)
+            try:
+                paginated_cases = paginator.page(page)
+            except PageNotAnInteger:
+                paginated_cases = paginator.page(1)
+            except EmptyPage:
+                paginated_cases = paginator.page(paginator.num_pages)
+
+            # Prepare query parameters for pagination links
+            query_params = request.GET.copy()
+            query_params.pop("page", None)
+            base_query_string = urlencode(query_params)
+
+            # Context for rendering
+            context = {
+                "criteriaDateFrom": _dateFrom,
+                "criteriaDateTo": _dateTo,
+                "Title": self.title,
+                "workflowCases": paginated_cases,
+                "itemsPerPage": _itemsPerPage,
+                "criteriaReportStatuses": self.dataServices.GetReportStatus(),
+                "criteriaReportStatus": _reportStatus,
+                "criteriaPriorities": self.dataServices.GetDNAPriority(),
+                "criteriaPriority": _priority,
+                "criteriaDiseaseIndications": self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', '', 'DAML'),
+                "criteriaDiseaseIndication1": _diseaseIndicationCode1,
+                "criteriaDiseaseIndication2": _diseaseIndicationCode2,
+                "criteriaDiseaseIndication3": _diseaseIndicationCode3,
+                "criteriaDiseaseIndication4": _diseaseIndicationCode4,
+                "criteriaReasonsForDiseaseIndications": _reasonsForDiseaseIndications,
+                "criteriaReasonForDiseaseIndication1": _reasonForDiseaseIndication1,
+                "criteriaReasonForDiseaseIndication2": _reasonForDiseaseIndication2,
+                "criteriaSurnames": self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases),
+                "criteriaSurname": _lastName,
+                "criteriaLabnumber": _labNumber,
+                "criteriaNoResult": _noResultStatus,
+                "searchCount": len(_totalWorkflowCases),
+                "page_obj": paginated_cases,
+                "base_query_string": base_query_string,
+            }
+
+            return render(request, self.template_name, context)
+
+        except Exception as ex:
+            print(f"Error in DAMLSearch.get: {ex}")
+            context = {
+                "Title": self.title,
+                "errorMessage": f"DAMLSearch.get : {ex}"
+            }
+            return render(request, self.template_name, context)
+
+class CytoSearch(TemplateView):  # AML & MDS
+    template_name = "CytoSearch.html"
+    title = ShireXWorkflowMonitoringConfig.title
+    utilities = UtilityFunctions()
+    dataServices = ShireData()
+    worksheetHelper = Worksheet()  # Composition, instead of inheritance
+    extractsheetHelper = ExtractSheet()
+
+    def get(self, request):
+        try:
+            # Redirect to login if the user is not authenticated
+            if not request.user.is_authenticated:
+                return redirect("LoginPage")
+
+            # Default filter values
+            _reportStatus = "NOTFINAL"
+            _priority = ""
+            _diseaseIndicationCode1 = ""
+            _diseaseIndicationCode2 = ""
+            _diseaseIndicationCode3 = ""
+            _diseaseIndicationCode4 = ""
+            _reasonForDiseaseIndication1 = ""
+            _reasonForDiseaseIndication2 = ""
+            _reasonForDiseaseIndication3 = ""
+            _lastName = ""
+            _labNumber = ""
+            _RefKey = ""
+            _noResultStatus = 0
+
+            # Extract search filters and pagination parameters
+            _dateFrom = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime) or (datetime.today() - timedelta(days=60))
+            _dateTo = self.utilities.GetRequestKey(request, "txtCriteriaDateTo", enumDataType.Datetime) or (datetime.today() + timedelta(days=30))
+            _itemsPerPage = int(request.GET.get("items_per_page", 20))  # Default to 20 items per page
+            page = request.GET.get("page", 1)
+
+            try:
+                page = int(page)
+                if page < 1:
+                    page = 1
+            except ValueError:
+                page = 1
+
+            # Extract additional filters from the request
+            _reportStatus = self.utilities.GetRequestKey(request, "ddlCriteriaStatus", enumDataType.String) or _reportStatus
+            _priority = self.utilities.GetRequestKey(request, "ddlCriteriaPriority", enumDataType.String) or _priority
+            _diseaseIndicationCode1 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication1", enumDataType.String) or _diseaseIndicationCode1
+            _diseaseIndicationCode2 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication2", enumDataType.String) or _diseaseIndicationCode2
+            _diseaseIndicationCode3 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication3", enumDataType.String) or _diseaseIndicationCode3
+            _diseaseIndicationCode4 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication4", enumDataType.String) or _diseaseIndicationCode4
+            _reasonForDiseaseIndication1 = self.utilities.GetRequestKey(request, "ddlCriteriaReasonForDiseaseIndication1", enumDataType.String) or _reasonForDiseaseIndication1
+            _lastName = self.utilities.GetRequestKey(request, "txtCriteriaLastname", enumDataType.String) or _lastName
+            _labNumber = self.utilities.GetRequestKey(request, "txtCriteriaLabnumber", enumDataType.String) or _labNumber
+
+            print(f"Filters applied: _dateFrom={_dateFrom}, _dateTo={_dateTo}, _itemsPerPage={_itemsPerPage}, page={page}")
+
+            # Retrieve filtered workflow cases
+            _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
+                '2012_HAEM_ONC', '', 'CYTO', _dateFrom, _dateTo, _reportStatus, _priority,
                 _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3,
                 _reasonForDiseaseIndication1, _reasonForDiseaseIndication2, _reasonForDiseaseIndication3,
                 request.user.username, _lastName, _labNumber, _RefKey, _noResultStatus
@@ -456,6 +589,23 @@ class BreakSearch(TemplateView):
 
             print(f"Total workflow cases retrieved: {len(_totalWorkflowCases)}")
 
+            # Apply data transformations
+            _totalWorkflowCases = self.worksheetHelper.AddWorksheetTestResultsToWorkflowCases(_totalWorkflowCases)
+            _totalWorkflowCases = self.worksheetHelper.AddTestsWithNoWorksheetsToWorkflowCases(_totalWorkflowCases)
+            _totalWorkflowCases = self.worksheetHelper.ConvertWorksheetsColumnEmptyStringToNone(_totalWorkflowCases)
+            _totalWorkflowCases = self.extractsheetHelper.AddExtractsToWorkflowCases(_totalWorkflowCases)
+
+            # Fetch reasons for dropdowns
+            _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(
+                _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3
+            ) or []
+
+            # Add descriptions if missing
+            _reasonsForDiseaseIndications = [
+                {"REASON_CODE": reason.get("REASON_CODE", ""), "REASON_DESCRIPTION": reason.get("REASON_DESCRIPTION", reason.get("REASON_CODE", ""))}
+                for reason in _reasonsForDiseaseIndications
+            ]
+
             # Paginate results
             paginator = Paginator(_totalWorkflowCases, _itemsPerPage)
             try:
@@ -464,14 +614,6 @@ class BreakSearch(TemplateView):
                 paginated_cases = paginator.page(1)
             except EmptyPage:
                 paginated_cases = paginator.page(paginator.num_pages)
-
-            print(f"Page {page} contains: {list(paginated_cases)}")
-
-            # Add additional data to cases
-            paginated_cases = self.worksheetHelper.AddWorksheetTestResultsToWorkflowCases(paginated_cases)
-            paginated_cases = self.worksheetHelper.AddTestsWithNoWorksheetsToWorkflowCases(paginated_cases)
-            paginated_cases = self.worksheetHelper.ConvertWorksheetsColumnEmptyStringToNone(paginated_cases)
-            paginated_cases = self.extractsheetHelper.AddExtractsToWorkflowCases(paginated_cases)
 
             # Prepare query parameters for pagination links
             query_params = request.GET.copy()
@@ -493,8 +635,7 @@ class BreakSearch(TemplateView):
                 "criteriaDiseaseIndication1": _diseaseIndicationCode1,
                 "criteriaDiseaseIndication2": _diseaseIndicationCode2,
                 "criteriaDiseaseIndication3": _diseaseIndicationCode3,
-                "criteriaReasonsForDiseaseIndications": self.dataServices.GetDNAReasonForDiseaseIndication(
-                    _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3),
+                "criteriaReasonsForDiseaseIndications": _reasonsForDiseaseIndications,
                 "criteriaReasonForDiseaseIndication1": _reasonForDiseaseIndication1,
                 "criteriaReasonForDiseaseIndication2": _reasonForDiseaseIndication2,
                 "criteriaReasonForDiseaseIndication3": _reasonForDiseaseIndication3,
@@ -516,8 +657,6 @@ class BreakSearch(TemplateView):
                 "errorMessage": f"BreakSearch.get : {ex}"
             }
             return render(request, self.template_name, context)
-
-
 
 class RAMLSearch(TemplateView):
     template_name = "R-AMLSearch.html"
@@ -581,6 +720,23 @@ class RAMLSearch(TemplateView):
                 request.user.username, _lastName, _labNumber, _RefKey, _noResultStatus
             )
 
+            # Apply data transformations
+            _totalWorkflowCases = self.worksheetHelper.AddWorksheetTestResultsToWorkflowCases(_totalWorkflowCases)
+            _totalWorkflowCases = self.worksheetHelper.AddTestsWithNoWorksheetsToWorkflowCases(_totalWorkflowCases)
+            _totalWorkflowCases = self.worksheetHelper.ConvertWorksheetsColumnEmptyStringToNone(_totalWorkflowCases)
+            _totalWorkflowCases = self.extractsheetHelper.AddExtractsToWorkflowCases(_totalWorkflowCases)
+
+            # Fetch reasons for dropdowns
+            _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(
+                _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3
+            ) or []
+
+            # Add descriptions if missing
+            _reasonsForDiseaseIndications = [
+                {"REASON_CODE": reason.get("REASON_CODE", ""), "REASON_DESCRIPTION": reason.get("REASON_DESCRIPTION", reason.get("REASON_CODE", ""))}
+                for reason in _reasonsForDiseaseIndications
+            ]
+
             # Paginate results
             paginator = Paginator(_totalWorkflowCases, _itemsPerPage)
             try:
@@ -589,12 +745,6 @@ class RAMLSearch(TemplateView):
                 paginated_cases = paginator.page(1)
             except EmptyPage:
                 paginated_cases = paginator.page(paginator.num_pages)
-
-            # Add additional data to cases
-            paginated_cases = self.worksheetHelper.AddWorksheetTestResultsToWorkflowCases(paginated_cases)
-            paginated_cases = self.worksheetHelper.AddTestsWithNoWorksheetsToWorkflowCases(paginated_cases)
-            paginated_cases = self.worksheetHelper.ConvertWorksheetsColumnEmptyStringToNone(paginated_cases)
-            paginated_cases = self.extractsheetHelper.AddExtractsToWorkflowCases(paginated_cases)
 
             # Prepare query parameters for pagination links
             query_params = request.GET.copy()
@@ -616,8 +766,7 @@ class RAMLSearch(TemplateView):
                 "criteriaDiseaseIndication1": _diseaseIndicationCode1,
                 "criteriaDiseaseIndication2": _diseaseIndicationCode2,
                 "criteriaDiseaseIndication3": _diseaseIndicationCode3,
-                "criteriaReasonsForDiseaseIndications": self.dataServices.GetDNAReasonForDiseaseIndication(
-                    _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3),
+                "criteriaReasonsForDiseaseIndications": _reasonsForDiseaseIndications,
                 "criteriaReasonForDiseaseIndication1": _reasonForDiseaseIndication1,
                 "criteriaReasonForDiseaseIndication2": _reasonForDiseaseIndication2,
                 "criteriaReasonForDiseaseIndication3": _reasonForDiseaseIndication3,
@@ -724,7 +873,13 @@ class SNPSearch(TemplateView):
             _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', '', 'SNP')
             _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(
                 _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3
-            )
+            ) or []
+
+            # Add descriptions if missing
+            _reasonsForDiseaseIndications = [
+                {"REASON_CODE": reason.get("REASON_CODE", ""), "REASON_DESCRIPTION": reason.get("REASON_DESCRIPTION", reason.get("REASON_CODE", ""))}
+                for reason in _reasonsForDiseaseIndications
+            ]
 
             # Prepare query parameters for pagination links
             query_params = request.GET.copy()
@@ -835,7 +990,16 @@ class ALLSearch(TemplateView):
             _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', '', 'ALL')
             _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(
                 _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3
-            )
+            ) or []  # Ensure it defaults to an empty list if no data is returned
+
+            # Add descriptions if missing
+            _reasonsForDiseaseIndications = [
+                {"REASON_CODE": reason.get("REASON_CODE", ""), "REASON_DESCRIPTION": reason.get("REASON_DESCRIPTION", reason.get("REASON_CODE", ""))}
+                for reason in _reasonsForDiseaseIndications
+            ]
+
+            # Debug output for reasons
+            print("Reasons for Disease Indications (Populated):", _reasonsForDiseaseIndications)
 
             # Paginate results
             paginator = Paginator(_totalWorkflowCases, _itemsPerPage)
@@ -882,9 +1046,6 @@ class ALLSearch(TemplateView):
                 "errorMessage": f"ALLSearch.get : {ex}"
             }
             return render(request, self.template_name, context)
-
-
-
 
 class CLLSearch(TemplateView):
     template_name = "CLLSearch.html"
@@ -978,7 +1139,13 @@ class CLLSearch(TemplateView):
             disease_indications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', '', 'CLL')
             reasons_for_disease_indications = self.dataServices.GetDNAReasonForDiseaseIndication(
                 filters["diseaseIndicationCode1"], filters["diseaseIndicationCode2"], filters["diseaseIndicationCode3"]
-            )
+            ) or []
+
+            # Add descriptions if missing
+            reasons_for_disease_indications = [
+                {"REASON_CODE": reason.get("REASON_CODE", ""), "REASON_DESCRIPTION": reason.get("REASON_DESCRIPTION", reason.get("REASON_CODE", ""))}
+                for reason in reasons_for_disease_indications
+            ]
 
             # Prepare context for rendering
             context = {
@@ -1087,6 +1254,17 @@ class RBCRSearch(TemplateView):
                 case['Priority'] = case.get('Priority', "Unknown")
                 case['REPORT_STATUS'] = case.get('REPORT_STATUS', "Pending")
 
+            # Fetch reasons for dropdowns
+            _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(
+                _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3
+            ) or []
+
+            # Add descriptions if missing
+            _reasonsForDiseaseIndications = [
+                {"REASON_CODE": reason.get("REASON_CODE", ""), "REASON_DESCRIPTION": reason.get("REASON_DESCRIPTION", reason.get("REASON_CODE", ""))}
+                for reason in _reasonsForDiseaseIndications
+            ]
+
             # Paginate results
             paginator = Paginator(_totalWorkflowCases, _itemsPerPage)
             try:
@@ -1116,8 +1294,7 @@ class RBCRSearch(TemplateView):
                 "criteriaDiseaseIndication1": _diseaseIndicationCode1,
                 "criteriaDiseaseIndication2": _diseaseIndicationCode2,
                 "criteriaDiseaseIndication3": _diseaseIndicationCode3,
-                "criteriaReasonsForDiseaseIndications": self.dataServices.GetDNAReasonForDiseaseIndication(
-                    _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3),
+                "criteriaReasonsForDiseaseIndications": _reasonsForDiseaseIndications,
                 "criteriaReasonForDiseaseIndication1": _reasonForDiseaseIndication1,
                 "criteriaReasonForDiseaseIndication2": _reasonForDiseaseIndication2,
                 "criteriaReasonForDiseaseIndication3": _reasonForDiseaseIndication3,
@@ -1137,7 +1314,6 @@ class RBCRSearch(TemplateView):
                 "errorMessage": f"RBCRSearch.get : {ex}"
             }
             return render(request, self.template_name, context)
-
 
 class FALSearch(TemplateView):  # F-AML/F-ALL
     template_name = "FALSearch.html"
@@ -1213,6 +1389,17 @@ class FALSearch(TemplateView):  # F-AML/F-ALL
                 case['Priority'] = case.get('Priority', "Unknown")
                 case['REPORT_STATUS'] = case.get('REPORT_STATUS', "Pending")
 
+            # Fetch reasons for dropdowns
+            _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(
+                _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3
+            ) or []
+
+            # Add descriptions if missing
+            _reasonsForDiseaseIndications = [
+                {"REASON_CODE": reason.get("REASON_CODE", ""), "REASON_DESCRIPTION": reason.get("REASON_DESCRIPTION", reason.get("REASON_CODE", ""))}
+                for reason in _reasonsForDiseaseIndications
+            ]
+
             # Paginate results
             paginator = Paginator(_totalWorkflowCases, _itemsPerPage)
             try:
@@ -1242,8 +1429,7 @@ class FALSearch(TemplateView):  # F-AML/F-ALL
                 "criteriaDiseaseIndication1": _diseaseIndicationCode1,
                 "criteriaDiseaseIndication2": _diseaseIndicationCode2,
                 "criteriaDiseaseIndication3": _diseaseIndicationCode3,
-                "criteriaReasonsForDiseaseIndications": self.dataServices.GetDNAReasonForDiseaseIndication(
-                    _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3),
+                "criteriaReasonsForDiseaseIndications": _reasonsForDiseaseIndications,
                 "criteriaReasonForDiseaseIndication1": _reasonForDiseaseIndication1,
                 "criteriaReasonForDiseaseIndication2": _reasonForDiseaseIndication2,
                 "criteriaReasonForDiseaseIndication3": _reasonForDiseaseIndication3,
@@ -1263,7 +1449,6 @@ class FALSearch(TemplateView):  # F-AML/F-ALL
                 "errorMessage": f"FALSearch.get : {ex}"
             }
             return render(request, self.template_name, context)
-
 
 class HaemOncSearch(TemplateView):  # All Molecular
     template_name = "EverythingSearch.html"
@@ -1339,6 +1524,17 @@ class HaemOncSearch(TemplateView):  # All Molecular
                 case['Priority'] = case.get('Priority', "Unknown")
                 case['REPORT_STATUS'] = case.get('REPORT_STATUS', "Pending")
 
+            # Fetch reasons for dropdowns
+            _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(
+                _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3
+            ) or []
+
+            # Add descriptions if missing
+            _reasonsForDiseaseIndications = [
+                {"REASON_CODE": reason.get("REASON_CODE", ""), "REASON_DESCRIPTION": reason.get("REASON_DESCRIPTION", reason.get("REASON_CODE", ""))}
+                for reason in _reasonsForDiseaseIndications
+            ]
+
             # Paginate results
             paginator = Paginator(_totalWorkflowCases, _itemsPerPage)
             try:
@@ -1368,8 +1564,7 @@ class HaemOncSearch(TemplateView):  # All Molecular
                 "criteriaDiseaseIndication1": _diseaseIndicationCode1,
                 "criteriaDiseaseIndication2": _diseaseIndicationCode2,
                 "criteriaDiseaseIndication3": _diseaseIndicationCode3,
-                "criteriaReasonsForDiseaseIndications": self.dataServices.GetDNAReasonForDiseaseIndication(
-                    _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3),
+                "criteriaReasonsForDiseaseIndications": _reasonsForDiseaseIndications,
                 "criteriaReasonForDiseaseIndication1": _reasonForDiseaseIndication1,
                 "criteriaReasonForDiseaseIndication2": _reasonForDiseaseIndication2,
                 "criteriaReasonForDiseaseIndication3": _reasonForDiseaseIndication3,
@@ -1389,7 +1584,6 @@ class HaemOncSearch(TemplateView):  # All Molecular
                 "errorMessage": f"EverythingSearch.get : {ex}"
             }
             return render(request, self.template_name, context)
-
 
 class GLHPanHaemSearch(TemplateView):  # Pan-Haem Search
     template_name = "GLHPanHaemSearch.html"
@@ -1466,6 +1660,17 @@ class GLHPanHaemSearch(TemplateView):  # Pan-Haem Search
                 case['Priority'] = case.get('Priority', "Unknown")
                 case['REPORT_STATUS'] = case.get('REPORT_STATUS', "Pending")
 
+            # Fetch reasons for dropdowns
+            _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(
+                _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3
+            ) or []
+
+            # Add descriptions if missing
+            _reasonsForDiseaseIndications = [
+                {"REASON_CODE": reason.get("REASON_CODE", ""), "REASON_DESCRIPTION": reason.get("REASON_DESCRIPTION", reason.get("REASON_CODE", ""))}
+                for reason in _reasonsForDiseaseIndications
+            ]
+
             # Paginate results
             paginator = Paginator(_totalWorkflowCases, _itemsPerPage)
             try:
@@ -1495,8 +1700,7 @@ class GLHPanHaemSearch(TemplateView):  # Pan-Haem Search
                 "criteriaDiseaseIndication1": _diseaseIndicationCode1,
                 "criteriaDiseaseIndication2": _diseaseIndicationCode2,
                 "criteriaDiseaseIndication3": _diseaseIndicationCode3,
-                "criteriaReasonsForDiseaseIndications": self.dataServices.GetDNAReasonForDiseaseIndication(
-                    _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3),
+                "criteriaReasonsForDiseaseIndications": _reasonsForDiseaseIndications,
                 "criteriaRefKey": _refKey,
                 "criteriaRefKeys": self.dataServices.GetDNARefKey(_diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3),
                 "criteriaSurnames": self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases),
@@ -1515,7 +1719,6 @@ class GLHPanHaemSearch(TemplateView):  # Pan-Haem Search
                 "errorMessage": f"GLHPanHaemSearch.get : {ex}"
             }
             return render(request, self.template_name, context)
-
 
 class RNASearch(TemplateView):
     template_name = "RNASearch.html"
@@ -1591,6 +1794,17 @@ class RNASearch(TemplateView):
                 case['Priority'] = case.get('Priority', "Unknown")
                 case['REPORT_STATUS'] = case.get('REPORT_STATUS', "Pending")
 
+            # Fetch reasons for dropdowns
+            _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(
+                _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3
+            ) or []
+
+            # Add descriptions if missing
+            _reasonsForDiseaseIndications = [
+                {"REASON_CODE": reason.get("REASON_CODE", ""), "REASON_DESCRIPTION": reason.get("REASON_DESCRIPTION", reason.get("REASON_CODE", ""))}
+                for reason in _reasonsForDiseaseIndications
+            ]
+
             # Paginate results
             paginator = Paginator(_totalWorkflowCases, _itemsPerPage)
             try:
@@ -1620,8 +1834,7 @@ class RNASearch(TemplateView):
                 "criteriaDiseaseIndication1": _diseaseIndicationCode1,
                 "criteriaDiseaseIndication2": _diseaseIndicationCode2,
                 "criteriaDiseaseIndication3": _diseaseIndicationCode3,
-                "criteriaReasonsForDiseaseIndications": self.dataServices.GetDNAReasonForDiseaseIndication(
-                    _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3),
+                "criteriaReasonsForDiseaseIndications": _reasonsForDiseaseIndications,
                 "criteriaSurnames": self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases),
                 "criteriaSurname": _lastName,
                 "criteriaLabnumber": _labNumber,

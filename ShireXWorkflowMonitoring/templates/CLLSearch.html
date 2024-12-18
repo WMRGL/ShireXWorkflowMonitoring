@@ -405,36 +405,25 @@
 </div>
 <script>
     window.onload = function() {
-        // Get today's date
-        var today = new Date();
+    var txtCriteriaDateFrom = document.getElementById('txtCriteriaDateFrom');
+    var txtCriteriaDateTo = document.getElementById('txtCriteriaDateTo');
 
-        // Calculate the date 5 months ago
+    if (!txtCriteriaDateFrom.value) {
+        var today = new Date();
         var fiveMonthsAgo = new Date();
         fiveMonthsAgo.setMonth(today.getMonth() - 5);
-
-        // Calculate the date 2 months from now
-        var twoMonthsFromNow = new Date();
-        twoMonthsFromNow.setMonth(today.getMonth() + 2);
-
-        // Adjust for months where the date exceeds the valid range
         if (today.getDate() !== fiveMonthsAgo.getDate()) {
-            fiveMonthsAgo.setDate(0); // Set to the last day of the previous month in case of overflow
+            fiveMonthsAgo.setDate(0);
         }
-        if (today.getDate() !== twoMonthsFromNow.getDate()) {
-            twoMonthsFromNow.setDate(0); // Set to the last day of the overflow month
-        }
+        txtCriteriaDateFrom.value = fiveMonthsAgo.toISOString().split('T')[0];
+    }
 
-        // Format the dates as YYYY-MM-DD
-        function formatDate(date) {
-            var day = ("0" + date.getDate()).slice(-2);
-            var month = ("0" + (date.getMonth() + 1)).slice(-2);
-            return date.getFullYear() + "-" + month + "-" + day;
-        }
-
-        // Set the value of the date input fields
-        document.getElementById('txtCriteriaDateFrom').value = formatDate(fiveMonthsAgo);
-        document.getElementById('txtCriteriaDateTo').value = formatDate(twoMonthsFromNow);
-    };
+    if (!txtCriteriaDateTo.value) {
+        var twoMonthsFromNow = new Date();
+        twoMonthsFromNow.setMonth(new Date().getMonth() + 2);
+        txtCriteriaDateTo.value = twoMonthsFromNow.toISOString().split('T')[0];
+    }
+};
 </script>
 <script>
     function sortTable(columnIndex) {

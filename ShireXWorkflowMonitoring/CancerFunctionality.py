@@ -99,11 +99,16 @@ class SolidCancerSearch(TemplateView):
                 case['Priority'] = case.get('Priority', "Unknown")
                 case['REPORT_STATUS'] = case.get('REPORT_STATUS', "Pending")
 
-            # Fetch indications and reasons for dropdowns
-            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_SOLID_CANCER', '', 'SC')
+            # Fetch reasons for dropdowns
             _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(
                 _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3
-            )
+            ) or []
+
+            # Add descriptions if missing
+            _reasonsForDiseaseIndications = [
+                {"REASON_CODE": reason.get("REASON_CODE", ""), "REASON_DESCRIPTION": reason.get("REASON_DESCRIPTION", reason.get("REASON_CODE", ""))}
+                for reason in _reasonsForDiseaseIndications
+            ]
 
             # Paginate results
             paginator = Paginator(_totalWorkflowCases, _itemsPerPage)
@@ -130,7 +135,7 @@ class SolidCancerSearch(TemplateView):
                 "criteriaReportStatus": _reportStatus,
                 "criteriaPriorities": self.dataServices.GetDNAPriority(),
                 "criteriaPriority": _priority,
-                "criteriaDiseaseIndications": _diseaseIndications,
+                "criteriaDiseaseIndications": self.dataServices.GetDNADiseaseIndication('2012_SOLID_CANCER', '', 'SC'),
                 "criteriaReasonsForDiseaseIndications": _reasonsForDiseaseIndications,
                 "criteriaDiseaseIndication1": _diseaseIndicationCode1,
                 "criteriaDiseaseIndication2": _diseaseIndicationCode2,
@@ -151,9 +156,6 @@ class SolidCancerSearch(TemplateView):
                 "errorMessage": f"SolidCancerSearch.get : {ex}"
             }
             return render(request, self.template_name, context)
-
-
-
 
 class WGSSearch(TemplateView):
     template_name = "WGSSearch.html"
@@ -210,6 +212,30 @@ class WGSSearch(TemplateView):
                 request.user.username, _lastName, _labNumber, _refKey, _noResultStatus
             )
 
+            # Apply data transformations
+            _totalWorkflowCases = self.worksheetHelper.AddWorksheetTestResultsToWorkflowCases(_totalWorkflowCases)
+            _totalWorkflowCases = self.worksheetHelper.AddTestsWithNoWorksheetsToWorkflowCases(_totalWorkflowCases)
+            _totalWorkflowCases = self.worksheetHelper.ConvertWorksheetsColumnEmptyStringToNone(_totalWorkflowCases)
+            _totalWorkflowCases = self.extractsheetHelper.AddExtractsToWorkflowCases(_totalWorkflowCases)
+
+            # Ensure no NoneType values in workflow cases
+            for case in _totalWorkflowCases:
+                case['DaysRemaining'] = case.get('DaysRemaining', 0)  # Default to 0 if None
+                case['ActualPriorityOrder'] = case.get('ActualPriorityOrder', 0)
+                case['Priority'] = case.get('Priority', "Unknown")
+                case['REPORT_STATUS'] = case.get('REPORT_STATUS', "Pending")
+
+            # Fetch additional data for filters
+            _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(_diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3) or []
+
+            # Add descriptions if missing
+            _reasonsForDiseaseIndications = [
+                {"REASON_CODE": reason.get("REASON_CODE", ""), "REASON_DESCRIPTION": reason.get("REASON_DESCRIPTION", reason.get("REASON_CODE", ""))}
+                for reason in _reasonsForDiseaseIndications
+            ]
+
+            _refKeys = self.dataServices.GetDNARefKey(_diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3)
+
             # Pagination logic
             paginator = Paginator(_totalWorkflowCases, _itemsPerPage)
             try:
@@ -218,19 +244,6 @@ class WGSSearch(TemplateView):
                 _pageOfWorkflowCases = paginator.page(1)
             except EmptyPage:
                 _pageOfWorkflowCases = paginator.page(paginator.num_pages)
-
-            # Process workflow cases
-            _pageOfWorkflowCases = self.worksheetHelper.AddWorksheetTestResultsToWorkflowCases(_pageOfWorkflowCases)
-            _pageOfWorkflowCases = self.worksheetHelper.AddTestsWithNoWorksheetsToWorkflowCases(_pageOfWorkflowCases)
-            _pageOfWorkflowCases = self.worksheetHelper.ConvertWorksheetsColumnEmptyStringToNone(_pageOfWorkflowCases)
-            _pageOfWorkflowCases = self.extractsheetHelper.AddExtractsToWorkflowCases(_pageOfWorkflowCases)
-
-            # Fetch additional data for filters
-            _reportStatuses = self.dataServices.GetReportStatus()
-            _priorities = self.dataServices.GetDNAPriority()
-            _diseaseIndications = self.dataServices.GetDNADiseaseIndication('2012_SOLID_CANCER', '2012_OTHER', 'WGS')
-            _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(_diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3)
-            _refKeys = self.dataServices.GetDNARefKey(_diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3)
 
             # Prepare query string for pagination
             query_params = request.GET.copy()
@@ -244,18 +257,18 @@ class WGSSearch(TemplateView):
                 "Title": self.title,
                 "workflowCases": _pageOfWorkflowCases,
                 "itemsPerPage": _itemsPerPage,
-                "criteriaReportStatuses": _reportStatuses,
+                "criteriaReportStatuses": self.dataServices.GetReportStatus(),
                 "criteriaReportStatus": _reportStatus,
-                "criteriaPriorities": _priorities,
+                "criteriaPriorities": self.dataServices.GetDNAPriority(),
                 "criteriaPriority": _priority,
-                "criteriaDiseaseIndications": _diseaseIndications,
-                "criteriaDiseaseIndication1": _diseaseIndicationCode1,
-                "criteriaDiseaseIndication2": _diseaseIndicationCode2,
-                "criteriaDiseaseIndication3": _diseaseIndicationCode3,
+                "criteriaDiseaseIndications": self.dataServices.GetDNADiseaseIndication('2012_SOLID_CANCER', '2012_OTHER', 'WGS'),
                 "criteriaReasonsForDiseaseIndications": _reasonsForDiseaseIndications,
                 "criteriaReasonForDiseaseIndication1": _reasonForDiseaseIndication1,
                 "criteriaReasonForDiseaseIndication2": _reasonForDiseaseIndication2,
                 "criteriaReasonForDiseaseIndication3": _reasonForDiseaseIndication3,
+                "criteriaDiseaseIndication1": _diseaseIndicationCode1,
+                "criteriaDiseaseIndication2": _diseaseIndicationCode2,
+                "criteriaDiseaseIndication3": _diseaseIndicationCode3,
                 "criteriaRefKey": _refKey,
                 "criteriaRefKeys": _refKeys,
                 "criteriaSurnames": self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases),
@@ -273,3 +286,4 @@ class WGSSearch(TemplateView):
             logger = logging.getLogger(__name__)
             logger.error(f"WGSSearch.get: {ex}")
             return render(request, self.template_name, {"Title": self.title, "errorMessage": f"WGSSearch.get : {ex}"})
+
