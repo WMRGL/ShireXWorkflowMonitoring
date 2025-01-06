@@ -74,6 +74,7 @@ class BMTSearch(TemplateView):
             _reasonForDiseaseIndication1 = self.utilities.GetRequestKey(request, "ddlCriteriaReasonForDiseaseIndication1", enumDataType.String) or _reasonForDiseaseIndication1
             _lastName = self.utilities.GetRequestKey(request, "txtCriteriaLastname", enumDataType.String) or _lastName
             _labNumber = self.utilities.GetRequestKey(request, "txtCriteriaLabnumber", enumDataType.String) or _labNumber
+            _noResultStatus = self.utilities.GetRequestKey(request, "ddlCriteriaNoResult", enumDataType.Integer) or _noResultStatus
 
             # Retrieve data
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
@@ -192,6 +193,7 @@ class MPNSearch(TemplateView):
             _reasonForDiseaseIndication1 = self.utilities.GetRequestKey(request, "ddlCriteriaReasonForDiseaseIndication1", enumDataType.String) or _reasonForDiseaseIndication1
             _lastName = self.utilities.GetRequestKey(request, "txtCriteriaLastname", enumDataType.String) or _lastName
             _labNumber = self.utilities.GetRequestKey(request, "txtCriteriaLabnumber", enumDataType.String) or _labNumber
+            _noResultStatus = self.utilities.GetRequestKey(request, "ddlCriteriaNoResult", enumDataType.Integer) or _noResultStatus
 
             # Retrieve workflow cases
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
@@ -295,7 +297,7 @@ class DAMLSearch(TemplateView):  # AML & MDS
             _lastName = ""
             _labNumber = ""
             _RefKey = ""
-            _noResultStatus = 0
+            _noResultStatus = 0  # Default value for "Workflow" dropdown
 
             # Extract search filters and pagination parameters
             _dateFrom = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime) or (datetime.today() - timedelta(days=60))
@@ -321,7 +323,10 @@ class DAMLSearch(TemplateView):  # AML & MDS
             _lastName = self.utilities.GetRequestKey(request, "txtCriteriaLastname", enumDataType.String) or _lastName
             _labNumber = self.utilities.GetRequestKey(request, "txtCriteriaLabnumber", enumDataType.String) or _labNumber
 
-            print(f"Filters applied: _dateFrom={_dateFrom}, _dateTo={_dateTo}, _itemsPerPage={_itemsPerPage}, page={page}")
+            # Update for "Workflow" dropdown
+            _noResultStatus = self.utilities.GetRequestKey(request, "ddlCriteriaNoResult", enumDataType.Integer) or _noResultStatus
+
+            print(f"Filters applied: _dateFrom={_dateFrom}, _dateTo={_dateTo}, _itemsPerPage={_itemsPerPage}, page={page}, _noResultStatus={_noResultStatus}")
 
             # Retrieve filtered workflow cases
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
@@ -400,6 +405,7 @@ class DAMLSearch(TemplateView):  # AML & MDS
             }
             return render(request, self.template_name, context)
 
+
 class CytoSearch(TemplateView):  # AML & MDS
     template_name = "CytoSearch.html"
     title = ShireXWorkflowMonitoringConfig.title
@@ -452,6 +458,8 @@ class CytoSearch(TemplateView):  # AML & MDS
             _reasonForDiseaseIndication1 = self.utilities.GetRequestKey(request, "ddlCriteriaReasonForDiseaseIndication1", enumDataType.String) or _reasonForDiseaseIndication1
             _lastName = self.utilities.GetRequestKey(request, "txtCriteriaLastname", enumDataType.String) or _lastName
             _labNumber = self.utilities.GetRequestKey(request, "txtCriteriaLabnumber", enumDataType.String) or _labNumber
+
+            _noResultStatus = self.utilities.GetRequestKey(request, "ddlCriteriaNoResult", enumDataType.Integer) or _noResultStatus
 
             print(f"Filters applied: _dateFrom={_dateFrom}, _dateTo={_dateTo}, _itemsPerPage={_itemsPerPage}, page={page}")
 
