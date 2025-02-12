@@ -170,16 +170,16 @@
                                 <option value="3" {% if criteriaNoResult == 3 %} selected="selected" {% endif %}>No result</option>
                             </select>
                         </div>
-                        <div class="col-2">
+                         <div class="col-2 text-end">
                             <label for="ddlCriteriaItemsPerPage" class="col-form-label">Items per page:</label>
                         </div>
-                        <div class="col-1" style="padding-right: unset">  {# Unset to make select control wide enough #}
+                        <div class="col-1">
+                            <label for="ddlCriteriaItemsPerPage">Items per page:</label>
                             <select class="form-select" name="ddlCriteriaItemsPerPage" id="ddlCriteriaItemsPerPage">
                                 <option value="20" {% if itemsPerPage == 20 %} selected="selected" {% endif %}>20</option>
                                 <option value="40" {% if itemsPerPage == 40 %} selected="selected" {% endif %}>40</option>
                                 <option value="50" {% if itemsPerPage == 50 %} selected="selected" {% endif %}>50</option>
                                 <option value="100" {% if itemsPerPage == 100 %} selected="selected" {% endif %}>100</option>
-                                <option value="-1" {% if itemsPerPage == -1 %} selected="selected" {% endif %}>ALL</option>
                             </select>
                         </div>
                         <div class="col-1">
@@ -260,6 +260,7 @@
                         <td>
                             {#<a class="btn btn-primary" href="{% url 'HaemOncSetAllocatedTo' _labNumber=item.LABNO _workflowName='BMT' %}">&nbsp;</a>#}
                             <button class="btn btn-primary" id="{{item.LABNO}}" onclick="DoClaim(this.id)">&nbsp;</button>
+                            <button class="claim-btn" data-labno="{{item.LABNO}}" data-workflow="BMT">Claim</button>
                         </td>
                         {% if item.DECEASED_DATE %}
                         <td>
@@ -447,5 +448,4 @@
         rows.forEach(row => tbody.appendChild(row));
     }
 </script>
-
 {% endblock content %}
