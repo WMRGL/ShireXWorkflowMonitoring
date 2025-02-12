@@ -51,7 +51,7 @@
                             <label for="txtCriteriaLabnumber" class="col-form-label">Lab number:</label>
                         </div>
                         <div class="col-2">
-                            <input type="text" class="form-control" name="txtCriteriaLabnumber" id="txtCriteriaLabnumber" value="{{ criteriaLabnumber|default:'' }}">
+                            <input type="text" class="form-control" name="txtCriteriaLabnumber" id="txtCriteriaLabnumber" {% if criteriaLabnumber != "" %} value="{{ criteriaLabnumber }}" {% endif %}>
                         </div>
                         <div class="col-2 text-end">
                             <label for="txtCriteriaLastname" class="col-form-label">Surname:</label>
@@ -158,6 +158,7 @@
                             <label for="ddlCriteriaItemsPerPage" class="col-form-label">Items per page:</label>
                         </div>
                         <div class="col-1">
+                            <label for="ddlCriteriaItemsPerPage">Items per page:</label>
                             <select class="form-select" name="ddlCriteriaItemsPerPage" id="ddlCriteriaItemsPerPage">
                                 <option value="20" {% if itemsPerPage == 20 %} selected="selected" {% endif %}>20</option>
                                 <option value="40" {% if itemsPerPage == 40 %} selected="selected" {% endif %}>40</option>
