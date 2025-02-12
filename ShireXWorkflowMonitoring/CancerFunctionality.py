@@ -41,7 +41,7 @@ class SolidCancerSearch(TemplateView):
                 return redirect("LoginPage")
 
             # Default values for filters
-            _reportStatus = "NOTFINAL"
+            _reportStatus = ""
             _priority = ""
             _diseaseIndicationCode1 = ""
             _diseaseIndicationCode2 = ""
@@ -49,28 +49,30 @@ class SolidCancerSearch(TemplateView):
             _reasonForDiseaseIndication1 = ""
             _reasonForDiseaseIndication2 = ""
             _reasonForDiseaseIndication3 = ""
+            _labNumber = ""
+            _lastName = ""
+            _refKey = ""
+            _noResultStatus = 0
 
             # Retrieve search filters and pagination parameters
-            _dateFrom = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime) or (datetime.today() - timedelta(days=60))
-            _dateTo = self.utilities.GetRequestKey(request, "txtCriteriaDateTo", enumDataType.Datetime) or (datetime.today() + timedelta(days=30))
-            _itemsPerPage = int(request.GET.get("ddlCriteriaItemsPerPage", 20))  # Default to 20 items per page
+            _dateFrom = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime) or (
+                        datetime.today() - timedelta(days=60))
+            _dateTo = self.utilities.GetRequestKey(request, "txtCriteriaDateTo", enumDataType.Datetime) or (
+                        datetime.today() + timedelta(days=30))
+
+            print(f"Report Status Filter: {_reportStatus}")
+            print(f"Priority Filter: {_priority}")
+
+            # Validate and retrieve the number of items per page
+            try:
+                _itemsPerPage = int(request.GET.get("ddlCriteriaItemsPerPage", 20))
+                if _itemsPerPage not in [20, 40, 50, 100]:  # Allowed values
+                    _itemsPerPage = 20
+            except ValueError:
+                _itemsPerPage = 20
+
+            # Retrieve the current page number
             page = request.GET.get("page", 1)
-
-            # Indication Filters
-            _diseaseIndicationCode1 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication1", enumDataType.String) or _diseaseIndicationCode1
-            _diseaseIndicationCode2 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication2", enumDataType.String) or _diseaseIndicationCode2
-            _diseaseIndicationCode3 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication3", enumDataType.String) or _diseaseIndicationCode3
-
-            # Reason Filters
-            _reasonForDiseaseIndication1 = self.utilities.GetRequestKey(request, "ddlCriteriaReasonForDiseaseIndication1", enumDataType.String) or _reasonForDiseaseIndication1
-            _reasonForDiseaseIndication2 = self.utilities.GetRequestKey(request, "ddlCriteriaReasonForDiseaseIndication2", enumDataType.String) or _reasonForDiseaseIndication2
-            _reasonForDiseaseIndication3 = self.utilities.GetRequestKey(request, "ddlCriteriaReasonForDiseaseIndication3", enumDataType.String) or _reasonForDiseaseIndication3
-
-            # Additional filters
-            _priority = self.utilities.GetRequestKey(request, "ddlCriteriaPriority", enumDataType.String) or _priority
-            _reportStatus = self.utilities.GetRequestKey(request, "ddlCriteriaStatus", enumDataType.String) or _reportStatus
-
-            # Pagination logic
             try:
                 page = int(page)
                 if page < 1:
@@ -78,12 +80,41 @@ class SolidCancerSearch(TemplateView):
             except ValueError:
                 page = 1
 
+            # Indication Filters
+            _diseaseIndicationCode1 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication1",
+                                                                   enumDataType.String) or _diseaseIndicationCode1
+            _diseaseIndicationCode2 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication2",
+                                                                   enumDataType.String) or _diseaseIndicationCode2
+            _diseaseIndicationCode3 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication3",
+                                                                   enumDataType.String) or _diseaseIndicationCode3
+
+            # Reason Filters
+            _reasonForDiseaseIndication1 = self.utilities.GetRequestKey(request,
+                                                                        "ddlCriteriaReasonForDiseaseIndication1",
+                                                                        enumDataType.String) or _reasonForDiseaseIndication1
+            _reasonForDiseaseIndication2 = self.utilities.GetRequestKey(request,
+                                                                        "ddlCriteriaReasonForDiseaseIndication2",
+                                                                        enumDataType.String) or _reasonForDiseaseIndication2
+            _reasonForDiseaseIndication3 = self.utilities.GetRequestKey(request,
+                                                                        "ddlCriteriaReasonForDiseaseIndication3",
+                                                                        enumDataType.String) or _reasonForDiseaseIndication3
+
+            # Lab Number Filter
+            _labNumber = (self.utilities.GetRequestKey(request, "txtCriteriaLabnumber",
+                                                       enumDataType.String) or "").strip()
+            print(f"Lab Number Filter: {_labNumber}")
+
+            # Additional filters
+            _priority = self.utilities.GetRequestKey(request, "ddlCriteriaPriority", enumDataType.String) or _priority
+            _reportStatus = self.utilities.GetRequestKey(request, "ddlCriteriaStatus",
+                                                         enumDataType.String) or _reportStatus
+
             # Retrieve workflow cases
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
                 '2012_SOLID_CANCER', '2012_RARE_DIS', 'SC', _dateFrom, _dateTo, _reportStatus, _priority,
                 _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3,
                 _reasonForDiseaseIndication1, _reasonForDiseaseIndication2, _reasonForDiseaseIndication3,
-                request.user.username, "", "", "", 0
+                request.user.username, _lastName, _labNumber, _refKey, _noResultStatus
             )
 
             # Apply data transformations
@@ -106,7 +137,8 @@ class SolidCancerSearch(TemplateView):
 
             # Add descriptions if missing
             _reasonsForDiseaseIndications = [
-                {"REASON_CODE": reason.get("REASON_CODE", ""), "REASON_DESCRIPTION": reason.get("REASON_DESCRIPTION", reason.get("REASON_CODE", ""))}
+                {"REASON_CODE": reason.get("REASON_CODE", ""),
+                 "REASON_DESCRIPTION": reason.get("REASON_DESCRIPTION", reason.get("REASON_CODE", ""))}
                 for reason in _reasonsForDiseaseIndications
             ]
 
@@ -119,15 +151,11 @@ class SolidCancerSearch(TemplateView):
             except EmptyPage:
                 paginated_cases = paginator.page(paginator.num_pages)
 
-            # Prepare query parameters for pagination
-            query_params = request.GET.copy()
-            query_params.pop("page", None)  # Remove 'page' parameter to construct the base query string
-            base_query_string = urlencode(query_params)
-
             # Context for rendering
             context = {
                 "criteriaDateFrom": _dateFrom,
                 "criteriaDateTo": _dateTo,
+                "criteriaLabnumber": _labNumber,
                 "Title": self.title,
                 "workflowCases": paginated_cases,
                 "itemsPerPage": _itemsPerPage,
@@ -140,22 +168,16 @@ class SolidCancerSearch(TemplateView):
                 "criteriaDiseaseIndication1": _diseaseIndicationCode1,
                 "criteriaDiseaseIndication2": _diseaseIndicationCode2,
                 "criteriaDiseaseIndication3": _diseaseIndicationCode3,
-                "criteriaReasonForDiseaseIndication1": _reasonForDiseaseIndication1,
-                "criteriaReasonForDiseaseIndication2": _reasonForDiseaseIndication2,
-                "criteriaReasonForDiseaseIndication3": _reasonForDiseaseIndication3,
                 "searchCount": len(_totalWorkflowCases),
                 "page_obj": paginated_cases,
-                "base_query_string": base_query_string,
             }
             return render(request, self.template_name, context)
 
         except Exception as ex:
             print(f"ERROR: Exception in SolidCancerSearch.get - {ex}")
-            context = {
-                "Title": self.title,
-                "errorMessage": f"SolidCancerSearch.get : {ex}"
-            }
-            return render(request, self.template_name, context)
+            return render(request, self.template_name,
+                          {"Title": self.title, "errorMessage": f"SolidCancerSearch.get : {ex}"})
+
 
 class WGSSearch(TemplateView):
     template_name = "WGSSearch.html"
@@ -187,8 +209,23 @@ class WGSSearch(TemplateView):
             # Retrieve search filters and pagination parameters
             _dateFrom = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime) or (datetime.today() - timedelta(days=60))
             _dateTo = self.utilities.GetRequestKey(request, "txtCriteriaDateTo", enumDataType.Datetime) or (datetime.today() + timedelta(days=30))
-            _itemsPerPage = int(request.GET.get("ddlCriteriaItemsPerPage", 20))  # Default to 20 items per page
-            _pageNumber = int(request.GET.get("page", 1))
+
+            # Validate and retrieve the number of items per page
+            try:
+                _itemsPerPage = int(request.GET.get("ddlCriteriaItemsPerPage", 20))
+                if _itemsPerPage not in [20, 40, 50, 100]:  # Allowed values
+                    _itemsPerPage = 20
+            except ValueError:
+                _itemsPerPage = 20
+
+            # Retrieve the current page number
+            page = request.GET.get("page", 1)
+            try:
+                page = int(page)
+                if page < 1:
+                    page = 1
+            except ValueError:
+                page = 1
 
             # Fetch filters from request
             _reportStatus = self.utilities.GetRequestKey(request, "ddlCriteriaStatus", enumDataType.String) or _reportStatus
@@ -226,7 +263,9 @@ class WGSSearch(TemplateView):
                 case['REPORT_STATUS'] = case.get('REPORT_STATUS', "Pending")
 
             # Fetch additional data for filters
-            _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(_diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3) or []
+            _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(
+                _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3
+            ) or []
 
             # Add descriptions if missing
             _reasonsForDiseaseIndications = [
@@ -239,11 +278,11 @@ class WGSSearch(TemplateView):
             # Pagination logic
             paginator = Paginator(_totalWorkflowCases, _itemsPerPage)
             try:
-                _pageOfWorkflowCases = paginator.page(_pageNumber)
+                paginated_cases = paginator.page(page)
             except PageNotAnInteger:
-                _pageOfWorkflowCases = paginator.page(1)
+                paginated_cases = paginator.page(1)
             except EmptyPage:
-                _pageOfWorkflowCases = paginator.page(paginator.num_pages)
+                paginated_cases = paginator.page(paginator.num_pages)
 
             # Prepare query string for pagination
             query_params = request.GET.copy()
@@ -255,7 +294,7 @@ class WGSSearch(TemplateView):
                 "criteriaDateFrom": _dateFrom,
                 "criteriaDateTo": _dateTo,
                 "Title": self.title,
-                "workflowCases": _pageOfWorkflowCases,
+                "workflowCases": paginated_cases,
                 "itemsPerPage": _itemsPerPage,
                 "criteriaReportStatuses": self.dataServices.GetReportStatus(),
                 "criteriaReportStatus": _reportStatus,
@@ -276,7 +315,7 @@ class WGSSearch(TemplateView):
                 "criteriaLabnumber": _labNumber,
                 "criteriaNoResult": _noResultStatus,
                 "searchCount": len(_totalWorkflowCases),
-                "page_obj": _pageOfWorkflowCases,
+                "page_obj": paginated_cases,
                 "base_query_string": base_query_string,
             }
 
@@ -286,4 +325,3 @@ class WGSSearch(TemplateView):
             logger = logging.getLogger(__name__)
             logger.error(f"WGSSearch.get: {ex}")
             return render(request, self.template_name, {"Title": self.title, "errorMessage": f"WGSSearch.get : {ex}"})
-
