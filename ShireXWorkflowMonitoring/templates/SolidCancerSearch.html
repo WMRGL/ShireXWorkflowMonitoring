@@ -39,11 +39,17 @@
                         </div>
                         <div class="col-2">
                             <select class="form-select" name="ddlCriteriaStatus" id="ddlCriteriaStatus">
-                                <option value="NOTFINAL" {% if criteriaReportStatus == "" %} selected="selected" {% endif %}>Not Final</option>
+                                <!-- Default "Select..." option to prevent automatic selection of Not Final -->
+                                <option value="" {% if criteriaReportStatus == "" %} selected="selected" {% endif %}>Select...</option>
+
+                                <option value="NOTFINAL" {% if criteriaReportStatus == "NOTFINAL" %} selected="selected" {% endif %}>Not Final</option>
                                 <option value="NOTFINALORNONE" {% if criteriaReportStatus == "NOTFINALORNONE" %} selected="selected" {% endif %}>Written</option>
                                 <option value="NONE" {% if criteriaReportStatus == "NONE" %} selected="selected" {% endif %}>None</option>
+
                                 {% for item in criteriaReportStatuses %}
-                                    <option value="{{ item.REPORT_STATUS }}" {% if item.REPORT_STATUS == criteriaReportStatus %} selected="selected" {% endif %}>{{ item.REPORT_STATUS }}</option>
+                                    <option value="{{ item.REPORT_STATUS }}" {% if item.REPORT_STATUS == criteriaReportStatus %} selected="selected" {% endif %}>
+                                        {{ item.REPORT_STATUS }}
+                                    </option>
                                 {% endfor %}
                             </select>
                         </div>
@@ -51,11 +57,11 @@
 
                     <!-- Lab Number, Surname, and Priority Filters -->
                     <div class="row g-5 align-items-center" style="padding:1px">
-                        <div class="col-2 text-end">
+                        <div class="col-2" style="text-align:right">
                             <label for="txtCriteriaLabnumber" class="col-form-label">Lab number:</label>
                         </div>
                         <div class="col-2">
-                            <input type="text" class="form-control" name="txtCriteriaLabnumber" id="txtCriteriaLabnumber" value="{{ criteriaLabnumber|default:'' }}">
+                            <input type="text" class="form-control" name="txtCriteriaLabnumber" id="txtCriteriaLabnumber" {% if criteriaLabnumber != "" %} value="{{ criteriaLabnumber }}" {% endif %}>
                         </div>
                         <div class="col-2 text-end">
                             <label for="txtCriteriaLastname" class="col-form-label">Surname:</label>
@@ -144,6 +150,18 @@
                                 {% for item in criteriaReasonsForDiseaseIndications %}
                                     <option value="{{ item.REASON_CODE }}" {% if item.REASON_CODE == criteriaReasonForDiseaseIndication3 %} selected="selected" {% endif %}>{{ item.REASON_CODE }}</option>
                                 {% endfor %}
+                            </select>
+                        </div>
+                         <div class="col-2 text-end">
+                            <label for="ddlCriteriaItemsPerPage" class="col-form-label">Items per page:</label>
+                        </div>
+                        <div class="col-1">
+                            <label for="ddlCriteriaItemsPerPage">Items per page:</label>
+                            <select class="form-select" name="ddlCriteriaItemsPerPage" id="ddlCriteriaItemsPerPage">
+                                <option value="20" {% if itemsPerPage == 20 %} selected="selected" {% endif %}>20</option>
+                                <option value="40" {% if itemsPerPage == 40 %} selected="selected" {% endif %}>40</option>
+                                <option value="50" {% if itemsPerPage == 50 %} selected="selected" {% endif %}>50</option>
+                                <option value="100" {% if itemsPerPage == 100 %} selected="selected" {% endif %}>100</option>
                             </select>
                         </div>
                         <div class="col-1">
