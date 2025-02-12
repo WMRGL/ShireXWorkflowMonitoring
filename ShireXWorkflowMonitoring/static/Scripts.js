@@ -257,19 +257,28 @@ window.addEventListener('load', function() {
         }
 
 
-        function DoClaim(labno) {
-        if (!labno) {
-            console.error("labno is null or undefined");
+        document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll(".claim-btn").forEach(button => {
+            button.addEventListener("click", function() {
+                let labno = this.dataset.labno;
+                let workflowName = this.dataset.workflow;
+                DoClaim(labno, workflowName);
+            });
+        });
+    });
+
+    function DoClaim(labno, workflowName) {
+        if (!labno || !workflowName) {
+            console.error("Invalid lab number or workflow name.");
             return;
         }
 
-        console.log("labno:", labno); // Log the labno to ensure it is correct
+        let url = `/Molecular/Allocate/${labno}/${workflowName}/AllocateComplete/`;
 
-        let workflowName = 'RAML'; // Replace with actual logic if needed
-        let url = /Molecular/Allocate/${labno}/${workflowName}/AllocateComplete/;
         console.log("Navigating to URL:", url); // Debugging
-        window.location.href = url;
+        window.open(url);
     }
+
 
 
         function SortTable(n){
