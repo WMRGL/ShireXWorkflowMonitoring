@@ -206,9 +206,16 @@ class MPNSearch(TemplateView):
                                                                    enumDataType.String) or _diseaseIndicationCode1
             _diseaseIndicationCode2 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication2",
                                                                    enumDataType.String) or _diseaseIndicationCode2
+            _diseaseIndicationCode3 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication3", enumDataType.String) or _diseaseIndicationCode3
             _reasonForDiseaseIndication1 = self.utilities.GetRequestKey(request,
                                                                         "ddlCriteriaReasonForDiseaseIndication1",
                                                                         enumDataType.String) or _reasonForDiseaseIndication1
+            _reasonForDiseaseIndication2 = self.utilities.GetRequestKey(request,
+                                                                        "ddlCriteriaReasonForDiseaseIndication2",
+                                                                        enumDataType.String) or _reasonForDiseaseIndication2
+            _reasonForDiseaseIndication3 = self.utilities.GetRequestKey(request,
+                                                                        "ddlCriteriaReasonForDiseaseIndication3",
+                                                                        enumDataType.String) or _reasonForDiseaseIndication3
             _lastName = self.utilities.GetRequestKey(request, "txtCriteriaLastname", enumDataType.String) or _lastName
             _labNumber = self.utilities.GetRequestKey(request, "txtCriteriaLabnumber",
                                                       enumDataType.String) or _labNumber
@@ -269,9 +276,11 @@ class MPNSearch(TemplateView):
                 "criteriaDiseaseIndications": self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', '', 'MPN'),
                 "criteriaDiseaseIndication1": _diseaseIndicationCode1,
                 "criteriaDiseaseIndication2": _diseaseIndicationCode2,
+                "criteriaDiseaseIndication3": _diseaseIndicationCode3,
                 "criteriaReasonsForDiseaseIndications": _reasonsForDiseaseIndications,
                 "criteriaReasonForDiseaseIndication1": _reasonForDiseaseIndication1,
                 "criteriaReasonForDiseaseIndication2": _reasonForDiseaseIndication2,
+                "CriteriaReasonForDiseaseIndication3": _reasonForDiseaseIndication3,
                 "criteriaSurnames": self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases),
                 "criteriaSurname": _lastName,
                 "criteriaLabnumber": _labNumber,
@@ -1096,22 +1105,22 @@ class ALLSearch(TemplateView):
             }
             return render(request, self.template_name, context)
 
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.utils.http import urlencode
+
 class CLLSearch(TemplateView):
     template_name = "CLLSearch.html"
     title = ShireXWorkflowMonitoringConfig.title
     utilities = UtilityFunctions()
     dataServices = ShireData()
-    worksheetHelper = Worksheet()  # Composition instead of inheritance
+    worksheetHelper = Worksheet()
     extractsheetHelper = ExtractSheet()
 
     def get(self, request):
         try:
-            # Redirect to login page if user is not authenticated
+            # Redirect if not logged in
             if not request.user.is_authenticated:
                 return HttpResponseRedirect(reverse('LoginPage'))
-
-            # Check if it's a postback
-            is_postback = len(request.GET) > 0
 
             # Default filter values
             filters = {
@@ -1129,34 +1138,27 @@ class CLLSearch(TemplateView):
                 "noResultStatus": 0,
                 "dateFrom": datetime.today() - timedelta(days=60),
                 "dateTo": datetime.today() + timedelta(days=30),
-                "pageNumber": 1,
                 "itemsPerPage": 20,
             }
 
-            # Override default filters if it's a postback
-            if is_postback:
-                try:
-                    filters["dateFrom"] = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime) or filters["dateFrom"]
-                    filters["dateTo"] = self.utilities.GetRequestKey(request, "txtCriteriaDateTo", enumDataType.Datetime) or filters["dateTo"]
-                    filters["pageNumber"] = self.utilities.GetRequestKey(request, "txtPageNumber", enumDataType.Integer) or filters["pageNumber"]
-                    filters["itemsPerPage"] = self.utilities.GetRequestKey(request, "ddlCriteriaItemsPerPage", enumDataType.Integer) or filters["itemsPerPage"]
-                    filters["reportStatus"] = self.utilities.GetRequestKey(request, "ddlCriteriaStatus", enumDataType.String) or filters["reportStatus"]
-                    filters["priority"] = self.utilities.GetRequestKey(request, "ddlCriteriaPriority", enumDataType.String) or filters["priority"]
-                    filters["diseaseIndicationCode1"] = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication1", enumDataType.String) or filters["diseaseIndicationCode1"]
-                    filters["diseaseIndicationCode2"] = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication2", enumDataType.String) or filters["diseaseIndicationCode2"]
-                    filters["diseaseIndicationCode3"] = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication3", enumDataType.String) or filters["diseaseIndicationCode3"]
-                    filters["reasonForDiseaseIndication1"] = self.utilities.GetRequestKey(request, "ddlCriteriaReasonForDiseaseIndication1", enumDataType.String) or filters["reasonForDiseaseIndication1"]
-                    filters["reasonForDiseaseIndication2"] = self.utilities.GetRequestKey(request, "ddlCriteriaReasonForDiseaseIndication2", enumDataType.String) or filters["reasonForDiseaseIndication2"]
-                    filters["reasonForDiseaseIndication3"] = self.utilities.GetRequestKey(request, "ddlCriteriaReasonForDiseaseIndication3", enumDataType.String) or filters["reasonForDiseaseIndication3"]
-                    filters["lastName"] = self.utilities.GetRequestKey(request, "txtCriteriaLastname", enumDataType.String) or filters["lastName"]
-                    filters["labNumber"] = self.utilities.GetRequestKey(request, "txtCriteriaLabnumber", enumDataType.String) or filters["labNumber"]
-                    filters["noResultStatus"] = self.utilities.GetRequestKey(request, "ddlCriteriaNoResult", enumDataType.Integer) or filters["noResultStatus"]
-                except Exception as e:
-                    # If there's an error, reset to default filters
-                    filters["dateFrom"] = datetime.today() - timedelta(days=365)
-                    filters["dateTo"] = datetime.today() + timedelta(days=30)
-                    filters["pageNumber"] = 1
-                    filters["itemsPerPage"] = -1
+            # Override with GET parameters
+            filters.update({
+                "dateFrom": self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime) or filters["dateFrom"],
+                "dateTo": self.utilities.GetRequestKey(request, "txtCriteriaDateTo", enumDataType.Datetime) or filters["dateTo"],
+                "pageNumber": request.GET.get("page", 1),  # Use `GET` for pagination
+                "itemsPerPage": self.utilities.GetRequestKey(request, "ddlCriteriaItemsPerPage", enumDataType.Integer) or filters["itemsPerPage"],
+                "reportStatus": self.utilities.GetRequestKey(request, "ddlCriteriaStatus", enumDataType.String) or filters["reportStatus"],
+                "priority": self.utilities.GetRequestKey(request, "ddlCriteriaPriority", enumDataType.String) or filters["priority"],
+                "diseaseIndicationCode1": self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication1", enumDataType.String) or filters["diseaseIndicationCode1"],
+                "diseaseIndicationCode2": self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication2", enumDataType.String) or filters["diseaseIndicationCode2"],
+                "diseaseIndicationCode3": self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication3", enumDataType.String) or filters["diseaseIndicationCode3"],
+                "reasonForDiseaseIndication1": self.utilities.GetRequestKey(request, "ddlCriteriaReasonForDiseaseIndication1", enumDataType.String) or filters["reasonForDiseaseIndication1"],
+                "reasonForDiseaseIndication2": self.utilities.GetRequestKey(request, "ddlCriteriaReasonForDiseaseIndication2", enumDataType.String) or filters["reasonForDiseaseIndication2"],
+                "reasonForDiseaseIndication3": self.utilities.GetRequestKey(request, "ddlCriteriaReasonForDiseaseIndication3", enumDataType.String) or filters["reasonForDiseaseIndication3"],
+                "lastName": self.utilities.GetRequestKey(request, "txtCriteriaLastname", enumDataType.String) or filters["lastName"],
+                "labNumber": self.utilities.GetRequestKey(request, "txtCriteriaLabnumber", enumDataType.String) or filters["labNumber"],
+                "noResultStatus": self.utilities.GetRequestKey(request, "ddlCriteriaNoResult", enumDataType.Integer) or filters["noResultStatus"],
+            })
 
             # Fetch workflow cases
             totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
@@ -1169,49 +1171,43 @@ class CLLSearch(TemplateView):
                 filters["refKey"], filters["noResultStatus"]
             )
 
-            # Paginate the results
+            # Paginate results
             paginator = Paginator(totalWorkflowCases, filters["itemsPerPage"])
             try:
-                page_of_workflow_cases = paginator.page(filters["pageNumber"])
+                page_obj = paginator.get_page(filters["pageNumber"])
             except (EmptyPage, PageNotAnInteger):
-                page_of_workflow_cases = paginator.page(1)
+                page_obj = paginator.get_page(1)  # If error, fallback to page 1
 
             # Enrich workflow cases
-            page_of_workflow_cases = self.worksheetHelper.AddWorksheetTestResultsToWorkflowCases(page_of_workflow_cases)
-            page_of_workflow_cases = self.worksheetHelper.AddTestsWithNoWorksheetsToWorkflowCases(page_of_workflow_cases)
-            page_of_workflow_cases = self.worksheetHelper.ConvertWorksheetsColumnEmptyStringToNone(page_of_workflow_cases)
-            page_of_workflow_cases = self.extractsheetHelper.AddExtractsToWorkflowCases(page_of_workflow_cases)
+            page_obj = self.worksheetHelper.AddWorksheetTestResultsToWorkflowCases(page_obj)
+            page_obj = self.worksheetHelper.AddTestsWithNoWorksheetsToWorkflowCases(page_obj)
+            page_obj = self.worksheetHelper.ConvertWorksheetsColumnEmptyStringToNone(page_obj)
+            page_obj = self.extractsheetHelper.AddExtractsToWorkflowCases(page_obj)
 
-            # Fetch criteria lists
-            report_statuses = self.dataServices.GetReportStatus()
-            priorities = self.dataServices.GetDNAPriority()
-            disease_indications = self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', '', 'CLL')
-            reasons_for_disease_indications = self.dataServices.GetDNAReasonForDiseaseIndication(
-                filters["diseaseIndicationCode1"], filters["diseaseIndicationCode2"], filters["diseaseIndicationCode3"]
-            ) or []
+            # Prepare base query string for pagination (preserving filters)
+            query_params = request.GET.copy()
+            query_params.pop("page", None)  # Remove `page` to avoid duplication
+            base_query_string = urlencode(query_params)
 
-            # Add descriptions if missing
-            reasons_for_disease_indications = [
-                {"REASON_CODE": reason.get("REASON_CODE", ""), "REASON_DESCRIPTION": reason.get("REASON_DESCRIPTION", reason.get("REASON_CODE", ""))}
-                for reason in reasons_for_disease_indications
-            ]
-
-            # Prepare context for rendering
+            # Prepare context
             context = {
                 "criteriaDateFrom": filters["dateFrom"],
                 "criteriaDateTo": filters["dateTo"],
                 "Title": self.title,
-                "workflowCases": page_of_workflow_cases,
+                "workflowCases": page_obj,  # Make sure the template gets the correct pagination object
+                "page_obj": page_obj,  # Ensure `page_obj` is in context
                 "itemsPerPage": filters["itemsPerPage"],
-                "criteriaReportStatuses": report_statuses,
+                "criteriaReportStatuses": self.dataServices.GetReportStatus(),
                 "criteriaReportStatus": filters["reportStatus"],
-                "criteriaPriorities": priorities,
+                "criteriaPriorities": self.dataServices.GetDNAPriority(),
                 "criteriaPriority": filters["priority"],
-                "criteriaDiseaseIndications": disease_indications,
+                "criteriaDiseaseIndications": self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', '', 'CLL'),
                 "criteriaDiseaseIndication1": filters["diseaseIndicationCode1"],
                 "criteriaDiseaseIndication2": filters["diseaseIndicationCode2"],
                 "criteriaDiseaseIndication3": filters["diseaseIndicationCode3"],
-                "criteriaReasonsForDiseaseIndications": reasons_for_disease_indications,
+                "criteriaReasonsForDiseaseIndications": self.dataServices.GetDNAReasonForDiseaseIndication(
+                    filters["diseaseIndicationCode1"], filters["diseaseIndicationCode2"], filters["diseaseIndicationCode3"]
+                ) or [],
                 "criteriaReasonForDiseaseIndication1": filters["reasonForDiseaseIndication1"],
                 "criteriaReasonForDiseaseIndication2": filters["reasonForDiseaseIndication2"],
                 "criteriaReasonForDiseaseIndication3": filters["reasonForDiseaseIndication3"],
@@ -1219,6 +1215,7 @@ class CLLSearch(TemplateView):
                 "criteriaLabnumber": filters["labNumber"],
                 "criteriaNoResult": filters["noResultStatus"],
                 "searchCount": len(totalWorkflowCases),
+                "base_query_string": base_query_string,  # Pass to template
             }
             return render(request, self.template_name, context)
 
@@ -1228,6 +1225,7 @@ class CLLSearch(TemplateView):
                 "errorMessage": f"CLLSearch.get : {str(ex)}"
             }
             return render(request, self.template_name, context)
+
 
 class RBCRSearch(TemplateView):
     template_name = "R-BCRSearch.html"
@@ -1546,14 +1544,6 @@ class HaemOncSearch(TemplateView):  # All Molecular
             _dateFrom = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime) or (datetime.today() - timedelta(days=60))
             _dateTo = self.utilities.GetRequestKey(request, "txtCriteriaDateTo", enumDataType.Datetime) or (datetime.today() + timedelta(days=30))
 
-            # Validate and retrieve the number of items per page
-            try:
-                _itemsPerPage = int(request.GET.get("ddlCriteriaItemsPerPage", 20))
-                if _itemsPerPage not in [20, 40, 50, 100]:  # Allowed values
-                    _itemsPerPage = 20
-            except ValueError:
-                _itemsPerPage = 20
-
             # Retrieve the current page number
             page = request.GET.get("page", 1)
             try:
@@ -1583,6 +1573,16 @@ class HaemOncSearch(TemplateView):  # All Molecular
                 _reasonForDiseaseIndication1, _reasonForDiseaseIndication2, _reasonForDiseaseIndication3,
                 request.user.username, _lastName, _labNumber, _RefKey, _noResultStatus
             )
+
+            # Validate and retrieve the number of items per page
+            try:
+                _itemsPerPage = int(request.GET.get("ddlCriteriaItemsPerPage", 20))
+                if _itemsPerPage == -1:
+                    _itemsPerPage = len(_totalWorkflowCases)
+                elif _itemsPerPage not in [20, 40, 50, 100]:  # Allowed values
+                    _itemsPerPage = 20
+            except ValueError:
+                _itemsPerPage = 20
 
             # Apply data transformations
             _totalWorkflowCases = self.worksheetHelper.AddWorksheetTestResultsToWorkflowCases(_totalWorkflowCases)
