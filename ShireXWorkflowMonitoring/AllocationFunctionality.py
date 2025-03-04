@@ -16,40 +16,34 @@ class SetAllocatedToForDNA(TemplateView):
     utilities = UtilityFunctions()
     dataServices = ShireData()
 
-    def get(self, pRequest, pLabNumber, pWorkflowName):
-        _request = pRequest
-        _labNumber = pLabNumber
-        _workflowName = pWorkflowName
-        if not _request.user.is_authenticated:
+    def get(self, request, labNumber, workflowName):  # 🔥 Match `urls.py`
+        if not request.user.is_authenticated:
             return HttpResponseRedirect(reverse('LoginPage'))
 
         try:
-            _staff = self._get_staff(_request)
-            _isSupervisor, _staffList = self._get_supervisor_info(_request, _workflowName)
-            _cancelURL = self._get_cancel_url(_workflowName)
+            staff = self._get_staff(request)
+            isSupervisor, staffList = self._get_supervisor_info(request, workflowName)
+            cancelURL = self._get_cancel_url(workflowName)
 
-            _context = self._build_context(_labNumber, _staffList, _staff, _isSupervisor, _workflowName, _cancelURL)
-            return render(_request, self.template_name, _context)
+            context = self._build_context(labNumber, staffList, staff, isSupervisor, workflowName, cancelURL)
+            return render(request, self.template_name, context)
 
         except Exception as ex:
-            return self._handle_exception(_labNumber, ex)
+            return self._handle_exception(labNumber, ex)
 
-    def post(self, pRequest, pLabNumber, pWorkflowName):
-        _request = pRequest
-        _labNumber = pLabNumber
-        _workflowName = pWorkflowName
+    def post(self, request, labNumber, workflowName):  # 🔥 Match `urls.py`
         try:
-            _staffCode = self.utilities.PostRequestKey(_request, "ddlStaffCode", enumDataType.String)
-            _retVal = self.dataServices.SetAllocatedToForDNA(_labNumber, _staffCode)
+            staffCode = self.utilities.PostRequestKey(request, "ddlStaffCode", enumDataType.String)
+            retVal = self.dataServices.SetAllocatedToForDNA(labNumber, staffCode)
 
-            if _retVal != 1:
-                return self._handle_db_error(_labNumber)  # Refactored method - MW
+            if retVal != 1:
+                return self._handle_db_error(labNumber)  # Refactored method - MW
 
-            _urlName = "AllocateComplete"
-            return HttpResponseRedirect(_urlName)
+            urlName = reverse("AllocateComplete", kwargs={"labNumber": labNumber, "workflowName": workflowName})
+            return HttpResponseRedirect(urlName)
 
         except Exception as ex:
-            return self._handle_exception(_labNumber, ex)  # Refactored method - MW
+            return self._handle_exception(labNumber, ex)  # Refactored method - MW
 
     # Private methods start here - MW
 
@@ -116,9 +110,10 @@ class AllocateCompleteView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['labNumber'] = kwargs['labNumber']
-        context['workflowName'] = kwargs['workflowName']
+        context['labNumber'] = self.kwargs.get('labNumber', None)
+        context['workflowName'] = self.kwargs.get('workflowName', None)
         return context
+
 
 
 class SetAllocatedToForCyto(TemplateView):
@@ -194,6 +189,7 @@ class SetAllocatedToForCyto(TemplateView):
         _isSupervisor = pIsSupervisor
         _workflowName = pWorkflowName
         _cancelURL = pCancelURL
+
 
         #Build context for rendering the template - MW#
         return {

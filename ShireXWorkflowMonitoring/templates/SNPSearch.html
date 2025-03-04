@@ -256,7 +256,7 @@
                             </td>
                             {% endif %}
                             <td>
-                                <a href="{% url 'SampleForm'  _labNumber=item.LABNO _indication=item.DISEASE_CODE %}" target="_blank">{{ item.LABNO|default:"&ndsp;" }}</a>
+                                <a href="{% url 'SampleForm'  labNumber=item.LABNO indication=item.DISEASE_CODE %}" target="_blank">{{ item.LABNO|default:"&ndsp;" }}</a>
                             </td>
                             <td>
                                 {{ item.DISEASE_CODE|default:"&ndsp;" }} /<br>{{ item.REASON|default:"&ndsp;" }}

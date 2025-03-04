@@ -181,35 +181,36 @@
             </form>
         </div>
     </div>
-
-    <!-- Workflow Cases Table -->
     <div class="container-fluid">
         <table class="table table-bordered" id="ResultsTable">
             <thead class="bg-primary" style="color:white">
-                <th scope="col" onClick="sortTable(0)" style="cursor: pointer;">Claim</th>
-                <th scope="col" onClick="sortTable(1)" style="cursor: pointer;">Patient (Date deceased)</th>
-                <th scope="col" onClick="sortTable(2)" style="cursor: pointer;">Lab Number</th>
-                <th scope="col" onClick="sortTable(3)" style="cursor: pointer;">Indication / Reason</th>
-                <th scope="col" onClick="sortTable(4)" style="cursor: pointer;">Sample type</th>
-                <th scope="col" onClick="sortTable(5)" style="cursor: pointer;">Priority</th>
-                <th scope="col" onClick="sortTable(6)" style="cursor: pointer;">Days left</th>
-                <th scope="col" onClick="sortTable(7)" style="cursor: pointer;">Alloc to</th>
-                <th scope="col" onClick="sortTable(8)" style="cursor: pointer;">Key</th>
-                <th scope="col" onClick="sortTable(9)" style="cursor: pointer;">Date received</th>
-                <th scope="col" onClick="sortTable(10)" style="cursor: pointer;">Date activated</th>
-                <th scope="col" onClick="sortTable(11)" style="cursor: pointer;">Date_due</th>
-                <th scope="col" onClick="sortTable(12)" style="cursor: pointer;">Status</th>
-                <th scope="col" onClick="sortTable(13)" style="cursor: pointer;">Report by</th>
-                <th scope="col" onClick="sortTable(14)" style="cursor: pointer;">Wksheet / Result</th>
-                <th scope="col" onClick="sortTable(15)" style="cursor: pointer;">DNA/Quant</th>
-                <th scope="col" onClick="sortTable(16)" style="cursor: pointer;">Alert</th>
+                <th scope="col">Claim</th>
+                <th scope="col">Patient (Date deceased)</th>
+                <th scope="col">Lab Number</th>
+                <th scope="col">Indication / Reason</th>
+                <th scope="col">Sample type</th>
+                <th scope="col">Priority</th>
+                <th scope="col">Days left</th>
+                <th scope="col">Alloc to</th>
+                <th scope="col">Key</th>
+                <th scope="col">Date received</th>
+                <th scope="col">Date activated</th>
+                <th scope="col">Date_due</th>
+                <th scope="col">Status</th>
+                <th scope="col">Report by</th>
+                <th scope="col">Wksheet / Result</th>
+                <th scope="col">DNA/Quant</th>
+                <th scope="col">Alert</th>
             </thead>
             <tbody>
                 {% if workflowCases %}
                     {% for item in workflowCases %}
                         <tr>
                             <td>
-                                <button class="btn btn-primary" id="{{item.LABNO}}" name="" onclick="DoClaim(this.id, this.name)">&nbsp;</button>
+                                <button class="btn btn-primary claim-btn"
+                                        data-labno="{{ item.LABNO|default:'' }}"
+                                        data-workflow="{{ item.WORKFLOW_NAME|default:'ALL' }}">
+                                </button>
                             </td>
                             <td>
                                 {% if item.DECEASED_DATE %}
@@ -219,47 +220,21 @@
                                 {% endif %}
                             </td>
                             <td>
-                                <a href="{% url 'SampleForm' _labNumber=item.LABNO _indication=item.DISEASE_CODE %}" target="_blank">{{ item.LABNO }}</a>
+                                <a href="/Molecular/SampleForm/{{ item.LABNO }}/{{ item.DISEASE_CODE }}/" target="_blank">{{ item.LABNO }}</a>
                             </td>
                             <td>{{ item.DISEASE_CODE }} /<br>{{ item.REASON }}</td>
                             <td>{{ item.SAMPLETYPE }}</td>
-                            <td>
-                                {% if item.PRIORITY|upper == "URGENT" %}
-                                    <span style="color:red; font-weight: bold">{{ item.PRIORITY }}</span>
-                                {% else %}
-                                    <span>{{ item.PRIORITY }}</span>
-                                {% endif %}
-                            </td>
-                            <td style="
-                                {% if item.DaysRemaining >= 15 %}
-                                    background-color: lightgreen; color: black;
-                                {% elif item.DaysRemaining >= 8 and item.DaysRemaining <= 14 %}
-                                    background-color: yellow; color: black;
-                                {% else %}
-                                    background-color: red; color: white;
-                                {% endif %}
-                            ">
-                                {{ item.DaysRemaining|default:0 }}
-                            </td>
+                            <td>{{ item.PRIORITY }}</td>
+                            <td>{{ item.DaysRemaining|default:0 }}</td>
                             <td>{{ item.ALLOCATED_TO }}</td>
                             <td>{{ item.REF }}</td>
                             <td>{{ item.DATE_RECEIVED|date:'d-m-Y' }}</td>
                             <td>{{ item.DATE_ACTIVATED|date:'d-m-Y' }}</td>
                             <td>{{ item.TARGET_DATE|date:'d-m-Y' }}</td>
-                            <td>
-                                {% if item.REPORT_STATUS|upper == "PENDING" %}
-                                    <span style="color:green; font-weight: bold">{{ item.REPORT_STATUS }}</span>
-                                {% else %}
-                                    {{ item.REPORT_STATUS }}
-                                {% endif %}
-                            </td>
+                            <td>{{ item.REPORT_STATUS }}</td>
                             <td>{{ item.REPORT_BY }}</td>
-                            <td>
-                                {{ item.WORKSHEETS|safe }}
-                            </td>
-                            <td>
-                                {{ item.EXTRACTSHEETS|safe }}
-                            </td>
+                            <td>{{ item.WORKSHEETS|safe }}</td>
+                            <td>{{ item.EXTRACTSHEETS|safe }}</td>
                             <td>{{ item.SampleAlert|default:"&nbsp;" }}</td>
                         </tr>
                     {% endfor %}
@@ -270,93 +245,74 @@
                 {% endif %}
             </tbody>
         </table>
-        <!-- Pagination Controls -->
-        <nav aria-label="Page navigation">
-            <ul class="pagination justify-content-center">
-                {% if page_obj.has_previous %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page=1&{{ base_query_string }}">First</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}&{{ base_query_string }}">Previous</a>
-                    </li>
-                {% else %}
-                    <li class="page-item disabled"><span class="page-link">First</span></li>
-                    <li class="page-item disabled"><span class="page-link">Previous</span></li>
-                {% endif %}
-                <li class="page-item active">
-                    <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-                </li>
-                {% if page_obj.has_next %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.next_page_number }}&{{ base_query_string }}">Next</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&{{ base_query_string }}">Last</a>
-                    </li>
-                {% else %}
-                    <li class="page-item disabled"><span class="page-link">Next</span></li>
-                    <li class="page-item disabled"><span class="page-link">Last</span></li>
-                {% endif %}
-            </ul>
-        </nav>
     </div>
 </div>
+
 <script>
-    window.onload = function() {
-    var txtCriteriaDateFrom = document.getElementById('txtCriteriaDateFrom');
-    var txtCriteriaDateTo = document.getElementById('txtCriteriaDateTo');
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll(".claim-btn").forEach(button => {
+            button.addEventListener("click", function() {
+                let labno = this.dataset.labno;
+                let workflowName = this.dataset.workflow;
 
-    if (!txtCriteriaDateFrom.value) {
-        var today = new Date();
-        var fiveMonthsAgo = new Date();
-        fiveMonthsAgo.setMonth(today.getMonth() - 5);
-        if (today.getDate() !== fiveMonthsAgo.getDate()) {
-            fiveMonthsAgo.setDate(0);
-        }
-        txtCriteriaDateFrom.value = fiveMonthsAgo.toISOString().split('T')[0];
-    }
+                console.log("Lab Number:", labno); // Debugging
+                console.log("Workflow Name:", workflowName); // Debugging
 
-    if (!txtCriteriaDateTo.value) {
-        var twoMonthsFromNow = new Date();
-        twoMonthsFromNow.setMonth(new Date().getMonth() + 2);
-        txtCriteriaDateTo.value = twoMonthsFromNow.toISOString().split('T')[0];
-    }
-};
-</script>
-<script>
-    function logPagination(action) {
-        console.log(Pagination button clicked: ${action});
-    }
-</script>
-<script>
-    function sortTable(columnIndex) {
-        const table = document.getElementById("ResultsTable");
-        const tbody = table.querySelector("tbody");
-        const rows = Array.from(tbody.querySelectorAll("tr"));
-
-        // Determine sort direction: ascending or descending
-        const isAscending = table.dataset.sortOrder !== "asc";
-        table.dataset.sortOrder = isAscending ? "asc" : "desc";
-
-        // Sort rows based on the content of the clicked column
-        rows.sort((rowA, rowB) => {
-            const cellA = rowA.cells[columnIndex].innerText.trim().toLowerCase();
-            const cellB = rowB.cells[columnIndex].innerText.trim().toLowerCase();
-
-            if (!isNaN(cellA) && !isNaN(cellB)) {
-                // Numeric sorting
-                return isAscending ? cellA - cellB : cellB - cellA;
-            } else {
-                // String sorting
-                return isAscending
-                    ? cellA.localeCompare(cellB)
-                    : cellB.localeCompare(cellA);
-            }
+                DoClaim(labno, workflowName);
+            });
         });
+    });
 
-        // Re-attach rows to the tbody in the new sorted order
-        rows.forEach(row => tbody.appendChild(row));
+    function DoClaim(labno, workflowName) {
+        if (!labno || !workflowName) {
+            console.error("Invalid lab number or workflow name.", { labno, workflowName });
+            alert(`Error: Lab number (${labno}) or workflow (${workflowName}) is missing.`);
+            return;
+        }
+
+        // Construct the URL manually and encode values
+        let url = `/Molecular/Allocate/${encodeURIComponent(labno)}/${encodeURIComponent(workflowName)}/`;
+
+        console.log("Navigating to URL:", url);
+        window.location.href = url;
+    }
+
+    function SortTable(n){
+        var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+        table = document.getElementById("ResultsTable");
+        switching = true;
+        dir = "asc";
+        while(switching){
+            switching = false;
+            rows = table.rows;
+            for (i=1; i < rows.length-1; i++){
+                shouldSwitch = false;
+                x = rows[i].getElementsByTagName("TD")[n];
+                y = rows[i+1].getElementsByTagName("TD")[n];
+                if (dir == "asc"){
+                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()){
+                        shouldSwitch = true;
+                        break;
+                    }
+                }else if (dir == "desc"){
+                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()){
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+            }
+            if(shouldSwitch){
+                rows[i].parentNode.insertBefore(rows[i+1], rows[i]);
+                switching = true;
+                switchcount++;
+            }else{
+                if(switchcount == 0 && dir == "asc"){
+                    dir = "desc";
+                    switching = true;
+                }
+            }
+        }
     }
 </script>
+
 {% endblock %}

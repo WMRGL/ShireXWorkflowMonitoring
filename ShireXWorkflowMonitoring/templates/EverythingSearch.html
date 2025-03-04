@@ -262,7 +262,11 @@
                         <tr>
                             <!-- Claim Column -->
                             <td>
-                                <button class="btn btn-primary" id="{{item.LABNO}}" name="" onclick="DoClaim(this.id, this.name)">&nbsp;</button>
+                                <button class="btn btn-primary claim-btn"
+                                        data-labno="{{ item.LABNO|default:'' }}"
+                                        data-workflow="{{ item.WORKFLOW_NAME|default:'ALL' }}">
+                                    Claim
+                                </button>
                             </td>
 
                             <!-- Patient Column -->
@@ -276,7 +280,9 @@
 
                             <!-- Lab Number -->
                             <td>
-                                <a href="{% url 'SampleForm' _labNumber=item.LABNO _indication=item.DISEASE_CODE %}" target="_blank">{{ item.LABNO }}</a>
+                                <a href="{% url 'SampleForm' labNumber=item.LABNO|default:'' indication=item.DISEASE_CODE|default:'' %}" target="_blank">
+                                    {{ item.LABNO }}
+                                </a>
                             </td>
 
                             <!-- Indication / Reason -->

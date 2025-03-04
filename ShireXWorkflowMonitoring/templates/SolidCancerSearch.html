@@ -212,7 +212,7 @@
                                 {% endif %}
                             </td>
                             <td>
-                                <a href="{% url 'SampleForm' _labNumber=item.LABNO _indication=item.DISEASE_CODE %}" target="_blank">
+                                <a href="{% url 'SampleForm' labNumber=item.LABNO indication=item.DISEASE_CODE %}" target="_blank">
                                     {{ item.LABNO }}
                                 </a>
                             </td>
@@ -236,7 +236,13 @@
                             <td>{{ item.REPORT_BY|default:"N/A" }}</td>
                             <td>{% autoescape off %}{{ item.WORKSHEETS|default:"&nbsp;" }}{% endautoescape %}</td>
                             <td>{% autoescape off %}{{ item.EXTRACTSHEETS|default:"&nbsp;" }}{% endautoescape %}</td>
-                            <td>{{ item.DNAQuantification|default:"N/A" }}</td>
+                            <td>
+                                {% if item.DNAQuantification and item.DNAQuantification != "" %}
+                                    {{ item.DNAQuantification }}
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </td>
                             <td>{{ item.SampleAlert|default:"&nbsp;" }}</td>
                         </tr>
                     {% endfor %}
