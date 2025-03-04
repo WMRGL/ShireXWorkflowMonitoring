@@ -8,16 +8,15 @@ from ShireXWorkflowMonitoring import CancerFunctionality
 from ShireXWorkflowMonitoring import AllocationFunctionality
 from ShireXWorkflowMonitoring import SampleFunctionality
 
-
-
 app_name = "ShireXWorkflowMonitoringApplication"
-
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', CommonFunctionality.Login.as_view(), name="LoginPage"),
     path('', CommonFunctionality.Start.as_view(), name="StartPage"),
     path('logout/', CommonFunctionality.Authenticate.DoLogout, name="LogoutSystem"),
+
+    # Molecular HaemOnc Pages
     path('Molecular/BMT/', HaemOncologyFunctionality.BMTSearch.as_view(), name="HaemOncBMTSearch"),
     path('Molecular/MPN/', HaemOncologyFunctionality.MPNSearch.as_view(), name="HaemOncMPNSearch"),
     path('Molecular/D-AML/', HaemOncologyFunctionality.DAMLSearch.as_view(), name="HaemOncDAMLSearch"),
@@ -34,11 +33,16 @@ urlpatterns = [
     path('Molecular/FAL/', HaemOncologyFunctionality.FALSearch.as_view(), name="HaemOncFALSearch"),
     path('Molecular/HaemOncAll/', HaemOncologyFunctionality.HaemOncSearch.as_view(), name="HaemOncMolecularSearch"),
     path('Molecular/SolidCancer/', CancerFunctionality.SolidCancerSearch.as_view(), name="SCSearch"),
-    path('Molecular/Allocate/<str:_labNumber>/<str:_workflowName>/',
+
+    # Allocation route (DNA) - MW
+    path('Molecular/Allocate/<str:labNumber>/<str:workflowName>/',
          AllocationFunctionality.SetAllocatedToForDNA.as_view(), name="DNASetAllocatedTo"),
-    path('Sample/<str:_labNumber>/<str:_indication>', SampleFunctionality.SampleForm.as_view(), name="SampleForm"),
-    path('Molecular/Allocate/<str:labNumber>/<str:workflowName>/AllocateComplete/', AllocationFunctionality.AllocateCompleteView.as_view(),
-         name='AllocateComplete'),
-    path('Molecular/Allocate/<str:labNumber>/<str:workflowName>/', AllocationFunctionality.SetAllocatedToForDNA.as_view(),
-         name='DNASSetAllocatedTo'),
+
+    # Sample Form - MW
+    path('Sample/<str:labNumber>/<str:indication>/',
+         SampleFunctionality.SampleForm.as_view(), name="SampleForm"),
+
+    # Allocation complete page (Ensure context data is retrieved correctly) - MW
+    path('Molecular/Allocate/<str:labNumber>/<str:workflowName>/AllocateComplete/',
+         AllocationFunctionality.AllocateCompleteView.as_view(), name='AllocateComplete'),
 ]
