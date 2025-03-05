@@ -333,13 +333,7 @@ class DAMLSearch(TemplateView):  # AML & MDS
             _dateFrom = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime) or (datetime.today() - timedelta(days=60))
             _dateTo = self.utilities.GetRequestKey(request, "txtCriteriaDateTo", enumDataType.Datetime) or (datetime.today() + timedelta(days=30))
 
-            # Validate and retrieve the number of items per page
-            try:
-                _itemsPerPage = int(request.GET.get("ddlCriteriaItemsPerPage", 20))
-                if _itemsPerPage not in [20, 40, 50, 100]:  # Allowed values for items per page
-                    _itemsPerPage = 20
-            except ValueError:
-                _itemsPerPage = 20
+
 
             # Retrieve the current page number
             page = request.GET.get("page", 1)
@@ -364,8 +358,6 @@ class DAMLSearch(TemplateView):  # AML & MDS
             # Update for "Workflow" dropdown
             _noResultStatus = self.utilities.GetRequestKey(request, "ddlCriteriaNoResult", enumDataType.Integer) or _noResultStatus
 
-            print(f"Filters applied: _dateFrom={_dateFrom}, _dateTo={_dateTo}, _itemsPerPage={_itemsPerPage}, page={page}, _noResultStatus={_noResultStatus}")
-
             # Retrieve filtered workflow cases
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
                 '2012_HAEM_ONC', '', 'DAML', _dateFrom, _dateTo, _reportStatus, _priority,
@@ -373,6 +365,16 @@ class DAMLSearch(TemplateView):  # AML & MDS
                 _reasonForDiseaseIndication1, _reasonForDiseaseIndication2, _reasonForDiseaseIndication3,
                 request.user.username, _lastName, _labNumber, _RefKey, _noResultStatus
             )
+
+            # Validate and retrieve the number of items per page
+            try:
+                _itemsPerPage = int(request.GET.get("ddlCriteriaItemsPerPage", 20))
+                if _itemsPerPage == -1:
+                    _itemsPerPage = len(_totalWorkflowCases)
+                elif _itemsPerPage not in [20, 40, 50, 100]:  # Allowed values
+                    _itemsPerPage = 20
+            except ValueError:
+                _itemsPerPage = 20
 
             # Apply data transformations
             _totalWorkflowCases = self.worksheetHelper.AddWorksheetTestResultsToWorkflowCases(_totalWorkflowCases)
@@ -741,14 +743,6 @@ class RAMLSearch(TemplateView):
             _dateFrom = self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime) or (datetime.today() - timedelta(days=60))
             _dateTo = self.utilities.GetRequestKey(request, "txtCriteriaDateTo", enumDataType.Datetime) or (datetime.today() + timedelta(days=30))
 
-            # Validate and retrieve the number of items per page
-            try:
-                _itemsPerPage = int(request.GET.get("ddlCriteriaItemsPerPage", 20))
-                if _itemsPerPage not in [20, 40, 50, 100]:  # Allowed values for items per page
-                    _itemsPerPage = 20
-            except ValueError:
-                _itemsPerPage = 20
-
             # Retrieve the current page number
             page = request.GET.get("page", 1)
             try:
@@ -784,6 +778,16 @@ class RAMLSearch(TemplateView):
             _totalWorkflowCases = self.worksheetHelper.AddTestsWithNoWorksheetsToWorkflowCases(_totalWorkflowCases)
             _totalWorkflowCases = self.worksheetHelper.ConvertWorksheetsColumnEmptyStringToNone(_totalWorkflowCases)
             _totalWorkflowCases = self.extractsheetHelper.AddExtractsToWorkflowCases(_totalWorkflowCases)
+
+            # Validate and retrieve the number of items per page
+            try:
+                _itemsPerPage = int(request.GET.get("ddlCriteriaItemsPerPage", 20))
+                if _itemsPerPage == -1:
+                    _itemsPerPage = len(_totalWorkflowCases)
+                elif _itemsPerPage not in [20, 40, 50, 100]:  # Allowed values
+                    _itemsPerPage = 20
+            except ValueError:
+                _itemsPerPage = 20
 
             # Fetch reasons for dropdowns
             _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(
@@ -1001,6 +1005,9 @@ class ALLSearch(TemplateView):
             _reasonForDiseaseIndication1 = ""
             _reasonForDiseaseIndication2 = ""
             _reasonForDiseaseIndication3 = ""
+            _lastName = ""
+            _noResultStatus = 0
+            _refKey = ""
             _labNumber = ""  # Added Lab Number filter
 
             # Retrieve search filters and pagination parameters
@@ -1022,7 +1029,9 @@ class ALLSearch(TemplateView):
             # Additional filters
             _priority = self.utilities.GetRequestKey(request, "ddlCriteriaPriority", enumDataType.String) or _priority
             _reportStatus = self.utilities.GetRequestKey(request, "ddlCriteriaStatus", enumDataType.String) or _reportStatus
+            _lastName = self.utilities.GetRequestKey(request, "txtCriteriaLastname", enumDataType.String) or _lastName
             _labNumber = self.utilities.GetRequestKey(request, "txtCriteriaLabnumber", enumDataType.String) or _labNumber  # Retrieve Lab Number
+            _noResultStatus = self.utilities.GetRequestKey(request, "ddlCriteriaNoResult", enumDataType.Integer) or _noResultStatus
 
             # Pagination logic
             try:
@@ -1031,14 +1040,13 @@ class ALLSearch(TemplateView):
                     page = 1
             except ValueError:
                 page = 1
-
-            # Retrieve workflow cases
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
                 '2012_HAEM_ONC', '', 'ALL', _dateFrom, _dateTo, _reportStatus, _priority,
                 _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3,
                 _reasonForDiseaseIndication1, _reasonForDiseaseIndication2, _reasonForDiseaseIndication3,
-                request.user.username, "", _labNumber, "", 0  # Added _labNumber to query
+                request.user.username, _lastName, _labNumber, _refKey, _noResultStatus  # Removed _noResultStatus filter
             )
+
 
             # Apply data transformations
             _totalWorkflowCases = self.worksheetHelper.AddWorksheetTestResultsToWorkflowCases(_totalWorkflowCases)
@@ -1573,6 +1581,9 @@ class HaemOncSearch(TemplateView):  # All Molecular
                 _reasonForDiseaseIndication1, _reasonForDiseaseIndication2, _reasonForDiseaseIndication3,
                 request.user.username, _lastName, _labNumber, _RefKey, _noResultStatus
             )
+            print(f"DEBUG: Filtering for last name = '{_lastName}'")
+            matching_cases = [case for case in _totalWorkflowCases if case['LASTNAME'].lower() == _lastName.lower()]
+            print(f"DEBUG: Found {len(matching_cases)} matching cases")
 
             # Validate and retrieve the number of items per page
             try:

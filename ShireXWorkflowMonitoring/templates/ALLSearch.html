@@ -57,7 +57,7 @@
                             <label for="txtCriteriaLastname" class="col-form-label">Surname:</label>
                         </div>
                         <div class="col-2">
-                            <input type="text" class="form-control" name="txtCriteriaLastname" id="txtCriteriaLastname" list="listOfSurnames" value="{{ criteriaSurname|default:'' }}">
+                            <input type="text" class="form-control" name="txtCriteriaLastname" id="txtCriteriaLastname" value="{{ criteriaSurname|default:'' }}">
                             <datalist id="listOfSurnames">
                                 {% for item in criteriaSurnames %}
                                     <option value="{{ item }}"></option>
@@ -151,9 +151,20 @@
                             </select>
                         </div>
                     </div>
-
                     <!-- Pagination Controls and Search Button -->
                     <div class="row g-5 align-items-center" style="padding:1px">
+                        <div class="col-2" style="text-align:right">
+                            <label for="ddlCriteriaNoResult" class="col-form-label">Workflow:</label>
+                            <input type="hidden" id="txtPageNumber" name="txtPageNumber">
+                        </div>
+                        <div class="col-2">
+                            <select class="form-select" name="ddlCriteriaNoResult" id="ddlCriteriaNoResult">
+                                <option value="0" {% if criteriaNoResult == 0 %} selected="selected" {% endif %}>select...</option>
+                                <option value="1" {% if criteriaNoResult == 1 %} selected="selected" {% endif %}>No test</option>
+                                <option value="2" {% if criteriaNoResult == 2 %} selected="selected" {% endif %}>No wksheet</option>
+                                <option value="3" {% if criteriaNoResult == 3 %} selected="selected" {% endif %}>No result</option>
+                            </select>
+                        </div>
                         <div class="col-2 text-end">
                             <label for="ddlCriteriaItemsPerPage" class="col-form-label">Items per page:</label>
                         </div>
@@ -245,6 +256,40 @@
                 {% endif %}
             </tbody>
         </table>
+        <nav>
+            <ul class="pagination justify-content-center">
+                    <!-- First and Previous Page Links -->
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1&{{ base_query_string }}">First</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}&{{ base_query_string }}">Previous</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">First</span></li>
+                        <li class="page-item disabled"><span class="page-link">Previous</span></li>
+                    {% endif %}
+
+                    <!-- Current Page Indicator -->
+                    <li class="page-item active">
+                        <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                    </li>
+
+                    <!-- Next and Last Page Links -->
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}&{{ base_query_string }}">Next</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&{{ base_query_string }}">Last</a>
+                        </li>
+                    {% else %}
+                        <li class="page-item disabled"><span class="page-link">Next</span></li>
+                        <li class="page-item disabled"><span class="page-link">Last</span></li>
+                    {% endif %}
+                </ul>
+        </nav>
     </div>
 </div>
 

@@ -175,11 +175,11 @@
                         </div>
                         <div class="col-1" style="padding-right: unset">  {# Unset to make select control wide enough #}
                             <select class="form-select" name="ddlCriteriaItemsPerPage" id="ddlCriteriaItemsPerPage">
-                                <option value="-1" {% if itemsPerPage == -1 or not itemsPerPage%} selected="selected" {% endif %}>ALL</option>
                                 <option value="20" {% if itemsPerPage == 20 %} selected="selected" {% endif %}>20</option>
                                 <option value="40" {% if itemsPerPage == 40 %} selected="selected" {% endif %}>40</option>
                                 <option value="50" {% if itemsPerPage == 50 %} selected="selected" {% endif %}>50</option>
                                 <option value="100" {% if itemsPerPage == 100 %} selected="selected" {% endif %}>100</option>
+                                <option value="-1" {% if itemsPerPage == -1 %} selected="selected" {% endif %}>ALL</option>
                             </select>
                         </div>
                         <div class="col-1">
