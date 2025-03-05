@@ -152,8 +152,6 @@ class SolidCancerSearch(TemplateView):
             except EmptyPage:
                 paginated_cases = paginator.page(paginator.num_pages)
 
-            for case in _totalWorkflowCases:
-                print(f"DEBUG: Case {case.get('LABNO')} - CONC: {case.get('CONC', 'Missing')}")
 
             # Context for rendering
             context = {
