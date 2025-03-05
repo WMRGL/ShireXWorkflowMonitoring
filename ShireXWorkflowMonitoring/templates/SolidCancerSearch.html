@@ -215,8 +215,8 @@
                     <th onClick="sortTable(14)" style="cursor: pointer;">Report by</th>
                     <th onClick="sortTable(15)" style="cursor: pointer;">Worksheet / Result</th>
                     <th onClick="sortTable(16)" style="cursor: pointer;">DNA/Quant</th>
-                    <th onClick="sortTable(17)" style="cursor: pointer;">CONC</th>
-                    <th onClick="sortTable(18)" style="cursor: pointer;">Alert</th>
+                    <th onClick="sortTable(17)" style="cursor: pointer;">Alert</th>
+                    <th onClick="sortTable(18)" style="cursor: pointer;">CONC</th>
                 </tr>
             </thead>
             <tbody>
@@ -263,8 +263,10 @@
                                     N/A
                                 {% endif %}
                             </td>
+                            <td>{{ item.CONC|default:"N/A" }}</td>
                             <td>{{ item.SampleAlert|default:"&nbsp;" }}</td>
                         </tr>
+
                     {% endfor %}
                 {% else %}
                     <tr>
