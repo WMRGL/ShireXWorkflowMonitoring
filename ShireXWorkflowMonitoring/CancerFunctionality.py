@@ -60,17 +60,6 @@ class SolidCancerSearch(TemplateView):
             _dateTo = self.utilities.GetRequestKey(request, "txtCriteriaDateTo", enumDataType.Datetime) or (
                         datetime.today() + timedelta(days=30))
 
-            print(f"Report Status Filter: {_reportStatus}")
-            print(f"Priority Filter: {_priority}")
-
-            # Validate and retrieve the number of items per page
-            try:
-                _itemsPerPage = int(request.GET.get("ddlCriteriaItemsPerPage", 20))
-                if _itemsPerPage not in [20, 40, 50, 100]:  # Allowed values
-                    _itemsPerPage = 20
-            except ValueError:
-                _itemsPerPage = 20
-
             # Retrieve the current page number
             page = request.GET.get("page", 1)
             try:
@@ -102,7 +91,9 @@ class SolidCancerSearch(TemplateView):
             # Lab Number Filter
             _labNumber = (self.utilities.GetRequestKey(request, "txtCriteriaLabnumber",
                                                        enumDataType.String) or "").strip()
-            print(f"Lab Number Filter: {_labNumber}")
+
+            _noResultStatus = self.utilities.GetRequestKey(request, "ddlCriteriaNoResult",
+                                                           enumDataType.Integer) or _noResultStatus
 
             # Additional filters
             _priority = self.utilities.GetRequestKey(request, "ddlCriteriaPriority", enumDataType.String) or _priority
@@ -122,6 +113,16 @@ class SolidCancerSearch(TemplateView):
             _totalWorkflowCases = self.worksheetHelper.AddTestsWithNoWorksheetsToWorkflowCases(_totalWorkflowCases)
             _totalWorkflowCases = self.worksheetHelper.ConvertWorksheetsColumnEmptyStringToNone(_totalWorkflowCases)
             _totalWorkflowCases = self.extractsheetHelper.AddExtractsToWorkflowCases(_totalWorkflowCases)
+
+            # Validate and retrieve the number of items per page
+            try:
+                _itemsPerPage = int(request.GET.get("ddlCriteriaItemsPerPage", 20))
+                if _itemsPerPage == -1:
+                    _itemsPerPage = len(_totalWorkflowCases)
+                elif _itemsPerPage not in [20, 40, 50, 100]:  # Allowed values
+                    _itemsPerPage = 20
+            except ValueError:
+                _itemsPerPage = 20
 
             # Ensure no NoneType values in workflow cases
             for case in _totalWorkflowCases:
@@ -168,6 +169,7 @@ class SolidCancerSearch(TemplateView):
                 "criteriaDiseaseIndication1": _diseaseIndicationCode1,
                 "criteriaDiseaseIndication2": _diseaseIndicationCode2,
                 "criteriaDiseaseIndication3": _diseaseIndicationCode3,
+                "criteriaNoResult": _noResultStatus,
                 "searchCount": len(_totalWorkflowCases),
                 "page_obj": paginated_cases,
             }

@@ -181,13 +181,6 @@ class MPNSearch(TemplateView):
             _dateTo = self.utilities.GetRequestKey(request, "txtCriteriaDateTo", enumDataType.Datetime) or (
                         datetime.today() + timedelta(days=30))
 
-            # Validate and retrieve the number of items per page
-            try:
-                _itemsPerPage = int(request.GET.get("ddlCriteriaItemsPerPage", 20))
-                if _itemsPerPage not in [20, 40, 50, 100]:  # Allowed values for items per page
-                    _itemsPerPage = 20
-            except ValueError:
-                _itemsPerPage = 20
 
             # Retrieve the current page number
             page = request.GET.get("page", 1)
@@ -226,7 +219,7 @@ class MPNSearch(TemplateView):
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
                 '2012_HAEM_ONC', '', 'MPN', _dateFrom, _dateTo, _reportStatus, _priority,
                 _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3,
-                _reasonForDiseaseIndication1, "", "",
+                _reasonForDiseaseIndication1, _reasonForDiseaseIndication2, _reasonForDiseaseIndication3,
                 request.user.username, _lastName, _labNumber, _RefKey, _noResultStatus
             )
 
@@ -235,6 +228,16 @@ class MPNSearch(TemplateView):
             _totalWorkflowCases = self.worksheetHelper.AddTestsWithNoWorksheetsToWorkflowCases(_totalWorkflowCases)
             _totalWorkflowCases = self.worksheetHelper.ConvertWorksheetsColumnEmptyStringToNone(_totalWorkflowCases)
             _totalWorkflowCases = self.extractsheetHelper.AddExtractsToWorkflowCases(_totalWorkflowCases)
+
+            # Validate and retrieve the number of items per page
+            try:
+                _itemsPerPage = int(request.GET.get("ddlCriteriaItemsPerPage", 20))
+                if _itemsPerPage == -1:
+                    _itemsPerPage = len(_totalWorkflowCases)
+                elif _itemsPerPage not in [20, 40, 50, 100]:  # Allowed values
+                    _itemsPerPage = 20
+            except ValueError:
+                _itemsPerPage = 20
 
             # Fetch reasons for dropdowns
             _reasonsForDiseaseIndications = self.dataServices.GetDNAReasonForDiseaseIndication(
@@ -882,12 +885,6 @@ class SNPSearch(TemplateView):
             _dateFrom = datetime.today() - timedelta(days=60)
             _dateTo = datetime.today() + timedelta(days=30)
 
-            try:
-                _itemsPerPage = int(request.GET.get("ddlCriteriaItemsPerPage", 20))
-                if _itemsPerPage not in [20, 40, 50, 100]:
-                    _itemsPerPage = 20
-            except ValueError:
-                _itemsPerPage = 20
 
             page = request.GET.get("page", 1)
             try:
@@ -914,11 +911,6 @@ class SNPSearch(TemplateView):
                     _dateTo = datetime.today() + timedelta(days=30)
                     _itemsPerPage = 20
 
-            print("GET request parameters:", request.GET)  # Debugging step
-
-            # Debug message for missing GetDistinctReasons
-            print(f"Skipping GetDistinctReasons since it does not exist.")
-
             # Fetch SNP workflow cases using corrected parameters
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
                 '2012_HAEM_ONC', '', 'SNP', _dateFrom, _dateTo, _reportStatus, _priority,
@@ -927,20 +919,21 @@ class SNPSearch(TemplateView):
                 request.user.username, _lastName, _labNumber, _RefKey, _noResultStatus
             )
 
-            print(f"Total SNP Cases Retrieved from DB: {len(_totalWorkflowCases)}")
-            if _totalWorkflowCases:
-                print("First 5 records:", _totalWorkflowCases[:5])
-
             # Process workflow cases
-            print(f"SNP Cases Before Processing: {len(_totalWorkflowCases)}")
             _totalWorkflowCases = self.worksheetHelper.AddWorksheetTestResultsToWorkflowCases(_totalWorkflowCases)
-            print(f"SNP Cases After AddWorksheetTestResults: {len(_totalWorkflowCases)}")
             _totalWorkflowCases = self.worksheetHelper.AddTestsWithNoWorksheetsToWorkflowCases(_totalWorkflowCases)
-            print(f"SNP Cases After AddTestsWithNoWorksheets: {len(_totalWorkflowCases)}")
             _totalWorkflowCases = self.worksheetHelper.ConvertWorksheetsColumnEmptyStringToNone(_totalWorkflowCases)
-            print(f"SNP Cases After ConvertWorksheetsColumnEmptyStringToNone: {len(_totalWorkflowCases)}")
             _totalWorkflowCases = self.extractsheetHelper.AddExtractsToWorkflowCases(_totalWorkflowCases)
-            print(f"SNP Cases After AddExtractsToWorkflowCases: {len(_totalWorkflowCases)}")
+
+            # Validate and retrieve the number of items per page
+            try:
+                _itemsPerPage = int(request.GET.get("ddlCriteriaItemsPerPage", 20))
+                if _itemsPerPage == -1:
+                    _itemsPerPage = len(_totalWorkflowCases)
+                elif _itemsPerPage not in [20, 40, 50, 100]:  # Allowed values
+                    _itemsPerPage = 20
+            except ValueError:
+                _itemsPerPage = 20
 
             _searchCount = len(_totalWorkflowCases)
             paginator = Paginator(_totalWorkflowCases, _itemsPerPage)
@@ -948,8 +941,6 @@ class SNPSearch(TemplateView):
                 _pageOfWorkflowCases = paginator.page(page)
             except (EmptyPage, PageNotAnInteger):
                 _pageOfWorkflowCases = paginator.page(1)
-
-            print(f"Cases sent to template: {len(_pageOfWorkflowCases)}")  # Debugging
 
             query_params = request.GET.copy()
             query_params.pop("page", None)
