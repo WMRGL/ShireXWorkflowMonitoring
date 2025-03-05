@@ -1,3 +1,4 @@
+let isResizing = false;  // Declare isResizing before using it - MW
 document.addEventListener("DOMContentLoaded", function() {
     var dropdowns = document.querySelectorAll('.navbar .dropdown');
 
@@ -17,23 +18,23 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
 
-    // Modal logic inside DOMContentLoaded
+    // Modal logic inside DOMContentLoaded - MW
     var modal = document.getElementById("font-size-modal");
     var btn = document.getElementById("settings-btn");
     var span = document.getElementsByClassName("close")[0];
 
-    // Open the modal when the settings button is clicked
+    // Open the modal when the settings button is clicked - MW
     btn.onclick = function() {
         console.log("Settings button clicked");
         modal.style.display = "block";
     };
 
-    // Close the modal when the 'x' is clicked
+    // Close the modal when the 'x' is clicked - MW
     span.onclick = function() {
         modal.style.display = "none";
     };
 
-    // Close the modal if clicked outside
+    // Close the modal if clicked outside - MW
     window.onclick = function(event) {
         if (event.target == modal) {
             modal.style.display = "none";
@@ -81,9 +82,9 @@ document.addEventListener("DOMContentLoaded", function() {
     });
 });
 
-console.log("Modal:", modal); // Should not be null
-console.log("Button:", btn);  // Should not be null
-console.log("Close button:", span); // Should not be null
+console.log("Modal:", modal); // Should not be null - MW
+console.log("Button:", btn);  // Should not be null - MW
+console.log("Close button:", span); // Should not be null - MW
 
 
 
@@ -94,7 +95,7 @@ window.addEventListener('load', function() {
         document.addEventListener("DOMContentLoaded", function () {
             var indicationDropdown = document.getElementById('ddlCriteriaDiseaseIndication1');
 
-            if (indicationDropdown) {  // Check if the element exists
+            if (indicationDropdown) {  // Check if the element exists - MW
                 indicationDropdown.addEventListener('change', function () {
                     if (IsFormValid()) {
                         document.getElementById('ddlCriteriaReasonForDiseaseIndication1').value = '';
@@ -106,28 +107,92 @@ window.addEventListener('load', function() {
             }
         });
 
-        document.getElementById('ddlCriteriaDiseaseIndication2').addEventListener('change', function () {
-            if (IsFormValid()) {
-                document.getElementById('ddlCriteriaReasonForDiseaseIndication1').value = '';
-                document.getElementById('ddlCriteriaReasonForDiseaseIndication2').value = '';
-                document.getElementById('ddlCriteriaReasonForDiseaseIndication3').value = '';
-                DoPostBack();
-            }
-        } )
+        document.addEventListener("DOMContentLoaded", function () {
+            var indicationDropdown2 = document.getElementById('ddlCriteriaDiseaseIndication2');
 
-        document.getElementById('ddlCriteriaDiseaseIndication3').addEventListener('change', function () {
-            if (IsFormValid()) {
-                document.getElementById('ddlCriteriaReasonForDiseaseIndication1').value = '';
-                document.getElementById('ddlCriteriaReasonForDiseaseIndication2').value = '';
-                document.getElementById('ddlCriteriaReasonForDiseaseIndication3').value = '';
-                DoPostBack();
-            }
-        } )
+            if (indicationDropdown2) { // ✅ Check if element exists before adding event listener - MW
+                indicationDropdown2.addEventListener('change', function () {
+                    if (IsFormValid()) {
+                        var reason1 = document.getElementById('ddlCriteriaReasonForDiseaseIndication1');
+                        var reason2 = document.getElementById('ddlCriteriaReasonForDiseaseIndication2');
+                        var reason3 = document.getElementById('ddlCriteriaReasonForDiseaseIndication3');
 
-        document.getElementById('btnPageFirst').addEventListener('click', function () { DoSubmitFirstPage(); } );
-        document.getElementById('btnPagePrevious').addEventListener('click', function () { DoSubmitPreviousPage(); } );
-        document.getElementById('btnPageNext').addEventListener('click', function () { DoSubmitNextPage(); } );
-        document.getElementById('btnPageLast').addEventListener('click', function () { DoSubmitLastPage(); } );
+                        if (reason1) reason1.value = '';
+                        if (reason2) reason2.value = '';
+                        if (reason3) reason3.value = '';
+
+                        DoPostBack();
+                    }
+                });
+            } else {
+                console.warn("⚠️ Element with ID 'ddlCriteriaDiseaseIndication2' not found. Skipping event listener.");
+            }
+        });
+
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var indicationDropdown3 = document.getElementById('ddlCriteriaDiseaseIndication3');
+
+            if (indicationDropdown3) {  // ✅ Check if element exists before adding event listener - MW
+                indicationDropdown3.addEventListener('change', function () {
+                    if (IsFormValid()) {
+                        var reason1 = document.getElementById('ddlCriteriaReasonForDiseaseIndication1');
+                        var reason2 = document.getElementById('ddlCriteriaReasonForDiseaseIndication2');
+                        var reason3 = document.getElementById('ddlCriteriaReasonForDiseaseIndication3');
+
+                        if (reason1) reason1.value = '';
+                        if (reason2) reason2.value = '';
+                        if (reason3) reason3.value = '';
+
+                        DoPostBack();
+                    }
+                });
+            } else {
+                console.warn("⚠️ Element with ID 'ddlCriteriaDiseaseIndication3' not found. Skipping event listener.");
+            }
+        });
+
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var btnPageFirst = document.getElementById('btnPageFirst');
+            var btnPagePrevious = document.getElementById('btnPagePrevious');
+            var btnPageNext = document.getElementById('btnPageNext');
+            var btnPageLast = document.getElementById('btnPageLast');
+
+            if (btnPageFirst) {
+                btnPageFirst.addEventListener('click', function () {
+                    DoSubmitFirstPage();
+                });
+            } else {
+                console.warn("⚠️ Element with ID 'btnPageFirst' not found. Skipping event listener.");
+            }
+
+            if (btnPagePrevious) {
+                btnPagePrevious.addEventListener('click', function () {
+                    DoSubmitPreviousPage();
+                });
+            } else {
+                console.warn("⚠️ Element with ID 'btnPagePrevious' not found. Skipping event listener.");
+            }
+
+            if (btnPageNext) {
+                btnPageNext.addEventListener('click', function () {
+                    DoSubmitNextPage();
+                });
+            } else {
+                console.warn("⚠️ Element with ID 'btnPageNext' not found. Skipping event listener.");
+            }
+
+            if (btnPageLast) {
+                btnPageLast.addEventListener('click', function () {
+                    DoSubmitLastPage();
+                });
+            } else {
+                console.warn("⚠️ Element with ID 'btnPageLast' not found. Skipping event listener.");
+            }
+        });
+
 
         function DoPostBack() {
             document.getElementById('formSearch').submit();
@@ -179,7 +244,7 @@ window.addEventListener('load', function() {
 
             if (workflowCases != null) {
                 if (workflowCases.has_next) {
-                    _pageNumber.value = "10"; // assuming workflowCases.paginator.num_pages is 10
+                    _pageNumber.value = "10"; // assuming workflowCases.paginator.num_pages is 10 - MW
                 } else {
                     _pageNumber.value = '1';
                 }
@@ -257,32 +322,38 @@ window.addEventListener('load', function() {
         }
 
 
-        document.addEventListener("DOMContentLoaded", function() {
-        document.querySelectorAll(".claim-btn").forEach(button => {
-            button.addEventListener("click", function() {
-                let labno = this.dataset.labno;
-                let workflowName = this.dataset.workflow;
-                DoClaim(labno, workflowName);
+        document.addEventListener("DOMContentLoaded", function ()
+        {
+            document.body.addEventListener("click", function (event)
+            {
+                if (event.target.classList.contains("claim-btn"))
+                {
+                    console.log("Claim button clicked:", event.target);
+
+                    let labno = event.target.dataset.labno;
+                    let workflowName = event.target.dataset.workflow;
+
+                    console.log("Lab Number:", labno);
+                    console.log("Workflow Name:", workflowName);
+
+                    if (!labno || !workflowName)
+                    {
+                        alert("Error: Missing lab number or workflow name.");
+                        return;
+                    }
+
+                    let url = `/Molecular/Allocate/${encodeURIComponent(labno)}/${encodeURIComponent(workflowName)}/`;
+
+                    console.log("Navigating to URL:", url);
+                    window.location.href = url;
+                }
             });
         });
-    });
-
-    function DoClaim(labno, workflowName) {
-        if (!labno || !workflowName) {
-            console.error("Invalid lab number or workflow name.");
-            return;
-        }
-
-        let url = `/Molecular/Allocate/${labno}/${workflowName}/AllocateComplete/`;
-
-        console.log("Navigating to URL:", url); // Debugging
-        window.open(url);
-    }
 
 
 
         function SortTable(n){
-            //Doing it this way means it can only sort what's on the screen, but it'll reduce the SQL sproc calls #
+            //Doing it this way means it can only sort what's on the screen, but it'll reduce the SQL sproc calls - MW
            var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
            table = document.getElementById("ResultsTable");
            switching=true;
@@ -401,7 +472,7 @@ window.addEventListener('load', function() {
     }
 
     function applySavedFontSize(){
-        // Applies these fonts to the page
+        // Applies these fonts to the page - MW
         var savedSize = localStorage.getItem('preferredFontSize');
         if(savedSize){
             changeFontSize(savedSize);
@@ -422,37 +493,51 @@ window.addEventListener('load', function() {
         } else {
             document.body.classList.remove('dyslexic');
         }
-        document.getElementById('dyslexia-checkbox').checked = isDyslexiaAidChecked;
+        document.addEventListener("DOMContentLoaded", function () {
+            let checkbox = document.getElementById("dyslexia-checkbox");
+            if (checkbox) {
+                checkbox.checked = localStorage.getItem("isDyslexiaAidChecked") === "true";
+            } else {
+                console.warn("⚠️ Element with ID 'dyslexia-checkbox' not found.");
+            }
+        });
     })
 
     // This closes the settings window - MW
-    document.getElementById('btnExit').addEventListener('click', function () { CloseForm(); })
+    document.addEventListener("DOMContentLoaded", function () {
+        const table = document.getElementById('ResultsTable');
 
-    document.addEventListener('DOMContentLoaded', function () {
-      const table = document.getElementById('ResultsTable');
-      let isResizing = false;
-      let lastX = 0;
-      let currentTh = null;
+        if (!table) {
+            console.warn("⚠️ Element with ID 'ResultsTable' not found. Skipping table resizing.");
+            return;  // Stop execution if table is missing - MW
+        }
 
-      table.querySelectorAll('th').forEach(th => {
-        const div = document.createElement('div');
-        div.classList.add('resize-handle');
-        th.appendChild(div);
-        div.addEventListener('mousedown', (e) => {
-          isResizing = true;
-          lastX = e.clientX;
-          currentTh = th;
-          document.body.style.cursor = 'col-resize';
+        let isResizing = false;
+        let lastX = 0;
+        let currentTh = null;
+
+        table.querySelectorAll('th').forEach(th => {
+            const div = document.createElement('div');
+            div.classList.add('resize-handle');
+            th.appendChild(div);
+
+            div.addEventListener('mousedown', (e) => {
+                isResizing = true;
+                lastX = e.clientX;
+                currentTh = th;
+                document.body.style.cursor = 'col-resize';
+            });
         });
-      });
+    });
+
 
       document.addEventListener('mousemove', (e) => {
-        if (isResizing) {
-          const dx = e.clientX - lastX;
-          const newWidth = (currentTh.offsetWidth + dx) + 'px';
-          currentTh.style.width = newWidth;
-          lastX = e.clientX;
-        }
+        let isResizing = false; // Define it before using it - MW
+        document.addEventListener("mousemove", (e) => {
+            if (isResizing) {
+                console.log("Resizing in progress...");
+            }
+        });
       });
 
       document.addEventListener('mouseup', () => {
@@ -460,7 +545,6 @@ window.addEventListener('load', function() {
           isResizing = false;
           document.body.style.cursor = 'default';
         }
-      });
     });
 
 
@@ -473,21 +557,21 @@ window.addEventListener('load', function() {
 
     function submitPage(pageNumber){
         if(pageNumber < 1){
-            pageNumber = 1; // Ensures the page number doesn't go below 1
+            pageNumber = 1; // Ensures the page number doesn't go below 1 - MW
         }
         document.getElementById('txtPageNumber').value = pageNumber;
-        document.getElementById('formSearch').submit(); // Submit the form to the server
+        document.getElementById('formSearch').submit(); // Submit the form to the server - MW
     }
 
 
-    // Get the number of columns in the <thead>
+    // Get the number of columns in the <thead> - MW
     var columnCount = document.querySelectorAll('#ResultsTable thead th').length;
     console.log('Number of columns in <thead>: ', columnCount);
 
-    // Get all rows in the <tbody>
+    // Get all rows in the <tbody> - MW
     var rows = document.querySelectorAll('#ResultsTable tbody tr');
 
-    // Check each row's column count
+    // Check each row's column count - MW
     rows.forEach(function(row, index) {
         var cellCount = row.querySelectorAll('td').length;
         console.log('Row ' + (index + 1) + ' column count: ', cellCount);
@@ -499,19 +583,19 @@ window.addEventListener('load', function() {
 
 
     window.onload = function() {
-        // Get today's date
+        // Get today's date - MW
         var today = new Date();
 
-        // Calculate the date 5 months ago
+        // Calculate the date 5 months ago - MW
         var fiveMonthsAgo = new Date();
         fiveMonthsAgo.setMonth(today.getMonth() - 5);
 
-        // Adjust for months where the date exceeds the valid range (i.e., if subtracting months causes invalid dates)
+        // Adjust for months where the date exceeds the valid range (i.e., if subtracting months causes invalid dates) - MW
         if (today.getDate() !== fiveMonthsAgo.getDate()) {
-            fiveMonthsAgo.setDate(0); // Set to the last day of the previous month in case of overflow
+            fiveMonthsAgo.setDate(0); // Set to the last day of the previous month in case of overflow - MW
         }
 
-        // Format the dates as YYYY-MM-DD
+        // Format the dates as YYYY-MM-DD - MW
         var day = ("0" + today.getDate()).slice(-2);
         var month = ("0" + (today.getMonth() + 1)).slice(-2);
         var formattedToday = today.getFullYear() + "-" + month + "-" + day;
@@ -520,7 +604,7 @@ window.addEventListener('load', function() {
         var monthFiveMonthsAgo = ("0" + (fiveMonthsAgo.getMonth() + 1)).slice(-2);
         var formattedFiveMonthsAgo = fiveMonthsAgo.getFullYear() + "-" + monthFiveMonthsAgo + "-" + dayFiveMonthsAgo;
 
-        // Set the value of the date input fields
+        // Set the value of the date input fields - MW
         document.getElementById('txtCriteriaDateFrom').value = formattedFiveMonthsAgo;
         document.getElementById('txtCriteriaDateTo').value = formattedToday;
     };
