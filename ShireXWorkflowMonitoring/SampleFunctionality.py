@@ -14,34 +14,32 @@ class SampleForm(TemplateView):
     utilities = UtilityFunctions()
     dataServices = ShireData()
 
-    def get(self, request, _labNumber, _indication):
-
+    def get(self, request, *args, **kwargs):
         try:
             if not request.user.is_authenticated:
                 return HttpResponseRedirect(reverse('LoginPage'))
 
-            _sample = self.dataServices.GetSample(_labNumber)
+            # Retrieve URL parameters from kwargs
+            labNumber = kwargs.get("labNumber")
+            indication = kwargs.get("indication")
 
-            # Because the template cannot handle the list of dictionary that is
-            # _sample, we have to extract the dictionary in _sampleItem
-            _sampleItem = _sample[0]
+            _sample = self.dataServices.GetSample(labNumber)
 
-            _indicationReportBills = self.dataServices.GetSampleIndicationReportBill(_labNumber)
+            # Ensure safe extraction of data
+            _sampleItem = _sample[0] if _sample else {}
 
-            _tests = self.dataServices.GetSampleTests(_labNumber)
-
-            _worksheetResults = self.dataServices.GetSampleWorksheetResults(_labNumber, _indication)
-
-            _backURL = "StartPage"
+            _indicationReportBills = self.dataServices.GetSampleIndicationReportBill(labNumber)
+            _tests = self.dataServices.GetSampleTests(labNumber)
+            _worksheetResults = self.dataServices.GetSampleWorksheetResults(labNumber, indication)
 
             _context = {
                 "Title": self.title,
-                "labNumber": _labNumber,
+                "labNumber": labNumber,
                 "sampleItem": _sampleItem,
                 "indicationReportBills": _indicationReportBills,
                 "tests": _tests,
                 "worksheetResults": _worksheetResults,
-                "backURL": _backURL,
+                "backURL": "StartPage",
             }
 
             return render(request, self.template_name, _context)
@@ -49,7 +47,6 @@ class SampleForm(TemplateView):
         except Exception as ex:
             _context = {
                 "Title": self.title,
-                "errorMessage": "SampleForm.get : " + str(ex)
+                "errorMessage": f"SampleForm.get: {ex}"
             }
-
             return render(request, self.template_name, _context)

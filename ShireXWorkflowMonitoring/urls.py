@@ -33,16 +33,10 @@ urlpatterns = [
     path('Molecular/FAL/', HaemOncologyFunctionality.FALSearch.as_view(), name="HaemOncFALSearch"),
     path('Molecular/HaemOncAll/', HaemOncologyFunctionality.HaemOncSearch.as_view(), name="HaemOncMolecularSearch"),
     path('Molecular/SolidCancer/', CancerFunctionality.SolidCancerSearch.as_view(), name="SCSearch"),
-
     # Allocation route (DNA) - MW
-    path('Molecular/Allocate/<str:labNumber>/<str:workflowName>/',
-         AllocationFunctionality.SetAllocatedToForDNA.as_view(), name="DNASetAllocatedTo"),
-
+    path('Molecular/Allocate/<str:labNumber>/<str:workflowName>/', AllocationFunctionality.SetAllocatedToForDNA.as_view(), name="DNASetAllocatedTo"),
     # Sample Form - MW
-    path('Sample/<str:labNumber>/<str:indication>/',
-         SampleFunctionality.SampleForm.as_view(), name="SampleForm"),
-
+    path('Sample/<str:labNumber>/<str:indication>/', SampleFunctionality.SampleForm.as_view(), name="SampleForm"),
     # Allocation complete page (Ensure context data is retrieved correctly) - MW
-    path('Molecular/Allocate/<str:labNumber>/<str:workflowName>/AllocateComplete/',
-         AllocationFunctionality.AllocateCompleteView.as_view(), name='AllocateComplete'),
+    path('Molecular/Allocate/<str:labNumber>/<str:workflowName>/AllocateComplete/', AllocationFunctionality.AllocateCompleteView.as_view(), name='AllocateComplete'),
 ]

@@ -876,7 +876,7 @@ class SNPSearch(TemplateView):
             _diseaseIndicationCode1 = ""
             _diseaseIndicationCode2 = ""
             _diseaseIndicationCode3 = ""
-            _reasonForDiseaseIndication1 = ""
+            _reasonForDiseaseIndication1 = "SNP Array Analysis"
             _lastName = ""
             _labNumber = ""
             _RefKey = ""
@@ -915,7 +915,7 @@ class SNPSearch(TemplateView):
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
                 '2012_HAEM_ONC', '', 'SNP', _dateFrom, _dateTo, _reportStatus, _priority,
                 _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3,
-                "", "", "",  # Removed reason filters for now
+                _reasonForDiseaseIndication1, "", "",
                 request.user.username, _lastName, _labNumber, _RefKey, _noResultStatus
             )
 
@@ -956,6 +956,7 @@ class SNPSearch(TemplateView):
                 "criteriaReportStatus": _reportStatus,
                 "criteriaPriorities": self.dataServices.GetDNAPriority(),
                 "criteriaPriority": _priority,
+                "criteriaReasonForDiseaseIndication1": _reasonForDiseaseIndication1,
                 "criteriaDiseaseIndications": self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', '', 'SNP'),
                 "criteriaSurname": _lastName,
                 "criteriaLabnumber": _labNumber,
