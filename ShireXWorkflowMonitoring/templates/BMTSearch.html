@@ -259,8 +259,8 @@
                     <tr>
                         <td>
                             {#<a class="btn btn-primary" href="{% url 'HaemOncSetAllocatedTo' _labNumber=item.LABNO _workflowName='BMT' %}">&nbsp;</a>#}
-                            <button class="btn btn-primary" id="{{item.LABNO}}" onclick="DoClaim(this.id)">&nbsp;</button>
-                            <button class="claim-btn" data-labno="{{item.LABNO}}" data-workflow="BMT">Claim</button>
+                            <!--<button class="btn btn-primary" id="{{item.LABNO}}" onclick="DoClaim(this.id)">&nbsp;</button>-->
+                            <button class="btn btn-primary btn-sm claim-btn" data-labno="{{ item.LABNO }}" data-workflow="BMT">Claim</button>
                         </td>
                         {% if item.DECEASED_DATE %}
                         <td>
