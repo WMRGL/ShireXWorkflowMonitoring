@@ -1873,6 +1873,9 @@ class RNASearch(TemplateView):
                 request.user.username, _lastName, _labNumber, _RefKey, _noResultStatus
             )
 
+            # **Filter cases to only include RNA_Sequencing**
+            _totalWorkflowCases = [case for case in _totalWorkflowCases if case.get("REASON", "").strip() == "RNA_Sequencing"]
+
             # Apply data transformations
             _totalWorkflowCases = self.worksheetHelper.AddWorksheetTestResultsToWorkflowCases(_totalWorkflowCases)
             _totalWorkflowCases = self.worksheetHelper.AddTestsWithNoWorksheetsToWorkflowCases(_totalWorkflowCases)
