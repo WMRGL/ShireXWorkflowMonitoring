@@ -1145,7 +1145,7 @@ class CLLSearch(TemplateView):
             filters.update({
                 "dateFrom": self.utilities.GetRequestKey(request, "txtCriteriaDateFrom", enumDataType.Datetime) or filters["dateFrom"],
                 "dateTo": self.utilities.GetRequestKey(request, "txtCriteriaDateTo", enumDataType.Datetime) or filters["dateTo"],
-                "pageNumber": request.GET.get("page", 1),  # Use `GET` for pagination
+                "pageNumber": int(request.GET.get("page", 1)) if str(request.GET.get("page", 1)).isdigit() else 1,
                 "itemsPerPage": self.utilities.GetRequestKey(request, "ddlCriteriaItemsPerPage", enumDataType.Integer) or filters["itemsPerPage"],
                 "reportStatus": self.utilities.GetRequestKey(request, "ddlCriteriaStatus", enumDataType.String) or filters["reportStatus"],
                 "priority": self.utilities.GetRequestKey(request, "ddlCriteriaPriority", enumDataType.String) or filters["priority"],
@@ -1187,7 +1187,8 @@ class CLLSearch(TemplateView):
             # Prepare base query string for pagination (preserving filters)
             query_params = request.GET.copy()
             query_params.pop("page", None)  # Remove `page` to avoid duplication
-            base_query_string = urlencode(query_params)
+            query_params = {k: v for k, v in query_params.items() if v and v not in ["['']", '']}  # Remove empty values
+            base_query_string = urlencode(query_params, doseq=True)  # Properly format list-based params
 
             # Prepare context
             context = {
