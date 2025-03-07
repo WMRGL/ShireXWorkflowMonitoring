@@ -1286,7 +1286,8 @@ class RBCRSearch(TemplateView):
             _reasonForDiseaseIndication3 = self.utilities.GetRequestKey(request, "ddlCriteriaReasonForDiseaseIndication3", enumDataType.String) or _reasonForDiseaseIndication3
             _lastName = self.utilities.GetRequestKey(request, "txtCriteriaLastname", enumDataType.String) or _lastName
             _labNumber = self.utilities.GetRequestKey(request, "txtCriteriaLabnumber", enumDataType.String) or _labNumber
-            _noResultStatus = self.utilities.GetRequestKey(request, "ddlCriteriaNoResult", enumDataType.Integer) or _noResultStatus
+            _noResultStatus = self.utilities.GetRequestKey(request, "ddlCriteriaNoResult", enumDataType.Integer)
+            _noResultStatus = int(_noResultStatus) if str(_noResultStatus).isdigit() else 0  # Ensure it's an integer
 
             # Retrieve filtered workflow cases
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
@@ -1329,10 +1330,10 @@ class RBCRSearch(TemplateView):
             except EmptyPage:
                 paginated_cases = paginator.page(paginator.num_pages)
 
-            # Prepare query parameters for pagination
             query_params = request.GET.copy()
-            query_params.pop("page", None)  # Remove 'page' parameter to construct the base query string
-            base_query_string = urlencode(query_params)
+            query_params.pop("page", None)  # Remove 'page' to avoid duplication
+            query_params = {k: v for k, v in query_params.items() if v and v not in ["['']", '']}  # Filter out empty values
+            base_query_string = urlencode(query_params, doseq=True)  # Ensure lists are formatted properly
 
             # Context for rendering
             context = {
