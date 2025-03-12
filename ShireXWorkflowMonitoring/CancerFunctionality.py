@@ -289,8 +289,9 @@ class WGSSearch(TemplateView):
 
             # Prepare query string for pagination
             query_params = request.GET.copy()
-            query_params.pop("page", None)  # Exclude 'page' from query string
-            base_query_string = urlencode(query_params)
+            query_params.pop("page", None)  # Remove 'page' to avoid duplication
+            query_params = {k: v for k, v in query_params.items() if v and v not in ["['']", '']}  # Remove empty values
+            base_query_string = urlencode(query_params, doseq=True)  # Properly format multi-value parameters
 
             # Prepare context
             context = {

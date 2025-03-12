@@ -262,8 +262,9 @@ class MPNSearch(TemplateView):
 
             # Prepare query parameters for pagination links
             query_params = request.GET.copy()
-            query_params.pop("page", None)
-            base_query_string = urlencode(query_params)
+            query_params.pop("page", None)  # Remove 'page' to avoid duplication
+            query_params = {k: v for k, v in query_params.items() if v and v not in ["['']", '']}  # Remove empty values
+            base_query_string = urlencode(query_params, doseq=True)  # Properly format multi-value parameters
 
             # Context for rendering
             context = {
@@ -283,7 +284,7 @@ class MPNSearch(TemplateView):
                 "criteriaReasonsForDiseaseIndications": _reasonsForDiseaseIndications,
                 "criteriaReasonForDiseaseIndication1": _reasonForDiseaseIndication1,
                 "criteriaReasonForDiseaseIndication2": _reasonForDiseaseIndication2,
-                "CriteriaReasonForDiseaseIndication3": _reasonForDiseaseIndication3,
+                "criteriaReasonForDiseaseIndication3": _reasonForDiseaseIndication3,
                 "criteriaSurnames": self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases),
                 "criteriaSurname": _lastName,
                 "criteriaLabnumber": _labNumber,
@@ -407,8 +408,9 @@ class DAMLSearch(TemplateView):  # AML & MDS
 
             # Prepare query parameters for pagination links
             query_params = request.GET.copy()
-            query_params.pop("page", None)
-            base_query_string = urlencode(query_params)
+            query_params.pop("page", None)  # Remove 'page' to avoid duplication
+            query_params = {k: v for k, v in query_params.items() if v and v not in ["['']", '']}  # Remove empty values
+            base_query_string = urlencode(query_params, doseq=True)  # Properly format multi-value parameters
 
             # Context for rendering
             context = {
@@ -531,8 +533,9 @@ class CytoSearch(TemplateView):  # AML & MDS
 
             # Prepare query parameters for pagination links
             query_params = request.GET.copy()
-            query_params.pop("page", None)
-            base_query_string = urlencode(query_params)
+            query_params.pop("page", None)  # Remove 'page' to avoid duplication
+            query_params = {k: v for k, v in query_params.items() if v and v not in ["['']", '']}  # Remove empty values
+            base_query_string = urlencode(query_params, doseq=True)  # Properly format multi-value parameters
 
             # Context for rendering
             context = {
@@ -673,8 +676,9 @@ class BreakSearch(TemplateView):
 
             # Prepare query parameters for pagination links
             query_params = request.GET.copy()
-            query_params.pop("page", None)
-            base_query_string = urlencode(query_params)
+            query_params.pop("page", None)  # Remove 'page' to avoid duplication
+            query_params = {k: v for k, v in query_params.items() if v and v not in ["['']", '']}  # Remove empty values
+            base_query_string = urlencode(query_params, doseq=True)  # Properly format multi-value parameters
 
             # Context for rendering
             context = {
@@ -814,8 +818,9 @@ class RAMLSearch(TemplateView):
 
             # Prepare query parameters for pagination links
             query_params = request.GET.copy()
-            query_params.pop("page", None)  # Remove 'page' parameter to construct the base query string
-            base_query_string = urlencode(query_params)
+            query_params.pop("page", None)  # Remove 'page' to avoid duplication
+            query_params = {k: v for k, v in query_params.items() if v and v not in ["['']", '']}  # Remove empty values
+            base_query_string = urlencode(query_params, doseq=True)  # Properly format multi-value parameters
 
             # Context for rendering
             context = {
@@ -943,8 +948,9 @@ class SNPSearch(TemplateView):
                 _pageOfWorkflowCases = paginator.page(1)
 
             query_params = request.GET.copy()
-            query_params.pop("page", None)
-            base_query_string = urlencode(query_params)
+            query_params.pop("page", None)  # Remove 'page' to avoid duplication
+            query_params = {k: v for k, v in query_params.items() if v and v not in ["['']", '']}  # Remove empty values
+            base_query_string = urlencode(query_params, doseq=True)  # Properly format multi-value parameters
 
             context = {
                 "criteriaDateFrom": _dateFrom,
@@ -1069,8 +1075,9 @@ class ALLSearch(TemplateView):
 
             # Prepare query parameters for pagination
             query_params = request.GET.copy()
-            query_params.pop("page", None)  # Remove 'page' parameter to construct the base query string
-            base_query_string = urlencode(query_params)
+            query_params.pop("page", None)  # Remove 'page' to avoid duplication
+            query_params = {k: v for k, v in query_params.items() if v and v not in ["['']", '']}  # Remove empty values
+            base_query_string = urlencode(query_params, doseq=True)  # Properly format multi-value parameters
 
             # Context for rendering
             context = {
@@ -1476,8 +1483,9 @@ class FALSearch(TemplateView):  # F-AML/F-ALL
 
             # Prepare query parameters for pagination
             query_params = request.GET.copy()
-            query_params.pop("page", None)  # Remove 'page' parameter to construct the base query string
-            base_query_string = urlencode(query_params)
+            query_params.pop("page", None)  # Remove 'page' to avoid duplication
+            query_params = {k: v for k, v in query_params.items() if v and v not in ["['']", '']}  # Remove empty values
+            base_query_string = urlencode(query_params, doseq=True)  # Properly format multi-value parameters
 
             # Context for rendering
             context = {
@@ -1624,8 +1632,9 @@ class HaemOncSearch(TemplateView):  # All Molecular
 
             # Prepare query parameters for pagination
             query_params = request.GET.copy()
-            query_params.pop("page", None)  # Remove 'page' parameter to construct the base query string
-            base_query_string = urlencode(query_params)
+            query_params.pop("page", None)  # Remove 'page' to avoid duplication
+            query_params = {k: v for k, v in query_params.items() if v and v not in ["['']", '']}  # Remove empty values
+            base_query_string = urlencode(query_params, doseq=True)  # Properly format multi-value parameters
 
             # Context for rendering
             context = {
@@ -1768,8 +1777,9 @@ class GLHPanHaemSearch(TemplateView):  # Pan-Haem Search
 
             # Prepare query parameters for pagination
             query_params = request.GET.copy()
-            query_params.pop("page", None)  # Remove 'page' parameter to construct the base query string
-            base_query_string = urlencode(query_params)
+            query_params.pop("page", None)  # Remove 'page' to avoid duplication
+            query_params = {k: v for k, v in query_params.items() if v and v not in ["['']", '']}  # Remove empty values
+            base_query_string = urlencode(query_params, doseq=True)  # Properly format multi-value parameters
 
             # Context for rendering
             context = {
@@ -1875,9 +1885,6 @@ class RNASearch(TemplateView):
                 request.user.username, _lastName, _labNumber, _RefKey, _noResultStatus
             )
 
-            # **Filter cases to only include RNA_Sequencing**
-            _totalWorkflowCases = [case for case in _totalWorkflowCases if case.get("REASON", "").strip() == "RNA_Sequencing"]
-
             # Apply data transformations
             _totalWorkflowCases = self.worksheetHelper.AddWorksheetTestResultsToWorkflowCases(_totalWorkflowCases)
             _totalWorkflowCases = self.worksheetHelper.AddTestsWithNoWorksheetsToWorkflowCases(_totalWorkflowCases)
@@ -1913,8 +1920,9 @@ class RNASearch(TemplateView):
 
             # Prepare query parameters for pagination
             query_params = request.GET.copy()
-            query_params.pop("page", None)  # Remove 'page' parameter to construct the base query string
-            base_query_string = urlencode(query_params)
+            query_params.pop("page", None)  # Remove 'page' to avoid duplication
+            query_params = {k: v for k, v in query_params.items() if v and v not in ["['']", '']}  # Remove empty values
+            base_query_string = urlencode(query_params, doseq=True)  # Properly format multi-value parameters
 
             # Context for rendering
             context = {

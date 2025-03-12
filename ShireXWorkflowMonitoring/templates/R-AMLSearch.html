@@ -341,10 +341,22 @@
                             {{ item.WORKSHEETS }}
                             </td>
                         {% endautoescape %}
-                        <td>
-                            {% autoescape off%}
-                                {{ item.EXTRACTSHEETS }}
-                            {% endautoescape %}
+                        <td style="
+                            {% if item.EXTRACTSHEETS %}
+                                {% if 'Date Unknown' in item.EXTRACTSHEETS or 'RNA Mx' in item.EXTRACTSHEETS %}
+                                    color: orange; font-weight: bold;
+                                {% else %}
+                                    color: green; font-weight: bold;
+                                {% endif %}
+                            {% else %}
+                                color: red; font-weight: bold;
+                            {% endif %}
+                        ">
+                            {% if item.EXTRACTSHEETS %}
+                                {{ item.EXTRACTSHEETS|safe }}  {# Allow HTML rendering #}
+                            {% else %}
+                                None
+                            {% endif %}
                         </td>
                         <td>
                             {{ item.SampleAlert|default:"None" }}
