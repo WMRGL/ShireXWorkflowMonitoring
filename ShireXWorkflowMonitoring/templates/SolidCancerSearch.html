@@ -223,7 +223,7 @@
                 {% if page_obj %}
                     {% for item in page_obj %}
                         <tr>
-                            <td><button class="btn btn-primary" id="{{ item.LABNO }}" onclick="DoClaim(this.id)">&nbsp;</button></td>
+                            <td><button class="btn btn-primary" id="{{ item.LABNO }}" onclick="DoClaim(this.id)" onclick="sessionStorage.setItem('lastSearchPage', window.location.href);">&nbsp;</button></td>
                             <td>
                                 {% if item.DECEASED_DATE %}
                                     {{ item.LASTNAME }}, {{ item.FIRSTNAME }} ({{ item.DECEASED_DATE|date:'d-m-Y' }})
@@ -307,6 +307,9 @@
 </div>
 
 <script>
+    // Store the current URL as the last search page in sessionStorage
+    sessionStorage.setItem('lastSearchPage', window.location.href);
+
     window.onload = function() {
     var txtCriteriaDateFrom = document.getElementById('txtCriteriaDateFrom');
     var txtCriteriaDateTo = document.getElementById('txtCriteriaDateTo');

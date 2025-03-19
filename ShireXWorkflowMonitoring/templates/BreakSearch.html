@@ -261,7 +261,7 @@
                 {% for item in workflowCases %}
                     <tr>
                         <td>
-                            <a class="btn btn-primary" href="{% url 'DNASetAllocatedTo' labNumber=item.LABNO workflowName='Break' %}">&nbsp;</a>
+                            <button class="btn btn-primary btn-sm claim-btn" data-labno="{{ item.LABNO }}" data-workflow="BMT" onclick="sessionStorage.setItem('lastSearchPage', window.location.href);">Claim</button>
                         </td>
                         {% if item.DECEASED_DATE %}
                         <td>
@@ -400,6 +400,9 @@
     </div>
 </div>
 <script>
+    // Store the current URL as the last search page in sessionStorage
+    sessionStorage.setItem('lastSearchPage', window.location.href);
+
     window.onload = function() {
     var txtCriteriaDateFrom = document.getElementById('txtCriteriaDateFrom');
     var txtCriteriaDateTo = document.getElementById('txtCriteriaDateTo');

@@ -68,6 +68,9 @@
         </div>
     </body>
 <script>
+    // Store the current URL as the last search page in sessionStorage
+    sessionStorage.setItem('lastSearchPage', window.location.href);
+
     window.onload = function() {
     var txtCriteriaDateFrom = document.getElementById('txtCriteriaDateFrom');
     var txtCriteriaDateTo = document.getElementById('txtCriteriaDateTo');

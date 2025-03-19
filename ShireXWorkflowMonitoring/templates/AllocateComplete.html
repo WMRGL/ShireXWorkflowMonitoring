@@ -17,7 +17,12 @@
 
 <script>
     function DoClose() {
-        window.history.back();
+        let previousPage = sessionStorage.getItem('lastSearchPage'); // Retrieve the stored search page
+        if (previousPage) {
+            window.location.href = previousPage; // Redirect to the last search page
+        } else {
+            window.location.href = "/Molecular/"; // Fallback page
+        }
     }
 
     document.addEventListener("DOMContentLoaded", function() {

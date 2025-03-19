@@ -266,7 +266,7 @@
                         <tr>
                             <td>
                                 {#<a class="btn btn-primary" href="{% url 'HaemOncSetAllocatedTo' _labNumber=item.LABNO _workflowName='WGS' %}">&nbsp;</a>#}
-                                <button class="btn btn-primary" id="{{item.LABNO}}" onclick="DoClaim(this.id)">&nbsp;</button>
+                                <button class="btn btn-primary" id="{{item.LABNO}}" onclick="DoClaim(this.id)" onclick="sessionStorage.setItem('lastSearchPage', window.location.href);">&nbsp;</button>
                             </td>
                             {% if item.DECEASED_DATE %}
                             <td>
@@ -411,6 +411,9 @@
     </div>
 </body>
 <script>
+    // Store the current URL as the last search page in sessionStorage
+    sessionStorage.setItem('lastSearchPage', window.location.href);
+
     window.onload = function() {
     var txtCriteriaDateFrom = document.getElementById('txtCriteriaDateFrom');
     var txtCriteriaDateTo = document.getElementById('txtCriteriaDateTo');

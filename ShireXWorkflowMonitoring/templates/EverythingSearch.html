@@ -264,7 +264,8 @@
                             <td>
                                 <button class="btn btn-primary claim-btn"
                                         data-labno="{{ item.LABNO|default:'' }}"
-                                        data-workflow="{{ item.WORKFLOW_NAME|default:'ALL' }}">
+                                        data-workflow="{{ item.WORKFLOW_NAME|default:'ALL' }}"
+                                        onclick="sessionStorage.setItem('lastSearchPage', window.location.href);">
                                     Claim
                                 </button>
                             </td>
@@ -390,6 +391,9 @@
     </div>
 </div>
 <script>
+    // Store the current URL as the last search page in sessionStorage
+    sessionStorage.setItem('lastSearchPage', window.location.href);
+
     window.onload = function() {
     var txtCriteriaDateFrom = document.getElementById('txtCriteriaDateFrom');
     var txtCriteriaDateTo = document.getElementById('txtCriteriaDateTo');
