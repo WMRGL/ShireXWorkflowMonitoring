@@ -236,8 +236,30 @@
                             </td>
                             <td>{{ item.DISEASE_CODE }} /<br>{{ item.REASON }}</td>
                             <td>{{ item.SAMPLETYPE }}</td>
-                            <td>{{ item.PRIORITY }}</td>
-                            <td>{{ item.DaysRemaining|default:0 }}</td>
+                            {% if item.PRIORITY|upper == "URGENT" %}
+                            <td style="color:red; font-weight: bold">
+                                {{ item.PRIORITY }}
+                            </td>
+                            {% else %}
+                                {% if item.PRIORITY|upper == "PRIORITY" %}
+                                <td style="color:green; font-weight: bold">
+                                    {{ item.PRIORITY }}
+                                </td>
+                                {% else %}
+                                <td>
+                                    {{ item.PRIORITY }}
+                                </td>
+                                {% endif %}
+                            {% endif %}
+                            <td style="
+                                {% if item.DaysRemaining >= 15 %}
+                                    background-color: lightgreen; color: black;
+                                {% elif item.DaysRemaining >= 8 and item.DaysRemaining <= 14 %}
+                                    background-color: yellow; color: black;
+                                {% else %}
+                                    background-color: red; color: white;
+                                {% endif %}
+                            ">{{ item.DaysRemaining|default:0 }}</td>
                             <td>{{ item.ALLOCATED_TO }}</td>
                             <td>{{ item.REF }}</td>
                             <td>{{ item.DATE_RECEIVED|date:'d-m-Y' }}</td>
@@ -293,7 +315,31 @@
         </nav>
     </div>
 </div>
+<script>
+    // Store the current URL as the last search page in sessionStorage
+    sessionStorage.setItem('lastSearchPage', window.location.href);
 
+    window.onload = function() {
+    var txtCriteriaDateFrom = document.getElementById('txtCriteriaDateFrom');
+    var txtCriteriaDateTo = document.getElementById('txtCriteriaDateTo');
+
+    if (!txtCriteriaDateFrom.value) {
+        var today = new Date();
+        var fiveMonthsAgo = new Date();
+        fiveMonthsAgo.setMonth(today.getMonth() - 5);
+        if (today.getDate() !== fiveMonthsAgo.getDate()) {
+            fiveMonthsAgo.setDate(0);
+        }
+        txtCriteriaDateFrom.value = fiveMonthsAgo.toISOString().split('T')[0];
+    }
+
+    if (!txtCriteriaDateTo.value) {
+        var twoMonthsFromNow = new Date();
+        twoMonthsFromNow.setMonth(new Date().getMonth() + 2);
+        txtCriteriaDateTo.value = twoMonthsFromNow.toISOString().split('T')[0];
+    }
+};
+</script>
 <script>
     // Store the current URL as the last search page in sessionStorage
     sessionStorage.setItem('lastSearchPage', window.location.href);
