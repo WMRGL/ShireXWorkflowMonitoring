@@ -121,16 +121,13 @@
                             <div class="col-2 bg-light" style="text-align:right">
                                 <label for="ddlCriteriaReasonForDiseaseIndication1" class="col-form-label">Reason(s):</label>
                             </div>
-                            <div class="col-2 bg-light">
+                            <div class="col-2">
                                 <select class="form-select" name="ddlCriteriaReasonForDiseaseIndication1" id="ddlCriteriaReasonForDiseaseIndication1">
                                     <option value="" {% if criteriaReasonForDiseaseIndication1 == "" %} selected="selected" {% endif %}>select...</option>
-                                    {% if criteriaReasonsForDiseaseIndications %}
-                                        {% for item in criteriaReasonsForDiseaseIndications %}
-                                            <option value="{{ item.REASON_CODE }}" {% if item.REASON_CODE == criteriaReasonForDiseaseIndication1 %} selected="selected" {% endif %}>{{ item.REASON_CODE }}</option>
-                                        {% endfor %}
-                                    {% endif %}
+                                    <option value="SNP Array Analysis" {% if criteriaReasonForDiseaseIndication1 == "RNA_Sequencing" %} selected="selected" {% endif %}>RNA_Sequencing</option>
                                 </select>
                             </div>
+                            <!--
                             <div class="col-2 bg-light">
                                 <select class="form-select" name="ddlCriteriaReasonForDiseaseIndication2" id="ddlCriteriaReasonForDiseaseIndication2">
                                     <option value="" {% if criteriaReasonForDiseaseIndication2 == "" %} selected="selected" {% endif %}>select...</option>
@@ -151,6 +148,7 @@
                                     {% endif %}
                                 </select>
                             </div>
+                            -->
                             <div class="col-2">
                                 &nbsp;
                             </div>

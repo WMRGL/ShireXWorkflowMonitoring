@@ -1835,9 +1835,9 @@ class RNASearch(TemplateView):
             _diseaseIndicationCode1 = ""
             _diseaseIndicationCode2 = ""
             _diseaseIndicationCode3 = ""
-            _reasonForDiseaseIndication1 = ""
-            _reasonForDiseaseIndication2 = ""
-            _reasonForDiseaseIndication3 = ""
+            _reasonForDiseaseIndication1 = "RNA_Sequencing"
+            #_reasonForDiseaseIndication2 = ""
+            #_reasonForDiseaseIndication3 = ""
             _lastName = ""
             _labNumber = ""
             _RefKey = ""
@@ -1871,8 +1871,8 @@ class RNASearch(TemplateView):
             _diseaseIndicationCode2 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication2", enumDataType.String) or _diseaseIndicationCode2
             _diseaseIndicationCode3 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication3", enumDataType.String) or _diseaseIndicationCode3
             _reasonForDiseaseIndication1 = self.utilities.GetRequestKey(request, "ddlCriteriaReasonForDiseaseIndication1", enumDataType.String) or _reasonForDiseaseIndication1
-            _reasonForDiseaseIndication2 = self.utilities.GetRequestKey(request, "ddlCriteriaReasonForDiseaseIndication2", enumDataType.String) or _reasonForDiseaseIndication2
-            _reasonForDiseaseIndication3 = self.utilities.GetRequestKey(request, "ddlCriteriaReasonForDiseaseIndication3", enumDataType.String) or _reasonForDiseaseIndication3
+            #_reasonForDiseaseIndication2 = self.utilities.GetRequestKey(request, "ddlCriteriaReasonForDiseaseIndication2", enumDataType.String) or _reasonForDiseaseIndication2
+            #_reasonForDiseaseIndication3 = self.utilities.GetRequestKey(request, "ddlCriteriaReasonForDiseaseIndication3", enumDataType.String) or _reasonForDiseaseIndication3
             _lastName = self.utilities.GetRequestKey(request, "txtCriteriaLastname", enumDataType.String) or _lastName
             _labNumber = self.utilities.GetRequestKey(request, "txtCriteriaLabnumber", enumDataType.String) or _labNumber
             _noResultStatus = self.utilities.GetRequestKey(request, "ddlCriteriaNoResult", enumDataType.Integer) or _noResultStatus
@@ -1881,7 +1881,7 @@ class RNASearch(TemplateView):
             _totalWorkflowCases = self.dataServices.GetDNAWorkflowCases(
                 '2012_HAEM_ONC', '', 'RNA', _dateFrom, _dateTo, _reportStatus, _priority,
                 _diseaseIndicationCode1, _diseaseIndicationCode2, _diseaseIndicationCode3,
-                _reasonForDiseaseIndication1, _reasonForDiseaseIndication2, _reasonForDiseaseIndication3,
+                _reasonForDiseaseIndication1, "", "",
                 request.user.username, _lastName, _labNumber, _RefKey, _noResultStatus
             )
 
@@ -1937,8 +1937,8 @@ class RNASearch(TemplateView):
                 "criteriaPriority": _priority,
                 "criteriaDiseaseIndications": self.dataServices.GetDNADiseaseIndication('2012_HAEM_ONC', '', 'RNA'),
                 "criteriaDiseaseIndication1": _diseaseIndicationCode1,
-                "criteriaDiseaseIndication2": _diseaseIndicationCode2,
-                "criteriaDiseaseIndication3": _diseaseIndicationCode3,
+                #"criteriaDiseaseIndication2": _diseaseIndicationCode2,
+                #"criteriaDiseaseIndication3": _diseaseIndicationCode3,
                 "criteriaReasonsForDiseaseIndications": _reasonsForDiseaseIndications,
                 "criteriaSurnames": self.worksheetHelper.GetListOfSurnamesFromWorkflowCases(_totalWorkflowCases),
                 "criteriaSurname": _lastName,
