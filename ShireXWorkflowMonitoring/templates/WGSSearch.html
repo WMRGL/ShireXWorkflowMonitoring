@@ -264,10 +264,9 @@
                 {% if workflowCases %}
                     {% for item in workflowCases %}
                         <tr>
-                            <td>
-                                {#<a class="btn btn-primary" href="{% url 'HaemOncSetAllocatedTo' _labNumber=item.LABNO _workflowName='WGS' %}">&nbsp;</a>#}
-                                <button class="btn btn-primary" id="{{item.LABNO}}" onclick="DoClaim(this.id)" onclick="sessionStorage.setItem('lastSearchPage', window.location.href);">&nbsp;</button>
-                            </td>
+                            <td><button class="btn btn-primary claim-btn"
+                            data-labno="{{ item.LABNO }}"
+                            data-workflow="SC"></button></td>
                             {% if item.DECEASED_DATE %}
                             <td>
                                 {{ item.LASTNAME }}, {{ item.FIRSTNAME }} ( {{ item.DECEASED_DATE|date:'d-m-Y' }} )
@@ -410,6 +409,37 @@
         </div>
     </div>
 </body>
+<script>
+    sessionStorage.setItem('lastSearchPage', window.location.href);
+
+    document.addEventListener("DOMContentLoaded", function() {
+        document.querySelectorAll(".claim-btn").forEach(button => {
+            button.addEventListener("click", function() {
+                let labno = this.dataset.labno;
+                let workflowName = this.dataset.workflow;
+
+                console.log("Lab Number:", labno); // Debugging
+                console.log("Workflow Name:", workflowName); // Debugging
+
+                DoClaim(labno, workflowName);
+            });
+        });
+    });
+
+    function DoClaim(labno, workflowName) {
+        if (!labno || !workflowName) {
+            console.error("Invalid lab number or workflow name.", { labno, workflowName });
+            alert(`Error: Lab number (${labno}) or workflow (${workflowName}) is missing.`);
+            return;
+        }
+
+        // Construct the URL manually and encode values
+        let url = `/Molecular/Allocate/${encodeURIComponent(labno)}/${encodeURIComponent(workflowName)}/`;
+
+        console.log("Navigating to URL:", url);
+        window.location.href = url;
+    }
+</script>
 <script>
     // Store the current URL as the last search page in sessionStorage
     sessionStorage.setItem('lastSearchPage', window.location.href);

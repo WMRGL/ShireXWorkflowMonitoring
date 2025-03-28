@@ -69,6 +69,8 @@ class SolidCancerSearch(TemplateView):
             except ValueError:
                 page = 1
 
+            _lastName = self.utilities.GetRequestKey(request, "txtCriteriaLastname", enumDataType.String) or _lastName
+
             # Indication Filters
             _diseaseIndicationCode1 = self.utilities.GetRequestKey(request, "ddlCriteriaDiseaseIndication1",
                                                                    enumDataType.String) or _diseaseIndicationCode1
@@ -152,6 +154,11 @@ class SolidCancerSearch(TemplateView):
             except EmptyPage:
                 paginated_cases = paginator.page(paginator.num_pages)
 
+            # Preserve filters in pagination
+            query_params = request.GET.copy()
+            query_params.pop("page", None)
+            query_params = {k: v for k, v in query_params.items() if v and v not in ["['']", '']}
+            base_query_string = urlencode(query_params, doseq=True)
 
             # Context for rendering
             context = {
@@ -173,6 +180,7 @@ class SolidCancerSearch(TemplateView):
                 "criteriaNoResult": _noResultStatus,
                 "searchCount": len(_totalWorkflowCases),
                 "page_obj": paginated_cases,
+                "base_query_string": base_query_string,
             }
             return render(request, self.template_name, context)
 
