@@ -245,7 +245,9 @@
                         <tr>
                             <td>
                                 {#<a class="btn btn-primary" href="{% url 'HaemOncSetAllocatedTo' _labNumber=item.LABNO _workflowName='SNP' %}">&nbsp;</a>#}
-                                <button class="btn btn-primary" id="{{ item.LABNO|default:'None' }}" onclick="DoClaim(this.id)" onclick="sessionStorage.setItem('lastSearchPage', window.location.href);"></button>
+                                <button class="btn btn-primary"
+                                        onclick="sessionStorage.setItem('lastSearchPage', window.location.href); DoClaim('{{ item.LABNO }}', 'SNP');">
+                                </button>
                             </td>
                             {% if item.DECEASED_DATE|default:"None" %}
                             <td>
@@ -404,6 +406,20 @@
         txtCriteriaDateTo.value = twoMonthsFromNow.toISOString().split('T')[0];
     }
 };
+
+    function DoClaim(labno, workflowName) {
+        if (!labno || !workflowName) {
+            console.error("Invalid lab number or workflow name.", { labno, workflowName });
+            alert(`Error: Lab number (${labno}) or workflow (${workflowName}) is missing.`);
+            return;
+        }
+
+        // Construct the URL manually and encode values
+        let url = `/Molecular/Allocate/${encodeURIComponent(labno)}/${encodeURIComponent(workflowName)}/`;
+
+        console.log("Navigating to URL:", url);
+        window.location.href = url;
+    }
 </script>
 <script>
     function sortTable(columnIndex) {
