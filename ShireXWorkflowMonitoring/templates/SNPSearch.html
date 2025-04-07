@@ -262,7 +262,11 @@
                             </td>
                             {% endif %}
                             <td>
-                                <a href="{% url 'SampleForm'  labNumber=item.LABNO indication=item.DISEASE_CODE %}" target="_blank">{{ item.LABNO|default:"None" }}</a>
+                                <a href="{% url 'SampleForm' labNumber=item.LABNO indication=item.DISEASE_CODE %}"
+                                   target="_blank"
+                                   onclick="localStorage.setItem('sampleReturnPage', window.location.href);">
+                                   {{ item.LABNO }}
+                                </a>
                             </td>
                             <td>
                                 {{ item.DISEASE_CODE|default:"None" }} /<br>{{ item.REASON|default:"None" }}

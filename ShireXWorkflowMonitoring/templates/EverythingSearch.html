@@ -281,8 +281,10 @@
 
                             <!-- Lab Number -->
                             <td>
-                                <a href="{% url 'SampleForm' labNumber=item.LABNO|default:'' indication=item.DISEASE_CODE|default:'' %}" target="_blank">
-                                    {{ item.LABNO }}
+                                <a href="{% url 'SampleForm' labNumber=item.LABNO indication=item.DISEASE_CODE %}"
+                                   target="_blank"
+                                   onclick="localStorage.setItem('sampleReturnPage', window.location.href);">
+                                   {{ item.LABNO }}
                                 </a>
                             </td>
 

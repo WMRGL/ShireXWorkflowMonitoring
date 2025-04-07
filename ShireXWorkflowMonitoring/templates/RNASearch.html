@@ -261,7 +261,11 @@
                         <tr>
                             <td>
                                 {#<a class="btn btn-primary" href="{% url 'HaemOncSetAllocatedTo' _labNumber=item.LABNO _workflowName='RAML' %}">&nbsp;</a>#}
-                                <button class="btn btn-primary" id="{{item.LABNO}}" onclick="DoClaim(this.id)" onclick="sessionStorage.setItem('lastSearchPage', window.location.href);">&nbsp;</button>
+                                <button class="btn btn-primary claim-btn"
+                                        data-labno="{{ item.LABNO|default:'' }}"
+                                        data-workflow="{{ item.WORKFLOW_NAME|default:'RAML' }}"
+                                        onclick="sessionStorage.setItem('lastSearchPage', window.location.href);">
+                        </button>
                             </td>
                             {% if item.DECEASED_DATE %}
                             <td>
@@ -273,7 +277,11 @@
                             </td>
                             {% endif %}
                             <td>
-                                <a href="{% url 'SampleForm'  labNumber=item.LABNO indication=item.DISEASE_CODE %}" target="_blank">{{ item.LABNO }}</a>
+                                <a href="{% url 'SampleForm' labNumber=item.LABNO indication=item.DISEASE_CODE %}"
+                                   target="_blank"
+                                   onclick="localStorage.setItem('sampleReturnPage', window.location.href);">
+                                   {{ item.LABNO }}
+                                </a>
                             </td>
                             <td>
                                 {{ item.DISEASE_CODE }} /<br>{{ item.REASON }}
@@ -426,6 +434,20 @@
         txtCriteriaDateTo.value = twoMonthsFromNow.toISOString().split('T')[0];
     }
 };
+
+    function DoClaim(labno, workflowName) {
+        if (!labno || !workflowName) {
+            console.error("Invalid lab number or workflow name.", { labno, workflowName });
+            alert(`Error: Lab number (${labno}) or workflow (${workflowName}) is missing.`);
+            return;
+        }
+
+        // Construct the URL manually and encode values
+        let url = `/Molecular/Allocate/${encodeURIComponent(labno)}/${encodeURIComponent(workflowName)}/`;
+
+        console.log("Navigating to URL:", url);
+        window.location.href = url;
+    }
 </script>
 <script>
     function sortTable(columnIndex) {

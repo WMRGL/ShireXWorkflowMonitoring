@@ -2,6 +2,11 @@
 {% block content %}
 <body>
     <div class="container mb-3">
+        <div class="container text-center mb-4">
+            <button class="btn btn-secondary me-2" onclick="window.close();">Close Tab</button>
+            <button class="btn btn-primary" onclick="returnToSearch();">Return to Search Page</button>
+        </div>
+
         <div class="row mb-3">
             <div class="col-10">
                 <h2 class="text-center">
@@ -246,5 +251,16 @@
             </div>
         </div>
     </div>
+
+<script>
+    function returnToSearch() {
+        const lastPage = localStorage.getItem('sampleReturnPage');
+        if (lastPage) {
+            window.location.href = lastPage;
+        } else {
+            alert("No search page stored.");
+        }
+    }
+</script>
 </body>
 {% endblock content %}
