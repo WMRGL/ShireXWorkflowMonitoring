@@ -259,10 +259,9 @@
                             <td>{{ item.REPORT_STATUS|default:"N/A" }}</td>
                             <td>{{ item.REPORT_BY|default:"N/A" }}</td>
                             <td>{% autoescape off %}{{ item.WORKSHEETS|default:"&nbsp;" }}{% endautoescape %}</td>
-                            <!--<td>{% autoescape off %}{{ item.EXTRACTSHEETS|default:"&nbsp;" }}{% endautoescape %}</td>-->
                             <td>{{ item.EXTRACTSHEETS|safe }}</td>
-                            <td>{{ item.SampleAlert|default:"&nbsp;" }}</td>  <!-- ✅ Correct placement -->
-                            <td>{{ item.CONC|default:"N/A" }}</td>  <!-- ✅ Appears last as in <thead> -->
+                            <td>{{ item.SampleAlert|default:"&nbsp;" }}</td>
+                            <td>{{ item.CONC }}</td>
                         </tr>
 
 

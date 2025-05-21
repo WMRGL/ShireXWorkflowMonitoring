@@ -110,6 +110,10 @@ class SolidCancerSearch(TemplateView):
                 request.user.username, _lastName, _labNumber, _refKey, _noResultStatus
             )
 
+            print("RAW SAMPLE ROWS: ")
+            for row in _totalWorkflowCases[:5]:
+                print(row)
+
             # Apply data transformations
             _totalWorkflowCases = self.worksheetHelper.AddWorksheetTestResultsToWorkflowCases(_totalWorkflowCases)
             _totalWorkflowCases = self.worksheetHelper.AddTestsWithNoWorksheetsToWorkflowCases(_totalWorkflowCases)
@@ -144,6 +148,8 @@ class SolidCancerSearch(TemplateView):
                  "REASON_DESCRIPTION": reason.get("REASON_DESCRIPTION", reason.get("REASON_CODE", ""))}
                 for reason in _reasonsForDiseaseIndications
             ]
+            for case in _totalWorkflowCases[:5]:
+                print(case.get('LABNO'), "->", case.get('CONC'))
 
             # Paginate results
             paginator = Paginator(_totalWorkflowCases, _itemsPerPage)

@@ -32,7 +32,7 @@ class Worksheet:
                                    test + ': ' + result + "</span><br><br>"
         return worksheetListString # Return the final assembled string - MW
 
-    # Method to process worksheet details and determine the coloring logic - MW
+    # Method to process worksheet details and determine the colouring logic - MW
     def ProcessWorksheetDetails(self, pWsRow):
         _wsRow = pWsRow
 
@@ -110,11 +110,24 @@ class ExtractSheet:
         _pageOfWorkflowCases = pPageOfWorkflowCases
 
         for row in _pageOfWorkflowCases:
-            labNumber = row['LABNO']  # Retrieve lab number from the row - MW
-            extracts = self.dataServices.GetSampleExtracts(labNumber)  # Retrieve extract sheet data for the lab number - MW
-            extractString = self.CompileExtractString(extracts)  # Compile a string representation of the extracts - MW
-            row['EXTRACTSHEETS'] = extractString  # Assign compiled string to the 'EXTRACTSHEETS' key in the row - MW
-        return _pageOfWorkflowCases  # Return the modified page of workflow cases - MW
+            labNumber = row['LABNO']
+            extracts = self.dataServices.GetSampleExtracts(labNumber)
+            row['EXTRACTSHEETS'] = self.CompileExtractString(extracts)
+
+            conc_values = []
+            for e in extracts:
+                raw_conc = e.get("CONC")
+                try:
+                    if raw_conc is not None and str(raw_conc).strip() != "":
+                        conc_float = float(raw_conc)
+                        conc_values.append(conc_float)
+                except (ValueError, TypeError):
+                    continue
+
+            if row.get("CONC") in [None, "", "N/A"]:
+                row["CONC"] = max(conc_values) if conc_values else "N/A"
+
+        return _pageOfWorkflowCases
 
     # Helper method to compile a string representation of extract sheets from extract data - MW
     def CompileExtractString(self, pExtracts):
