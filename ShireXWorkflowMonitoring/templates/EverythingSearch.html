@@ -333,7 +333,15 @@
                             <td>{{ item.TARGET_DATE|date:'d-m-Y' }}</td>
 
                             <!-- Status -->
-                            <td>{{ item.REPORT_STATUS }}</td>
+                            {% if item.REPORT_STATUS|upper == "PENDING" %}
+                            <td style="color:green; font-weight: bold">
+                                {{ item.REPORT_STATUS }}
+                            </td>
+                            {% else %}
+                            <td>
+                            {{ item.REPORT_STATUS }}
+                            </td>
+                            {% endif %}
 
                             <!-- Report By -->
                             <td>{{ item.REPORT_BY }}</td>

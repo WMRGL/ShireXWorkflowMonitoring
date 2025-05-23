@@ -269,7 +269,15 @@
                             <td>{{ item.DATE_RECEIVED|date:'d-m-Y' }}</td>
                             <td>{{ item.DATE_ACTIVATED|date:'d-m-Y' }}</td>
                             <td>{{ item.TARGET_DATE|date:'d-m-Y' }}</td>
-                            <td>{{ item.REPORT_STATUS }}</td>
+                            {% if item.REPORT_STATUS|upper == "PENDING" %}
+                            <td style="color:green; font-weight: bold">
+                                {{ item.REPORT_STATUS }}
+                            </td>
+                            {% else %}
+                            <td>
+                                {{ item.REPORT_STATUS }}
+                            </td>
+                            {% endif %}
                             <td>{{ item.REPORT_BY }}</td>
                             <td>{{ item.WORKSHEETS|safe }}</td>
                             <td>{{ item.EXTRACTSHEETS|safe }}</td>
