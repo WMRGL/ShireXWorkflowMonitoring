@@ -17,7 +17,6 @@ class ShireData:
                                  pPriority, pDiseaseIndicationCode1, pDiseaseIndicationCode2, pDiseaseIndicationCode3,
                                  pReasonCode1, pReasonCode2, pReasonCode3, pUsername, pSurname, pLabNumber, pRefKey,
                                  pNoResultStatus))
-                print("SQL COLUMN HEADERS:", [col[0] for col in _cursor.description])
 
                 _workflowCases = self.utilities.ConvertCursorListToDict(_cursor)
                 return _workflowCases

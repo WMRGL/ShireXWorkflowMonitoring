@@ -1,14 +1,7 @@
 {% load static %}
 <head>
-    <!-- DataTables CSS -->
-    <!--<link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.min.css">-->
-
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <!-- DataTables JS -->
-    <!--<script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>-->
-
 </head>
 <div class="container-fluid mb-3">
     <nav class="navbar navbar-expand-md navbar-dark bg-primary">
@@ -80,14 +73,6 @@
                     </li>-->
                 </ul>
                 <ul>
-                <!-- Button for dark mode toggle -->
-                <!--<div class="toggle-container">
-                    <input type="checkbox" id="dark-mode-toggle" class="toggle-checkbox">
-                    <label for="dark-mode-toggle" class="toggle-label">
-                        <span class="toggle-moon">🌙</span>
-                        <span class="toggle-sun">☀️</span>
-                    </label>
-                </div>-->
                 </ul>
                 {% if request.user.is_authenticated %}
                 <ul class="navbar-nav justify-content-end mb-2 mb-lg-0">
@@ -121,7 +106,7 @@
         </div>
     </nav>
     <footer class="text-muted text-center mt-4" style="font-size: 0.75rem;">
-    Version 32
+    Version 30
     </footer>
 </div>
 <script src="{%   static 'Scripts.js' %}"></script>
