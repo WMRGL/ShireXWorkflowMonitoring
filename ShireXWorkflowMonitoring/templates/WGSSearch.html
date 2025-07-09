@@ -116,6 +116,19 @@
                                 {% endfor %}
                             </select>
                         </div>
+                        <div class="col-2" style="text-align:right">
+                            <label for="ddlCriteriaRefKey" class="col-form-label" >Key:</label>
+                        </div>
+                        <div class="col-2">
+                            <select class="form-select" name="ddlCriteriaRefKey" id="ddlCriteriaRefKey">
+                                <option value="" {% if criteriaRefKey == "" %} selected="selected" {% endif %}>select...</option>
+                                {% if criteriaRefKeys %}
+                                    {% for item in criteriaRefKeys %}
+                                        <option value="{{ item.REF }}" {% if item.REF == criteriaRefKey %} selected="selected" {% endif %}>{{ item.REF }}</option>
+                                    {% endfor %}
+                                {% endif %}
+                            </select>
+                        </div>
                     </div>
                         <div class="row g-5 align-items-center" style="padding:5px">
                             <div class="col-2 bg-light" style="text-align:right">
